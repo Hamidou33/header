@@ -10,7 +10,7 @@ describe('Dropdown Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [Dropdown],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(Dropdown);
     component = fixture.componentInstance;
@@ -55,7 +55,7 @@ describe('Dropdown Component', () => {
       const items: DropdownItem[] = [
         { label: 'Item 1', link: '/item1' },
         { label: 'Item 2', link: '/item2' },
-        { label: 'Item 3', link: '/item3' }
+        { label: 'Item 3', link: '/item3' },
       ];
       fixture.componentRef.setInput('items', items);
       expect(component.items()).toEqual(items);
@@ -65,7 +65,7 @@ describe('Dropdown Component', () => {
     it('should accept items with icons', () => {
       const items: DropdownItem[] = [
         { label: 'Profile', link: '/profile', icon: 'user' },
-        { label: 'Settings', link: '/settings', icon: 'gear' }
+        { label: 'Settings', link: '/settings', icon: 'gear' },
       ];
       fixture.componentRef.setInput('items', items);
 
@@ -79,9 +79,9 @@ describe('Dropdown Component', () => {
           label: 'Products',
           subMenu: [
             { label: 'Product A', link: '/products/a' },
-            { label: 'Product B', link: '/products/b' }
-          ]
-        }
+            { label: 'Product B', link: '/products/b' },
+          ],
+        },
       ];
       fixture.componentRef.setInput('items', items);
 
@@ -204,10 +204,8 @@ describe('Dropdown Component', () => {
           link: '/complete',
           icon: 'star',
           active: true,
-          subMenu: [
-            { label: 'Sub 1', link: '/sub1' }
-          ]
-        }
+          subMenu: [{ label: 'Sub 1', link: '/sub1' }],
+        },
       ];
       fixture.componentRef.setInput('items', items);
 
@@ -229,12 +227,12 @@ describe('Dropdown Component', () => {
               subMenu: [
                 {
                   label: 'Level 3',
-                  link: '/level3'
-                }
-              ]
-            }
-          ]
-        }
+                  link: '/level3',
+                },
+              ],
+            },
+          ],
+        },
       ];
       fixture.componentRef.setInput('items', items);
 
@@ -255,10 +253,10 @@ describe('Dropdown Component', () => {
           label: 'Parent Item',
           subMenu: [
             { label: 'Child 1', link: '/child1' },
-            { label: 'Child 2', link: '/child2' }
-          ]
+            { label: 'Child 2', link: '/child2' },
+          ],
         },
-        { label: 'Another Simple', link: '/another' }
+        { label: 'Another Simple', link: '/another' },
       ];
       fixture.componentRef.setInput('items', items);
 
@@ -282,11 +280,11 @@ describe('Dropdown Component', () => {
       const items: DropdownItem[] = [
         { label: 'Item 1', link: '/1', active: false },
         { label: 'Item 2', link: '/2', active: true },
-        { label: 'Item 3', link: '/3', active: false }
+        { label: 'Item 3', link: '/3', active: false },
       ];
       fixture.componentRef.setInput('items', items);
 
-      const activeItem = component.items().find(item => item.active);
+      const activeItem = component.items().find((item) => item.active);
       expect(activeItem).toBeDefined();
       expect(activeItem?.label).toBe('Item 2');
     });
@@ -295,11 +293,11 @@ describe('Dropdown Component', () => {
       const items: DropdownItem[] = [
         { label: 'Item 1', link: '/1', active: true },
         { label: 'Item 2', link: '/2', active: true },
-        { label: 'Item 3', link: '/3', active: false }
+        { label: 'Item 3', link: '/3', active: false },
       ];
       fixture.componentRef.setInput('items', items);
 
-      const activeItems = component.items().filter(item => item.active);
+      const activeItems = component.items().filter((item) => item.active);
       expect(activeItems).toHaveLength(2);
     });
   });
@@ -329,18 +327,14 @@ describe('Dropdown Component', () => {
     });
 
     it('should handle items without links', () => {
-      const items: DropdownItem[] = [
-        { label: 'No Link Item' }
-      ];
+      const items: DropdownItem[] = [{ label: 'No Link Item' }];
       fixture.componentRef.setInput('items', items);
 
       expect(component.items()[0].link).toBeUndefined();
     });
 
     it('should handle items without icons', () => {
-      const items: DropdownItem[] = [
-        { label: 'No Icon', link: '/no-icon' }
-      ];
+      const items: DropdownItem[] = [{ label: 'No Icon', link: '/no-icon' }];
       fixture.componentRef.setInput('items', items);
 
       expect(component.items()[0].icon).toBeUndefined();

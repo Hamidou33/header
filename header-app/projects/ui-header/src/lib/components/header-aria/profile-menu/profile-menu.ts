@@ -14,7 +14,16 @@ export interface UserProfile {
 
 @Component({
   selector: 'ui-profile-menu',
-  imports: [CommonModule, RouterModule, Menu, MenuItem, MenuTrigger, MenuContent, CdkMenuModule, OverlayModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    Menu,
+    MenuItem,
+    MenuTrigger,
+    MenuContent,
+    CdkMenuModule,
+    OverlayModule,
+  ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
   templateUrl: './profile-menu.html',
   styleUrl: './profile-menu.css',

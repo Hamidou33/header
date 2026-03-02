@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { Nav } from '../nav/nav';
@@ -53,7 +53,7 @@ export class Header {
   userProfile = input<UserProfile | null>({
     name: 'John Doe',
     email: 'john.doe@company.com',
-    avatar: '👤'
+    avatar: '👤',
   });
 
   profileMenuItems = input<ProfileMenuItem[]>([
@@ -63,8 +63,8 @@ export class Header {
       subMenu: [
         { label: 'View Profile', link: '/profile/view', icon: '👁️' },
         { label: 'Edit Profile', link: '/profile/edit', icon: '✏️' },
-        { label: 'Privacy', link: '/profile/privacy', icon: '🔒' }
-      ]
+        { label: 'Privacy', link: '/profile/privacy', icon: '🔒' },
+      ],
     },
     {
       label: 'Settings',
@@ -73,13 +73,13 @@ export class Header {
         { label: 'Account', link: '/settings/account', icon: '🔧' },
         { label: 'Preferences', link: '/settings/preferences', icon: '🎨' },
         { label: 'Security', link: '/settings/security', icon: '🛡️' },
-        { label: 'Billing', link: '/settings/billing', icon: '💳' }
-      ]
+        { label: 'Billing', link: '/settings/billing', icon: '💳' },
+      ],
     },
     {
       label: 'Notifications',
       link: '/notifications',
-      icon: '🔔'
+      icon: '🔔',
     },
     {
       label: 'Help',
@@ -87,14 +87,14 @@ export class Header {
       subMenu: [
         { label: 'Documentation', link: '/help/docs', icon: '📚' },
         { label: 'Contact Support', link: '/help/support', icon: '💬' },
-        { label: 'FAQ', link: '/help/faq', icon: '💡' }
-      ]
+        { label: 'FAQ', link: '/help/faq', icon: '💡' },
+      ],
     },
     {
       label: 'Logout',
       link: '/logout',
-      icon: '🚪'
-    }
+      icon: '🚪',
+    },
   ]);
 
   menuItems = input<MenuItem[]>([
@@ -107,19 +107,19 @@ export class Header {
           subMenu: [
             { label: 'Consulting', link: '/products/services/consulting' },
             { label: 'Training', link: '/products/services/training' },
-            { label: 'Support', link: '/products/services/support' }
-          ]
+            { label: 'Support', link: '/products/services/support' },
+          ],
         },
-        { label: 'Cloud Solutions', link: '/products/cloud' }
-      ]
+        { label: 'Cloud Solutions', link: '/products/cloud' },
+      ],
     },
     {
       label: 'Solutions',
       subMenu: [
         { label: 'Enterprise', link: '/solutions/enterprise' },
         { label: 'Small Business', link: '/solutions/smb' },
-        { label: 'Startups', link: '/solutions/startups' }
-      ]
+        { label: 'Startups', link: '/solutions/startups' },
+      ],
     },
     {
       label: 'Resources',
@@ -127,48 +127,48 @@ export class Header {
         { label: 'Documentation', link: '/resources/docs' },
         { label: 'Tutorials', link: '/resources/tutorials' },
         { label: 'Blog', link: '/resources/blog' },
-        { label: 'Support', link: '/resources/support' }
-      ]
+        { label: 'Support', link: '/resources/support' },
+      ],
     },
     {
       label: 'About',
-      link: '/about'
+      link: '/about',
     },
     {
       label: 'Contact',
-      link: '/contact'
+      link: '/contact',
     },
     {
       label: 'Pricing',
-      link: '/pricing'
+      link: '/pricing',
     },
     {
       label: 'Partners',
-      link: '/partners'
+      link: '/partners',
     },
     {
       label: 'Careers',
-      link: '/careers'
+      link: '/careers',
     },
     {
       label: 'Blog',
-      link: '/blog'
+      link: '/blog',
     },
     {
       label: 'Docs',
-      link: '/docs'
+      link: '/docs',
     },
     {
       label: 'Support',
-      link: '/support'
+      link: '/support',
     },
     {
       label: 'Community',
-      link: '/community'
+      link: '/community',
     },
     {
       label: 'Events',
-      link: '/events'
-    }
+      link: '/events',
+    },
   ]);
 }

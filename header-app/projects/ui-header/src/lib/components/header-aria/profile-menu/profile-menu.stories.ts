@@ -20,21 +20,11 @@ const meta: Meta<ProfileMenu> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [
-        ProfileMenu,
-        OverlayModule,
-        Menu,
-        MenuTrigger,
-        MenuItem,
-        MenuContent,
-      ],
+      imports: [ProfileMenu, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
-        provideRouter(
-          [{ path: '**', redirectTo: '' }],
-          withHashLocation()
-        ),
+        provideRouter([{ path: '**', redirectTo: '' }], withHashLocation()),
         provideAnimationsAsync(),
       ],
     }),

@@ -12,5 +12,7 @@ import { DropdownItem } from '../../../models';
 export class DropdownCdk {
   label = input.required<string>();
   items = input<DropdownItem[]>([]);
-  position = input<Array<{originX: string; originY: string; overlayX: string; overlayY: string}> | undefined>(undefined);
+  position = input<
+    Array<{ originX: string; originY: string; overlayX: string; overlayY: string }> | undefined
+  >(undefined);
 }

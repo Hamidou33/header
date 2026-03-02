@@ -18,22 +18,11 @@ const meta: Meta<NavLink> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [
-        NavLink,
-        MenuBar,
-        OverlayModule,
-        Menu,
-        MenuTrigger,
-        MenuItem,
-        MenuContent,
-      ],
+      imports: [NavLink, MenuBar, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
-        provideRouter(
-          [{ path: '**', redirectTo: '' }],
-          withHashLocation()
-        ),
+        provideRouter([{ path: '**', redirectTo: '' }], withHashLocation()),
         provideAnimationsAsync(),
       ],
     }),

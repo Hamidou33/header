@@ -1,4 +1,17 @@
-import { Component, input, computed, signal, output, ViewChild, ViewChildren, ElementRef, QueryList, AfterViewInit, OnDestroy, effect } from '@angular/core';
+import {
+  Component,
+  input,
+  computed,
+  signal,
+  output,
+  ViewChild,
+  ViewChildren,
+  ElementRef,
+  QueryList,
+  AfterViewInit,
+  OnDestroy,
+  effect,
+} from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
@@ -62,7 +75,9 @@ export class Nav implements AfterViewInit, OnDestroy {
 
   @ViewChild('navMenu') navMenu?: ElementRef<HTMLElement>;
   @ViewChild('navContent') navContent?: ElementRef<HTMLElement>;
-  @ViewChildren('measureItem', { read: ElementRef }) measureItems?: QueryList<ElementRef<HTMLElement>>;
+  @ViewChildren('measureItem', { read: ElementRef }) measureItems?: QueryList<
+    ElementRef<HTMLElement>
+  >;
   @ViewChild('measureMore') measureMore?: ElementRef<HTMLElement>;
   @ViewChild('navRight') navRight?: ElementRef<HTMLElement>;
 
@@ -77,7 +92,7 @@ export class Nav implements AfterViewInit, OnDestroy {
     });
 
     const mediaQuery = window.matchMedia('(max-width: 768px)');
-    mediaQuery.addEventListener('change', e => {
+    mediaQuery.addEventListener('change', (e) => {
       this.isMobile.set(e.matches);
     });
   }
@@ -100,7 +115,9 @@ export class Nav implements AfterViewInit, OnDestroy {
 
     if (typeof document !== 'undefined' && 'fonts' in document) {
       // Recalculate after fonts load to avoid late text width changes.
-      (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(() => this.scheduleRecalculate());
+      (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(() =>
+        this.scheduleRecalculate(),
+      );
     }
 
     if (typeof ResizeObserver !== 'undefined') {
@@ -136,17 +153,17 @@ export class Nav implements AfterViewInit, OnDestroy {
     if (allItems.length <= count) {
       return [];
     }
-    return allItems.slice(count).map(item => ({
+    return allItems.slice(count).map((item) => ({
       label: item.label,
       link: item.link,
       icon: '', // Default icon if needed
       active: item.active,
-      subMenu: item.subMenu
+      subMenu: item.subMenu,
     }));
   });
 
   isMoreActive = computed(() => {
-    return this.moreItems().some(item => item.active);
+    return this.moreItems().some((item) => item.active);
   });
 
   private scheduleRecalculate() {
@@ -185,11 +202,9 @@ export class Nav implements AfterViewInit, OnDestroy {
 
     const availableWidth = this.getAvailableWidth(navEl);
     const moreWidth = this.measureMore?.nativeElement?.offsetWidth ?? 0;
-    const rects = measureEls.map(el => el.nativeElement.getBoundingClientRect());
+    const rects = measureEls.map((el) => el.nativeElement.getBoundingClientRect());
     const baseLeft = rects[0]?.left ?? 0;
-    const gap = rects.length > 1
-      ? Math.max(0, rects[1].left - rects[0].right)
-      : this.getGap(navEl);
+    const gap = rects.length > 1 ? Math.max(0, rects[1].left - rects[0].right) : this.getGap(navEl);
 
     let count = 0;
     for (let i = 0; i < allItems.length; i += 1) {

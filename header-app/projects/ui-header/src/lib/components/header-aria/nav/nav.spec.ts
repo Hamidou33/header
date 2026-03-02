@@ -13,7 +13,7 @@ describe('Nav Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [Nav],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(Nav);
     component = fixture.componentInstance;
@@ -53,7 +53,7 @@ describe('Nav Component', () => {
       const items: NavItem[] = [
         { label: 'Home', link: '/' },
         { label: 'About', link: '/about' },
-        { label: 'Contact', link: '/contact' }
+        { label: 'Contact', link: '/contact' },
       ];
       fixture.componentRef.setInput('items', items);
       expect(component.items()).toEqual(items);
@@ -65,9 +65,9 @@ describe('Nav Component', () => {
           label: 'Products',
           subMenu: [
             { label: 'Product A', link: '/products/a' },
-            { label: 'Product B', link: '/products/b' }
-          ]
-        }
+            { label: 'Product B', link: '/products/b' },
+          ],
+        },
       ];
       fixture.componentRef.setInput('items', items);
       expect(component.items()[0].subMenu).toHaveLength(2);
@@ -171,7 +171,7 @@ describe('Nav Component', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1' },
         { label: 'Item 2', link: '/2' },
-        { label: 'Item 3', link: '/3' }
+        { label: 'Item 3', link: '/3' },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(3);
@@ -184,7 +184,7 @@ describe('Nav Component', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1' },
         { label: 'Item 2', link: '/2' },
-        { label: 'Item 3', link: '/3' }
+        { label: 'Item 3', link: '/3' },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(2);
@@ -204,7 +204,7 @@ describe('Nav Component', () => {
     it('should cap visible items to minimum of count and array length', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1' },
-        { label: 'Item 2', link: '/2' }
+        { label: 'Item 2', link: '/2' },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(10);
@@ -220,7 +220,7 @@ describe('Nav Component', () => {
     it('should return empty array when all items are visible', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1' },
-        { label: 'Item 2', link: '/2' }
+        { label: 'Item 2', link: '/2' },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(2);
@@ -233,7 +233,7 @@ describe('Nav Component', () => {
         { label: 'Item 1', link: '/1' },
         { label: 'Item 2', link: '/2' },
         { label: 'Item 3', link: '/3' },
-        { label: 'Item 4', link: '/4' }
+        { label: 'Item 4', link: '/4' },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(2);
@@ -247,7 +247,7 @@ describe('Nav Component', () => {
     it('should preserve item properties in more items', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1' },
-        { label: 'Item 2', link: '/2', active: true, subMenu: [{ label: 'Sub', link: '/sub' }] }
+        { label: 'Item 2', link: '/2', active: true, subMenu: [{ label: 'Sub', link: '/sub' }] },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(1);
@@ -267,7 +267,7 @@ describe('Nav Component', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1', active: false },
         { label: 'Item 2', link: '/2', active: true },
-        { label: 'Item 3', link: '/3', active: false }
+        { label: 'Item 3', link: '/3', active: false },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(1);
@@ -279,7 +279,7 @@ describe('Nav Component', () => {
       const items: NavItem[] = [
         { label: 'Item 1', link: '/1', active: true },
         { label: 'Item 2', link: '/2', active: false },
-        { label: 'Item 3', link: '/3', active: false }
+        { label: 'Item 3', link: '/3', active: false },
       ];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(1);
@@ -288,9 +288,7 @@ describe('Nav Component', () => {
     });
 
     it('should return false when more menu is empty', () => {
-      const items: NavItem[] = [
-        { label: 'Item 1', link: '/1' }
-      ];
+      const items: NavItem[] = [{ label: 'Item 1', link: '/1' }];
       fixture.componentRef.setInput('items', items);
       component['visibleCount'].set(1);
 
@@ -307,7 +305,7 @@ describe('Nav Component', () => {
         { label: 'Item 1', link: '/1' },
         { label: 'Item 2', link: '/2' },
         { label: 'Item 3', link: '/3' },
-        { label: 'Item 4', link: '/4' }
+        { label: 'Item 4', link: '/4' },
       ];
       fixture.componentRef.setInput('items', items);
       fixture.componentRef.setInput('maxVisibleItems', 2);
@@ -328,7 +326,7 @@ describe('Nav Component', () => {
       const userProfile = {
         name: 'John Doe',
         email: 'john@example.com',
-        avatar: 'avatar.jpg'
+        avatar: 'avatar.jpg',
       };
       fixture.componentRef.setInput('userProfile', userProfile);
 
@@ -338,7 +336,7 @@ describe('Nav Component', () => {
     it('should accept profile menu items', () => {
       const profileMenuItems = [
         { label: 'Profile', link: '/profile', icon: 'user' },
-        { label: 'Settings', link: '/settings', icon: 'gear' }
+        { label: 'Settings', link: '/settings', icon: 'gear' },
       ];
       fixture.componentRef.setInput('profileMenuItems', profileMenuItems);
 

@@ -10,7 +10,7 @@ describe('NavLink Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NavLink],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(NavLink);
     component = fixture.componentInstance;

@@ -10,13 +10,13 @@ describe('ProfileMenu Component', () => {
   const mockUser: UserProfile = {
     name: 'John Doe',
     email: 'john@example.com',
-    avatar: 'avatar.jpg'
+    avatar: 'avatar.jpg',
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ProfileMenu],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(ProfileMenu);
     fixture.componentRef.setInput('user', mockUser);
@@ -68,7 +68,7 @@ describe('ProfileMenu Component', () => {
       const newUser: UserProfile = {
         name: 'Jane Smith',
         email: 'jane@example.com',
-        avatar: 'jane.jpg'
+        avatar: 'jane.jpg',
       };
       fixture.componentRef.setInput('user', newUser);
 
@@ -81,7 +81,7 @@ describe('ProfileMenu Component', () => {
       const userNoAvatar: UserProfile = {
         name: 'No Avatar',
         email: 'no@avatar.com',
-        avatar: ''
+        avatar: '',
       };
       fixture.componentRef.setInput('user', userNoAvatar);
 
@@ -96,7 +96,7 @@ describe('ProfileMenu Component', () => {
     it('should accept menu items', () => {
       const items: DropdownItem[] = [
         { label: 'Profile', link: '/profile', icon: 'user' },
-        { label: 'Settings', link: '/settings', icon: 'gear' }
+        { label: 'Settings', link: '/settings', icon: 'gear' },
       ];
       fixture.componentRef.setInput('menuItems', items);
 
@@ -111,9 +111,9 @@ describe('ProfileMenu Component', () => {
           icon: 'user',
           subMenu: [
             { label: 'Profile', link: '/profile' },
-            { label: 'Privacy', link: '/privacy' }
-          ]
-        }
+            { label: 'Privacy', link: '/privacy' },
+          ],
+        },
       ];
       fixture.componentRef.setInput('menuItems', items);
 
@@ -127,9 +127,7 @@ describe('ProfileMenu Component', () => {
     });
 
     it('should handle items without icons', () => {
-      const items: DropdownItem[] = [
-        { label: 'Logout', link: '/logout' }
-      ];
+      const items: DropdownItem[] = [{ label: 'Logout', link: '/logout' }];
       fixture.componentRef.setInput('menuItems', items);
 
       expect(component.menuItems()[0].icon).toBeUndefined();
@@ -254,7 +252,7 @@ describe('ProfileMenu Component', () => {
       const items: DropdownItem[] = [
         { label: 'Profile', link: '/profile', icon: 'user' },
         { label: 'Settings', link: '/settings', icon: 'gear' },
-        { label: 'Logout', link: '/logout', icon: 'exit' }
+        { label: 'Logout', link: '/logout', icon: 'exit' },
       ];
 
       fixture.componentRef.setInput('menuItems', items);
@@ -269,12 +267,10 @@ describe('ProfileMenu Component', () => {
     });
 
     it('should handle logout menu item', () => {
-      const items: DropdownItem[] = [
-        { label: 'Logout', link: '/logout', icon: 'exit' }
-      ];
+      const items: DropdownItem[] = [{ label: 'Logout', link: '/logout', icon: 'exit' }];
       fixture.componentRef.setInput('menuItems', items);
 
-      const logoutItem = component.menuItems().find(item => item.label === 'Logout');
+      const logoutItem = component.menuItems().find((item) => item.label === 'Logout');
       expect(logoutItem).toBeDefined();
       expect(logoutItem?.link).toBe('/logout');
     });

@@ -15,7 +15,16 @@ export interface DropdownItem {
 
 @Component({
   selector: 'ui-dropdown',
-  imports: [CommonModule, RouterModule, Menu, MenuItem, MenuTrigger, MenuContent, CdkMenuModule, OverlayModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    Menu,
+    MenuItem,
+    MenuTrigger,
+    MenuContent,
+    CdkMenuModule,
+    OverlayModule,
+  ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.css',

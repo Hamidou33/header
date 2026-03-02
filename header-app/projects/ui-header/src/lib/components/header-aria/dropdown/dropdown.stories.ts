@@ -21,22 +21,11 @@ const meta: Meta<Dropdown> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [
-        Dropdown,
-        MenuBar,
-        OverlayModule,
-        Menu,
-        MenuTrigger,
-        MenuItem,
-        MenuContent,
-      ],
+      imports: [Dropdown, MenuBar, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
-        provideRouter(
-          [{ path: '**', redirectTo: '' }],
-          withHashLocation()
-        ),
+        provideRouter([{ path: '**', redirectTo: '' }], withHashLocation()),
         provideAnimationsAsync(),
       ],
     }),

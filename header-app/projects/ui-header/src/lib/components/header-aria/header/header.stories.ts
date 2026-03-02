@@ -20,21 +20,11 @@ const meta: Meta<Header> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [
-        Header,
-        OverlayModule,
-        Menu,
-        MenuTrigger,
-        MenuItem,
-        MenuContent,
-      ],
+      imports: [Header, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
-        provideRouter(
-          [{ path: '**', redirectTo: '' }],
-          withHashLocation()
-        ),
+        provideRouter([{ path: '**', redirectTo: '' }], withHashLocation()),
         provideAnimationsAsync(),
       ],
     }),

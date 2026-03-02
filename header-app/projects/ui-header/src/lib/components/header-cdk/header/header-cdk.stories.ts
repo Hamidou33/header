@@ -91,7 +91,11 @@ export const Default: Story = {
             label: 'Consulting',
             subMenu: [
               { label: 'Strategy', link: '/services/consulting/strategy', icon: 'chart' },
-              { label: 'Implementation', link: '/services/consulting/implementation', icon: 'tool' },
+              {
+                label: 'Implementation',
+                link: '/services/consulting/implementation',
+                icon: 'tool',
+              },
             ],
           },
           { label: 'Support', link: '/services/support', icon: 'lifebuoy' },

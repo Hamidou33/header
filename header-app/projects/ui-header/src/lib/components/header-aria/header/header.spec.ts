@@ -10,7 +10,7 @@ describe('Header Component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [Header],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
@@ -78,7 +78,7 @@ describe('Header Component', () => {
       const customProfile = {
         name: 'Jane Smith',
         email: 'jane@example.com',
-        avatar: '👩'
+        avatar: '👩',
       };
       fixture.componentRef.setInput('userProfile', customProfile);
       expect(component.userProfile()).toEqual(customProfile);
@@ -112,7 +112,7 @@ describe('Header Component', () => {
     it('should accept custom menu items', () => {
       const customItems = [
         { label: 'Home', link: '/' },
-        { label: 'About', link: '/about' }
+        { label: 'About', link: '/about' },
       ];
       fixture.componentRef.setInput('menuItems', customItems);
       expect(component.menuItems()).toEqual(customItems);
@@ -195,19 +195,19 @@ describe('Header Component', () => {
 
     it('should include My Profile in default items', () => {
       const items = component.profileMenuItems();
-      const profileItem = items.find(item => item.label === 'My Profile');
+      const profileItem = items.find((item) => item.label === 'My Profile');
       expect(profileItem).toBeDefined();
     });
 
     it('should include Settings in default items', () => {
       const items = component.profileMenuItems();
-      const settingsItem = items.find(item => item.label === 'Settings');
+      const settingsItem = items.find((item) => item.label === 'Settings');
       expect(settingsItem).toBeDefined();
     });
 
     it('should include Logout in default items', () => {
       const items = component.profileMenuItems();
-      const logoutItem = items.find(item => item.label === 'Logout');
+      const logoutItem = items.find((item) => item.label === 'Logout');
       expect(logoutItem).toBeDefined();
       expect(logoutItem?.link).toBe('/logout');
     });
@@ -215,7 +215,7 @@ describe('Header Component', () => {
     it('should accept custom profile menu items', () => {
       const customItems = [
         { label: 'Account', link: '/account', icon: '⚙️' },
-        { label: 'Sign Out', link: '/signout', icon: '🚪' }
+        { label: 'Sign Out', link: '/signout', icon: '🚪' },
       ];
       fixture.componentRef.setInput('profileMenuItems', customItems);
       expect(component.profileMenuItems()).toEqual(customItems);
@@ -223,7 +223,7 @@ describe('Header Component', () => {
 
     it('should handle profile items with submenus', () => {
       const items = component.profileMenuItems();
-      const itemWithSubmenu = items.find(item => item.subMenu && item.subMenu.length > 0);
+      const itemWithSubmenu = items.find((item) => item.subMenu && item.subMenu.length > 0);
       expect(itemWithSubmenu).toBeDefined();
     });
   });
@@ -234,28 +234,28 @@ describe('Header Component', () => {
   describe('Menu Items Structure', () => {
     it('should have Products in default menu', () => {
       const items = component.menuItems();
-      const productsItem = items.find(item => item.label === 'Products');
+      const productsItem = items.find((item) => item.label === 'Products');
       expect(productsItem).toBeDefined();
       expect(productsItem?.subMenu).toBeDefined();
     });
 
     it('should have Solutions in default menu', () => {
       const items = component.menuItems();
-      const solutionsItem = items.find(item => item.label === 'Solutions');
+      const solutionsItem = items.find((item) => item.label === 'Solutions');
       expect(solutionsItem).toBeDefined();
     });
 
     it('should handle items with nested submenus', () => {
       const items = component.menuItems();
-      const productsItem = items.find(item => item.label === 'Products');
-      const servicesSubmenu = productsItem?.subMenu?.find(sub => sub.label === 'Services');
+      const productsItem = items.find((item) => item.label === 'Products');
+      const servicesSubmenu = productsItem?.subMenu?.find((sub) => sub.label === 'Services');
       expect(servicesSubmenu?.subMenu).toBeDefined();
       expect(servicesSubmenu?.subMenu).toHaveLength(3);
     });
 
     it('should handle simple menu items without submenus', () => {
       const items = component.menuItems();
-      const aboutItem = items.find(item => item.label === 'About');
+      const aboutItem = items.find((item) => item.label === 'About');
       expect(aboutItem).toBeDefined();
       expect(aboutItem?.link).toBe('/about');
       expect(aboutItem?.subMenu).toBeUndefined();
