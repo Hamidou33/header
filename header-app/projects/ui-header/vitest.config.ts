@@ -13,9 +13,11 @@ export default defineConfig(({ mode }) => ({
   ],
   test: {
     globals: true,
-    setupFiles: [resolve(rootDir, 'src/test-setup.ts')],
+    setupFiles: ['src/test-setup.ts'],
     environment: 'jsdom',
     include: ['src/**/*.spec.ts'],
+    pool: 'forks',
+    isolate: true,
     server: {
       deps: {
         inline: [/vendor/],
