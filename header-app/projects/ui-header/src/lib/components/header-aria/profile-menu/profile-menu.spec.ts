@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import '../../../../test-setup';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ProfileMenu, UserProfile } from './profile-menu';
 import { DropdownItem } from '../dropdown/dropdown';

@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import '../../../../test-setup';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Header } from './header';
 import { provideRouter } from '@angular/router';

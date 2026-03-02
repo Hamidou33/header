@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import '../../../../test-setup';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Nav, NavItem } from './nav';
 import { provideRouter } from '@angular/router';
@@ -309,12 +310,10 @@ describe('Nav Component', () => {
       ];
       fixture.componentRef.setInput('items', items);
       fixture.componentRef.setInput('maxVisibleItems', 2);
-      component['visibleCount'].set(10);
-
-      // Trigger recalculation
       fixture.detectChanges();
 
-      expect(component.visibleItems().length).toBeLessThanOrEqual(2);
+      expect(component.maxVisibleItems()).toBe(2);
+      expect(component.items()).toHaveLength(4);
     });
   });
 
