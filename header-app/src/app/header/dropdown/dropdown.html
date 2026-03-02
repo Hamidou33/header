@@ -1,0 +1,113 @@
+@if (!measureOnly()) {
+  <button
+    class="dropdown-trigger"
+    ngMenuItem
+    [value]="label()"
+    ngMenuTrigger
+    #origin
+    #trigger="ngMenuTrigger"
+    [menu]="menu()">
+    {{ label() }}
+    <svg
+      class="arrow-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="trigger.expanded()"
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[
+      {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4},
+      {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4}
+    ]"
+    cdkAttachPopoverAsChild>
+    <div ngMenu class="dropdown-menu" #menu="ngMenu">
+      <ng-template ngMenuContent>
+        @for (item of items(); track $index) {
+          @if (item.subMenu) {
+            <div
+              ngMenuItem
+              [value]="item.label"
+              #submenuItem
+              (click)="toggleSubmenu($index, $event)"
+              [attr.aria-expanded]="openSubmenuIndex() === $index"
+              class="dropdown-item">
+              @if (item.icon) {
+                <span class="dropdown-icon">{{ item.icon }}</span>
+              }
+              <span>{{ item.label }}</span>
+              <svg
+                class="arrow-icon-right"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+
+            <ng-template
+              [cdkConnectedOverlayOpen]="openSubmenuIndex() === $index"
+              [cdkConnectedOverlay]="{origin: submenuItem, usePopover: 'inline'}"
+              [cdkConnectedOverlayPositions]="[
+                {originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6},
+                {originX: 'start', originY: 'top', overlayY: 'top', overlayX: 'end', offsetX: -6}
+              ]"
+              cdkAttachPopoverAsChild>
+              <div ngMenu class="dropdown-submenu" #submenu="ngMenu" [attr.data-visible]="openSubmenuIndex() === $index">
+                <ng-template ngMenuContent>
+                  @for (subItem of item.subMenu; track $index) {
+                    <a
+                      [routerLink]="subItem.link"
+                      ngMenuItem
+                      [value]="subItem.label"
+                      class="dropdown-item">
+                      @if (subItem.icon) {
+                        <span class="dropdown-icon">{{ subItem.icon }}</span>
+                      }
+                      <span>{{ subItem.label }}</span>
+                    </a>
+                  }
+                </ng-template>
+              </div>
+            </ng-template>
+          } @else {
+            <a
+              [routerLink]="item.link"
+              ngMenuItem
+              [value]="item.label"
+              class="dropdown-item">
+              @if (item.icon) {
+                <span class="dropdown-icon">{{ item.icon }}</span>
+              }
+              <span>{{ item.label }}</span>
+            </a>
+          }
+        }
+      </ng-template>
+    </div>
+  </ng-template>
+} @else {
+  <span class="dropdown-trigger" aria-hidden="true">
+    {{ label() }}
+    <svg
+      class="arrow-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </span>
+}

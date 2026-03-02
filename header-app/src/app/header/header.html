@@ -1,0 +1,57 @@
+<header class="arv-header" [class.sticky]="sticky()" [class.arv-header_pre-header-desktop--show]="showHeaderPreNav() && !isHeaderFixed()">
+  @if (showHeaderPreNav() && !isHeaderFixed()) {
+    <section #prenav class="arv-header_pre-header-desktop">
+      <ng-content select="[slot=pre-header-desktop]"></ng-content>
+    </section>
+  }
+
+  @if (showHeaderPostNav()) {
+    <section #postnav class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
+      <div class="arv-header_main">
+        @if (showNav()) {
+          <app-nav
+            class="arv-header-nav"
+            [items]="menuItems()"
+            [maxVisibleItems]="maxVisibleItems()"
+            [mainLogoUrl]="logoUrl()"
+            [mainLogoTitle]="companyName()"
+            [mainLogoPath]="logoPath()"
+            [rounded]="rounded()"
+            [showProfile]="showProfile()"
+            [userProfile]="userProfile()"
+            [profileMenuItems]="profileMenuItems()"
+            [showAvatar]="showAvatar()"
+            [showEmail]="showEmail()"
+            [showIcons]="showIcons()">
+            <div slot="nav-left">
+              <ng-content select="[slot=nav-left]"></ng-content>
+            </div>
+            <div slot="nav-right">
+              @if (showProfile() && userProfile()) {
+                <app-profile-menu
+                  class="arv-header_profile"
+                  [user]="userProfile()!"
+                  [menuItems]="profileMenuItems()"
+                  [showAvatar]="showAvatar()"
+                  [showEmail]="showEmail()"
+                  [showIcons]="showIcons()" />
+              }
+              <div class="arv-header-nav-right-extra">
+                <ng-content select="[slot=nav-right]"></ng-content>
+              </div>
+            </div>
+            <div slot="pre-nav-mobile">
+              <ng-content select="[slot=pre-nav-mobile]"></ng-content>
+            </div>
+            <div slot="post-nav-mobile">
+              <ng-content select="[slot=post-nav-mobile]"></ng-content>
+            </div>
+          </app-nav>
+        }
+
+        <ng-content></ng-content>
+      </div>
+      <ng-content select="[slot=post-header-desktop]"></ng-content>
+    </section>
+  }
+</header>

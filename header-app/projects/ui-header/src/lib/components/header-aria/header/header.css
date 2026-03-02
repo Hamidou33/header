@@ -1,0 +1,122 @@
+:host {
+  --color-gray: 210 212 214;
+  --color-white: 255 255 255;
+  display: block;
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  left: 0;
+
+  @media (min-width: 768px) {
+    position: relative;
+    inset: unset;
+
+    &.sticky {
+      position: sticky;
+      z-index: 1030;
+      top: 0;
+      margin-bottom: 3rem;
+    }
+  }
+
+  ::ng-deep {
+    .arv-header.arv-header_pre-header-desktop--show {
+      @media (min-width: 768px) {
+        .arv-header-nav {
+          border-bottom-right-radius: 0 !important;
+          border-bottom-left-radius: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+.arv-header {
+  margin-top: 0;
+
+  @media (min-width: 768px) {
+    margin-top: 2rem;
+  }
+}
+
+&.sticky .arv-header {
+  @media (min-width: 768px) {
+    margin-top: 0;
+  }
+}
+
+.arv-header_main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  width: 100%;
+}
+
+.arv-header_profile {
+  display: none;
+  margin-right: 8px;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.arv-header-nav-right-extra {
+  display: block;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.arv-header_pre-header-desktop {
+  display: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: -2rem;
+  font-size: 1.125rem;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    gap: 0;
+  }
+
+  &:empty {
+    padding: 1rem;
+  }
+}
+
+.arv-header_post-header-desktop {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid rgb(var(--color-gray));
+  background: rgb(var(--color-white));
+  gap: 1.5rem;
+  font-size: 0.75rem;
+
+  @media (min-width: 768px) {
+    border-radius: 8px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 7px 3px rgb(23 35 40 / 15%);
+  }
+}

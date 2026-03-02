@@ -1,0 +1,118 @@
+<div class="profile-section">
+  <button
+    class="profile-button"
+    ngMenuTrigger
+    #origin
+    #trigger="ngMenuTrigger"
+    [menu]="profileMenu()"
+    aria-label="Profile menu">
+    @if (showAvatar()) {
+      <span class="profile-avatar">{{ user().avatar }}</span>
+    }
+    <div class="profile-info">
+      <span class="profile-name">{{ user().name }}</span>
+      @if (showEmail()) {
+        <span class="profile-email">{{ user().email }}</span>
+      }
+    </div>
+    <svg
+      class="arrow-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="trigger.expanded()"
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[
+      {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4, offsetX: -8},
+      {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4, offsetX: -8}
+    ]"
+    cdkAttachPopoverAsChild>
+    <div ngMenu class="profile-menu" #profileMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div class="profile-menu-header">
+          @if (showAvatar()) {
+            <span class="profile-menu-avatar">{{ user().avatar }}</span>
+          }
+          <div class="profile-menu-info">
+            <strong class="profile-menu-name">{{ user().name }}</strong>
+            @if (showEmail()) {
+              <span class="profile-menu-email">{{ user().email }}</span>
+            }
+          </div>
+        </div>
+        <div class="profile-menu-divider"></div>
+        @for (item of menuItems(); track $index) {
+          @if (item.subMenu) {
+            <div
+              ngMenuItem
+              [value]="item.label"
+              #submenuItem
+              (click)="toggleSubmenu($index, $event)"
+              [attr.aria-expanded]="openSubmenuIndex() === $index"
+              class="profile-menu-item">
+              @if (showIcons()) {
+                <span class="profile-menu-icon">{{ item.icon }}</span>
+              }
+              <span>{{ item.label }}</span>
+              <svg
+                class="arrow-icon-right"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+
+            <ng-template
+              [cdkConnectedOverlayOpen]="openSubmenuIndex() === $index"
+              [cdkConnectedOverlay]="{origin: submenuItem, usePopover: 'inline'}"
+              [cdkConnectedOverlayPositions]="[
+                {originX: 'start', originY: 'top', overlayY: 'top', overlayX: 'end', offsetX: -6},
+                {originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}
+              ]"
+              cdkAttachPopoverAsChild>
+              <div ngMenu #subMenu="ngMenu" class="profile-submenu" [attr.data-visible]="openSubmenuIndex() === $index">
+                <ng-template ngMenuContent>
+                  @for (subItem of item.subMenu; track $index) {
+                    <a
+                      [routerLink]="subItem.link"
+                      ngMenuItem
+                      [value]="subItem.label"
+                      class="profile-menu-item">
+                      @if (showIcons()) {
+                        <span class="profile-menu-icon">{{ subItem.icon }}</span>
+                      }
+                      <span>{{ subItem.label }}</span>
+                    </a>
+                  }
+                </ng-template>
+              </div>
+            </ng-template>
+          } @else {
+            <a
+              [routerLink]="item.link"
+              ngMenuItem
+              [value]="item.label"
+              class="profile-menu-item">
+              @if (showIcons()) {
+                <span class="profile-menu-icon">{{ item.icon }}</span>
+              }
+              <span>{{ item.label }}</span>
+            </a>
+          }
+        }
+      </ng-template>
+    </div>
+  </ng-template>
+</div>

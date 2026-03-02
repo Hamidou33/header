@@ -1,0 +1,33 @@
+@if (!measureOnly()) {
+  @if (useAriaMenu()) {
+    <a
+      [routerLink]="link()"
+      class="nav-link"
+      [class.active]="active()"
+      ngMenuItem
+      [value]="label()">
+      @if (icon()) {
+        <span class="nav-icon">{{ icon() }}</span>
+      }
+      {{ label() }}
+    </a>
+  } @else {
+    <a
+      [routerLink]="link()"
+      class="nav-link"
+      [class.active]="active()"
+      cdkMenuItem>
+      @if (icon()) {
+        <span class="nav-icon">{{ icon() }}</span>
+      }
+      {{ label() }}
+    </a>
+  }
+} @else {
+  <span class="nav-link" aria-hidden="true">
+    @if (icon()) {
+      <span class="nav-icon">{{ icon() }}</span>
+    }
+    {{ label() }}
+  </span>
+}

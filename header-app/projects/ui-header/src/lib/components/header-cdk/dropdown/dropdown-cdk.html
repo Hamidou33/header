@@ -1,0 +1,74 @@
+<div class="dropdown-container">
+  <button
+    class="dropdown-trigger"
+    [cdkMenuTriggerFor]="menu"
+    [cdkMenuPosition]="position()">
+    {{ label() }}
+    <svg
+      class="arrow-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <ng-template #menu>
+    <div class="dropdown-menu" cdkMenu>
+      @for (item of items(); track $index) {
+        @if (item.subMenu) {
+          <div class="dropdown-item-container">
+            <button
+              class="dropdown-item"
+              [cdkMenuTriggerFor]="submenu"
+              cdkMenuItem>
+              @if (item.icon) {
+                <span class="dropdown-icon">{{ item.icon }}</span>
+              }
+              <span>{{ item.label }}</span>
+              <svg
+                class="arrow-icon-right"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+
+            <ng-template #submenu>
+              <div class="dropdown-submenu" cdkMenu>
+                @for (subItem of item.subMenu; track $index) {
+                  <a
+                    [href]="subItem.link"
+                    class="dropdown-item"
+                    cdkMenuItem>
+                    @if (subItem.icon) {
+                      <span class="dropdown-icon">{{ subItem.icon }}</span>
+                    }
+                    <span>{{ subItem.label }}</span>
+                  </a>
+                }
+              </div>
+            </ng-template>
+          </div>
+        } @else {
+          <a
+            [href]="item.link"
+            class="dropdown-item"
+            cdkMenuItem>
+            @if (item.icon) {
+              <span class="dropdown-icon">{{ item.icon }}</span>
+            }
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      }
+    </div>
+  </ng-template>
+</div>

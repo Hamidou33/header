@@ -1,0 +1,137 @@
+<section class="arv-header-nav" [class.arv-header-nav_rounded]="rounded()">
+  <div class="arv-header-nav-brand">
+    <a [routerLink]="mainLogoUrl()" [title]="mainLogoTitle()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
+      @if (mainLogoPath() || (themeLogoPath$() | async); as logoSrc) {
+        <img
+          id="logo-partner-header"
+        [ngSrc]="logoSrc!"
+        [alt]="mainLogoAlt() || (themeLogoAlt$() | async)"
+        [style.max-width.px]="logoWidth()"
+        [style.height.px]="logoHeight()"
+        [width]="logoWidth()"
+        [height]="logoHeight()"
+      />
+      }
+    </a>
+
+    @if (showHeaderSecondLogo()) {
+      <section class="arv-header-nav-left">
+        <ng-content select="[slot=nav-left]"></ng-content>
+      </section>
+    }
+  </div>
+
+  <div #navContent class="arv-header-nav-content">
+    <nav #navMenu id="nav" class="arv-header-nav-menu" role="navigation" [class.show]="mobileMenuOpen()">
+    <div class="arv-header-nav-menu-back" (click)="toggleMobileMenu()">
+      <svg width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M21.2189 13C21.2189 13.5469 20.7812 13.9766 20.2734 13.9766H6.99219L12.1875 18.8984C12.5781 19.25 12.5781 19.875 12.2266 20.2656C11.875 20.6562 11.25 20.6562 10.8594 20.3047L4.21875 14.0547C4.0625 13.8984 3.98438 13.7031 3.98438 13.5C3.98438 13.2969 4.0625 13.1016 4.21875 12.9453L10.8594 6.69531C11.25 6.34375 11.875 6.34375 12.2266 6.73438C12.5781 7.125 12.5781 7.75 12.1875 8.10156L6.99219 13.0234H20.2734C20.7812 13.0234 21.2189 13.4531 21.2189 14V13Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span lang="fr">Retour</span>
+    </div>
+
+    @if (showHeaderNavMobileTop()) {
+      <div class="arv-header-nav-menu-pre-mobile">
+        <ng-content select="[slot=pre-nav-mobile]"></ng-content>
+      </div>
+    }
+
+    <div id="mainNav" class="arv-header-nav-menu-main" ngMenuBar>
+      @for (item of visibleItems(); track $index) {
+        <div class="arv-header-nav_item">
+          @if (item.subMenu) {
+            <app-dropdown
+              [label]="item.label"
+              [items]="item.subMenu"
+              [active]="item.active || false"
+              (itemClick)="closeMobileMenu()" />
+          } @else {
+            <app-nav-link
+              [label]="item.label"
+              [link]="item.link"
+              [active]="item.active || false"
+              [useAriaMenu]="true"
+              (itemClick)="closeMobileMenu()" />
+          }
+        </div>
+      }
+
+      @if (showProfile() && userProfile() && isMobile()) {
+        <div class="arv-header-nav_item mobile-profile-item">
+          <app-profile-menu
+            class="mobile-profile"
+            [user]="userProfile()!"
+            [menuItems]="profileMenuItems()"
+            [showAvatar]="showAvatar()"
+            [showEmail]="showEmail()"
+            [showIcons]="showIcons()"
+            (itemClick)="closeMobileMenu()" />
+        </div>
+      }
+    </div>
+
+    @if (moreItems().length > 0) {
+      <div class="arv-header-nav_item">
+        <app-dropdown
+          label="More"
+          [items]="moreItems()"
+          [active]="isMoreActive()"
+          (itemClick)="closeMobileMenu()" />
+      </div>
+    }
+
+    @if (showHeaderNavMobileBottom()) {
+      <div class="arv-header-nav-menu-post-mobile">
+        <ng-content select="[slot=post-nav-mobile]"></ng-content>
+      </div>
+    }
+    </nav>
+
+    @if (showHeaderNavRight()) {
+      <section #navRight class="arv-header-nav-right">
+        <ng-content select="[slot=nav-right]"></ng-content>
+      </section>
+    }
+  </div>
+
+  <div class="arv-header-nav-measure" aria-hidden="true">
+    @for (item of items(); track $index) {
+      <span class="arv-header-nav-measure-item" #measureItem>
+        @if (item.subMenu) {
+          <app-dropdown
+            [label]="item.label"
+            [items]="item.subMenu"
+            [active]="item.active || false"
+            [measureOnly]="true" />
+        } @else {
+          <app-nav-link
+            [label]="item.label"
+            [link]="item.link"
+            [active]="item.active || false"
+            [useAriaMenu]="true"
+            [measureOnly]="true" />
+        }
+      </span>
+    }
+    <span class="arv-header-nav-measure-item" #measureMore>
+      <app-dropdown label="More" [items]="[]" [measureOnly]="true"></app-dropdown>
+    </span>
+  </div>
+
+  <section
+    class="burger"
+    [class.burger-icon__display-desktop]="burgerIcon()"
+    [class.burger-icon__left]="burgerIconPos() === 'left'"
+    [class.open]="mobileMenuOpen()"
+    (click)="toggleMobileMenu()"
+    role="button"
+    title="burger icon"
+  >
+    <div class="burger-brick"></div>
+    <div class="burger-brick middle"></div>
+    <div class="burger-brick"></div>
+  </section>
+</section>

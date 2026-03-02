@@ -1,0 +1,17 @@
+<nav class="main-nav" aria-label="Main navigation">
+  <div class="nav-list" cdkMenuBar>
+    @for (item of items(); track $index) {
+      <div class="nav-item">
+        @if (item.subMenu) {
+          <ui-dropdown-cdk
+            [label]="item.label"
+            [items]="item.subMenu" />
+        } @else {
+          <ui-nav-link
+            [label]="item.label"
+            [link]="item.link" />
+        }
+      </div>
+    }
+  </div>
+</nav>

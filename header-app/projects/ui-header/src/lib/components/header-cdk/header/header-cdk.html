@@ -1,0 +1,27 @@
+<header class="header" [class.sticky]="sticky()" [ngStyle]="theme() && {
+  '--primary-color': theme()!.primaryColor,
+  '--hover-color': theme()!.hoverColor,
+  '--bg-color': theme()!.backgroundColor,
+  '--text-color': theme()!.textColor,
+  '--border-radius': theme()!.borderRadius
+}">
+  <div class="header-container">
+    @if (showBrand()) {
+      <div class="brand">
+        <h1 class="company-name">{{ companyName() }}</h1>
+        <span class="logo">{{ logoUrl() }}</span>
+      </div>
+    }
+
+    @if (showNav() && menuItems().length > 0) {
+      <ui-nav-cdk [items]="menuItems()"></ui-nav-cdk>
+    }
+
+    @if (showProfile() && userProfile()) {
+      <ui-profile-menu-cdk
+        [user]="userProfile()!"
+        [menuItems]="profileMenuItems()">
+      </ui-profile-menu-cdk>
+    }
+  </div>
+</header>

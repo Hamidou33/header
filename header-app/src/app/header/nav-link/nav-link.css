@@ -1,0 +1,67 @@
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: #333333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active {
+  color: #00965E;
+  outline: none;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0.75rem;
+  right: 0.75rem;
+  height: 2px;
+  background-color: #00965E;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.nav-link:hover {
+  color: #00965E;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  :host-context(.arv-header-nav-menu) .nav-link,
+  :host-context(.mobile-nav) .nav-link {
+    color: #ffffff;
+  }
+
+  :host-context(.arv-header-nav-menu) .nav-link:hover,
+  :host-context(.arv-header-nav-menu) .nav-link.active,
+  :host-context(.mobile-nav) .nav-link:hover,
+  :host-context(.mobile-nav) .nav-link.active {
+    color: #00965E;
+  }
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+}
