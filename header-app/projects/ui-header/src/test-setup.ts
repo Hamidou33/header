@@ -11,7 +11,7 @@ if (!(globalThis as Record<symbol, boolean>)[INIT_KEY]) {
   try {
     TestBed.resetTestEnvironment();
   } catch (e) {
-    // Ignore if environment is not initialized yet
+    // Ignore if the environment is not initialized yet
   }
 
   TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting(), {
