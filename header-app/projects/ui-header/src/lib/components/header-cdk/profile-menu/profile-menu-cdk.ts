@@ -7,7 +7,7 @@ import { UserProfile, DropdownItem } from '../../../models';
   selector: 'ui-profile-menu-cdk',
   imports: [CommonModule, CdkMenuModule],
   templateUrl: './profile-menu-cdk.html',
-  styleUrl: '../../header-aria/profile-menu/profile-menu.css',
+  styleUrl: '../../header-aria/profile-menu/profile-menu.component.css',
 })
 export class ProfileMenuCdk {
   user = input.required<UserProfile>();

@@ -7,7 +7,7 @@ import { DropdownItem } from '../../../models';
   selector: 'ui-dropdown-cdk',
   imports: [CommonModule, CdkMenuModule],
   templateUrl: './dropdown-cdk.html',
-  styleUrl: '../../header-aria/dropdown/dropdown.css',
+  styleUrl: '../../header-aria/dropdown/dropdown.component.css',
 })
 export class DropdownCdk {
   label = input.required<string>();

@@ -8,7 +8,7 @@ import { NavItem, UserProfile, DropdownItem, HeaderTheme } from '../../../models
   selector: 'ui-header-cdk',
   imports: [CommonModule, NavCdk, ProfileMenuCdk],
   templateUrl: './header-cdk.html',
-  styleUrl: '../../header-aria/header/header.css',
+  styleUrl: '../../header-aria/header/header.component.css',
 })
 export class HeaderCdk {
   companyName = input<string>('My Company');
