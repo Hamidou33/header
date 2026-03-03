@@ -1,19 +1,19 @@
 import 'zone.js';
 import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 
-// First, initialize the Angular testing environment.
+// Initialize the Angular testing environment
 try {
-  getTestBed().resetTestEnvironment();
+  TestBed.resetTestEnvironment();
 } catch (e) {
   // Ignore if environment is not initialized yet
 }
 
-getTestBed().initTestEnvironment(
+TestBed.initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),
   {
@@ -29,8 +29,6 @@ if (!window.matchMedia) {
       matches: false,
       media: query,
       onchange: null,
-      addListener: () => {},
-      removeListener: () => {},
       addEventListener: () => {},
       removeEventListener: () => {},
       dispatchEvent: () => true,
