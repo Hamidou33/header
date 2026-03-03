@@ -21,9 +21,9 @@ if (!(globalThis as Record<symbol, boolean>)[INIT_KEY]) {
   (globalThis as Record<symbol, boolean>)[INIT_KEY] = true;
 }
 
-// Mock window.matchMedia for tests
-if (!window.matchMedia) {
-  Object.defineProperty(window, 'matchMedia', {
+// Mock globalThis.matchMedia for tests
+if (typeof globalThis.matchMedia === 'undefined') {
+  Object.defineProperty(globalThis, 'matchMedia', {
     writable: true,
     value: (query: string) => ({
       matches: false,
