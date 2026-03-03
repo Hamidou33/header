@@ -1,18 +1,16 @@
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import angular from '@analogjs/vite-plugin-angular';
 
-const rootDir = dirname(fileURLToPath(import.meta.url));
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
   root: rootDir,
-  plugins: [
-    angular(),
-  ],
+  plugins: [angular()],
   test: {
     globals: true,
-    setupFiles: [resolve(rootDir, 'src/test-setup.ts')],
+    setupFiles: [path.resolve(rootDir, 'src/test-setup.ts')],
     environment: 'jsdom',
     include: ['src/**/*.spec.ts'],
     server: {
