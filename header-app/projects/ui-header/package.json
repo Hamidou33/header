@@ -9,16 +9,18 @@
     "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0",
+    "@angular/aria": "^21.2.0",
     "@angular/cdk": "^21.2.0",
-    "@angular/aria": "^21.2.0"
+    "@angular/common": "^21.2.0",
+    "@angular/core": "^21.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
   "sideEffects": [
     "src/test-setup.ts"
-  ]
+  ],
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18"
+  }
 }
-

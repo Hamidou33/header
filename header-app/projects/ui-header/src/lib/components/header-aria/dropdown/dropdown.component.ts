@@ -1,17 +1,13 @@
-import { Component, input, viewChild, signal, effect, output } from '@angular/core';
+import { Component, input, viewChild, signal, effect, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
+import type { DropdownItem } from '../../../models';
 
-export interface DropdownItem {
-  label: string;
-  link?: string;
-  icon?: string;
-  active?: boolean;
-  subMenu?: DropdownItem[];
-}
+// Re-export for backward compatibility
+export type { DropdownItem };
 
 @Component({
   selector: 'ui-dropdown',
@@ -26,8 +22,9 @@ export interface DropdownItem {
     OverlayModule,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
-  templateUrl: './dropdown.html',
-  styleUrl: './dropdown.css',
+  templateUrl: './dropdown.component.html',
+  styleUrl: './dropdown.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dropdown {
   label = input<string>('');
@@ -58,7 +55,9 @@ export class Dropdown {
     if (isOpening) {
       const element = event.currentTarget as HTMLElement;
       setTimeout(() => {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }, 100);
     }
   }

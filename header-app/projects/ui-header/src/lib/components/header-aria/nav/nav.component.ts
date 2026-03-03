@@ -11,27 +11,26 @@ import {
   AfterViewInit,
   OnDestroy,
   effect,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
-import { NavLink } from '../nav-link/nav-link';
-import { Dropdown, DropdownItem } from '../dropdown/dropdown';
-import { ProfileMenu, UserProfile } from '../profile-menu/profile-menu';
+import { NavLink } from '../nav-link/nav-link.component';
+import { Dropdown } from '../dropdown/dropdown.component';
+import { ProfileMenu } from '../profile-menu/profile-menu.component';
+import type { NavItem, DropdownItem, UserProfile } from '../../../models';
 import { Observable, of } from 'rxjs';
 
-export interface NavItem {
-  label: string;
-  link?: string;
-  active?: boolean;
-  subMenu?: DropdownItem[];
-}
+// Re-export for backward compatibility
+export type { NavItem };
 
 @Component({
   selector: 'ui-nav',
   imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown, ProfileMenu],
-  templateUrl: './nav.html',
-  styleUrl: './nav.css',
+  templateUrl: './nav.component.html',
+  styleUrl: './nav.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Nav implements AfterViewInit, OnDestroy {
   items = input<NavItem[]>([]);

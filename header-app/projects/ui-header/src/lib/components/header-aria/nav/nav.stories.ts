@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
-import { Nav } from './nav';
+import { Nav } from './nav.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 

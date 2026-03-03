@@ -1,17 +1,25 @@
 import 'zone.js';
 import 'zone.js/testing';
-import '@angular/compiler';
-
+import { getTestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import { getTestBed } from '@angular/core/testing';
 
-// Initialize test environment only once
-if (!getTestBed().platform) {
-  getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+// First, initialize the Angular testing environment.
+try {
+  getTestBed().resetTestEnvironment();
+} catch (e) {
+  // Ignore if environment is not initialized yet
 }
+
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting(),
+  {
+    teardown: { destroyAfterEach: true }
+  }
+);
 
 // Mock window.matchMedia for tests
 if (!window.matchMedia) {

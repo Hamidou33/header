@@ -1,16 +1,13 @@
-import { Component, input, viewChild, signal, effect, output } from '@angular/core';
+import { Component, input, viewChild, signal, effect, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { DropdownItem } from '../dropdown/dropdown';
+import type { DropdownItem, UserProfile } from '../../../models';
 
-export interface UserProfile {
-  name: string;
-  email: string;
-  avatar: string;
-}
+// Re-export for backward compatibility
+export type { UserProfile };
 
 @Component({
   selector: 'ui-profile-menu',
@@ -25,8 +22,9 @@ export interface UserProfile {
     OverlayModule,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
-  templateUrl: './profile-menu.html',
-  styleUrl: './profile-menu.css',
+  templateUrl: './profile-menu.component.html',
+  styleUrl: './profile-menu.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileMenu {
   user = input.required<UserProfile>();

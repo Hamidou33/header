@@ -3,7 +3,7 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import { MenuBar } from '@angular/aria/menu';
-import { Dropdown } from './dropdown';
+import { Dropdown } from './dropdown.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 

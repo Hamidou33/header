@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { Nav } from '../nav/nav';
-import { ProfileMenu, UserProfile } from '../profile-menu/profile-menu';
+import { Nav } from '../nav/nav.component';
+import { ProfileMenu } from '../profile-menu/profile-menu.component';
+import { UserProfile } from '../../../models';
 
 interface SubMenuItem {
   label: string;
@@ -26,8 +27,9 @@ interface ProfileMenuItem {
 @Component({
   selector: 'ui-header',
   imports: [CommonModule, CdkMenuModule, Nav, ProfileMenu],
-  templateUrl: './header.html',
-  styleUrl: './header.css',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   showProfile = input<boolean>(true);
