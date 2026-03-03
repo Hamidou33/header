@@ -5,21 +5,25 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
+import { getTestBed } from '@angular/core/testing';
 
 // Initialize the Angular testing environment
-try {
-  TestBed.resetTestEnvironment();
-} catch (e) {
-  // Ignore if environment is not initialized yet
-}
+// Note: BrowserDynamicTestingModule and platformBrowserDynamicTesting are deprecated
+// but still necessary until Angular provides stable replacements
 
-TestBed.initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-  {
-    teardown: { destroyAfterEach: true }
+// Only initialize once to avoid NG0400 error
+const testBed = getTestBed();
+if (!(testBed as any).platform) {
+  try {
+    TestBed.resetTestEnvironment();
+  } catch (e) {
+    // Ignore if environment is not initialized yet
   }
-);
+
+  TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
+    teardown: { destroyAfterEach: true },
+  });
+}
 
 // Mock window.matchMedia for tests
 if (!window.matchMedia) {
