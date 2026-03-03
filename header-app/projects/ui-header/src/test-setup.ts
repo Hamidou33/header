@@ -5,12 +5,9 @@ import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-
 
 // Initialize the Angular testing environment
 // Only initialize once to avoid NG0400 error
-declare global {
-  // eslint-disable-next-line no-var
-  var __ANGULAR_TEST_ENV_INITIALIZED__: boolean | undefined;
-}
+const INIT_KEY = Symbol.for('__ANGULAR_TEST_ENV_INITIALIZED__');
 
-if (!globalThis.__ANGULAR_TEST_ENV_INITIALIZED__) {
+if (!(globalThis as Record<symbol, boolean>)[INIT_KEY]) {
   try {
     TestBed.resetTestEnvironment();
   } catch (e) {
@@ -21,7 +18,7 @@ if (!globalThis.__ANGULAR_TEST_ENV_INITIALIZED__) {
     teardown: { destroyAfterEach: true },
   });
 
-  globalThis.__ANGULAR_TEST_ENV_INITIALIZED__ = true;
+  (globalThis as Record<symbol, boolean>)[INIT_KEY] = true;
 }
 
 // Mock window.matchMedia for tests
