@@ -1,12 +1,16 @@
 import 'zone.js';
 import 'zone.js/testing';
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 
 // Initialize the Angular testing environment
 // Only initialize once to avoid NG0400 error
-const testBed = getTestBed();
-if (!(testBed as any).platform) {
+declare global {
+  // eslint-disable-next-line no-var
+  var __ANGULAR_TEST_ENV_INITIALIZED__: boolean | undefined;
+}
+
+if (!globalThis.__ANGULAR_TEST_ENV_INITIALIZED__) {
   try {
     TestBed.resetTestEnvironment();
   } catch (e) {
@@ -16,6 +20,8 @@ if (!(testBed as any).platform) {
   TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting(), {
     teardown: { destroyAfterEach: true },
   });
+
+  globalThis.__ANGULAR_TEST_ENV_INITIALIZED__ = true;
 }
 
 // Mock window.matchMedia for tests
