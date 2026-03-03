@@ -1,16 +1,9 @@
 import 'zone.js';
 import 'zone.js/testing';
-import { TestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import { getTestBed } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
+import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 
 // Initialize the Angular testing environment
-// Note: BrowserDynamicTestingModule and platformBrowserDynamicTesting are deprecated
-// but still necessary until Angular provides stable replacements
-
 // Only initialize once to avoid NG0400 error
 const testBed = getTestBed();
 if (!(testBed as any).platform) {
@@ -20,7 +13,7 @@ if (!(testBed as any).platform) {
     // Ignore if environment is not initialized yet
   }
 
-  TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
+  TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting(), {
     teardown: { destroyAfterEach: true },
   });
 }
