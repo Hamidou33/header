@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => ({
   },
   resolve: {
     mainFields: ['module'],
+    alias: {
+      '@test-setup': path.resolve(rootDir, 'src/test-setup.ts'),
+    },
   },
   define: {
     'import.meta.vitest': mode !== 'production',
