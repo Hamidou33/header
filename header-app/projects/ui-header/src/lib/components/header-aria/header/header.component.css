@@ -1,6 +1,8 @@
+@import '../variables.css';
+
 :host {
-  --color-gray: 210 212 214;
-  --color-white: 255 255 255;
+  --color-gray: var(--color-gray);
+  --color-white: var(--color-white);
   display: block;
   position: sticky;
   z-index: 2;

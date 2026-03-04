@@ -1,0 +1,14 @@
+/* CSS Variables - Colors only */
+:root {
+  /* Base colors in RGB format (for use with rgb() function) */
+  --color-white: 255 255 255;
+  --color-black: 0 0 0;
+  --color-gray: 210 212 214;
+  --color-gray-light: 209 213 219;
+  --color-dark: 26 26 26;
+
+  /* Hex colors (for direct use) */
+  --color-white-hex: #ffffff;
+  --color-black-hex: #000000;
+  --color-primary-hex: #00965e;
+}

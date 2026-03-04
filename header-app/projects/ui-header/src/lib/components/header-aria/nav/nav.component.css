@@ -1,3 +1,4 @@
+@import '../variables.css';
 :host {
   display: block;
   width: 100%;
@@ -155,55 +156,63 @@
       }
 
       @media (max-width: 767px) {
-      .arv-header-nav_item {
-        width: 100%;
+        .arv-header-nav_item {
+          width: 100%;
 
-        ui-nav-link, app-nav-link {
-          ::ng-deep .nav-link {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
+          ui-nav-link,
+          app-nav-link {
+            ::ng-deep .nav-link {
+              color: var(--color-white-hex);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
 
-            &:hover, &.active {
-              color: #00965E;
+              &:hover,
+              &.active {
+                color: var(--color-primary-hex);
+              }
+            }
+          }
+
+          ui-dropdown,
+          app-dropdown {
+            ::ng-deep .dropdown-trigger {
+              color: var(--color-white-hex);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
+
+              &:hover,
+              &.active,
+              &[aria-expanded='true'] {
+                color: var(--color-primary-hex);
+              }
+
+              .arrow-icon {
+                opacity: 1;
+              }
             }
           }
         }
 
-        ui-dropdown, app-dropdown {
-          ::ng-deep .dropdown-trigger {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
+        /* Styles pour le dropdown More en mobile */
+        & > .arv-header-nav_item {
+          ui-dropdown,
+          app-dropdown {
+            ::ng-deep .dropdown-trigger {
+              color: var(--color-white-hex);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
 
-            &:hover, &.active, &[aria-expanded="true"] {
-              color: #00965E;
-            }
-
-            .arrow-icon {
-              opacity: 1;
-            }
-          }
-        }
-      }
-
-      /* Styles pour le dropdown More en mobile */
-      & > .arv-header-nav_item {
-        ui-dropdown, app-dropdown {
-          ::ng-deep .dropdown-trigger {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
-
-            &:hover, &.active, &[aria-expanded="true"] {
-              color: #00965E;
+              &:hover,
+              &.active,
+              &[aria-expanded='true'] {
+                color: var(--color-primary-hex);
+              }
             }
           }
         }
-      }
       }
 
       @media (min-width: 768px) {
@@ -228,7 +237,7 @@
         display: flex;
         margin-bottom: 1rem;
         column-gap: 0.5rem;
-        color: #ffffff;
+        color: var(--color-white-hex);
         justify-items: center;
         cursor: pointer;
 
@@ -237,7 +246,7 @@
         }
 
         svg {
-          color: #ffffff;
+          color: var(--color-white-hex);
         }
       }
 
@@ -307,7 +316,7 @@
         height: 2px;
         transition: all 0.3s ease-in-out;
         border-radius: 2px;
-        background-color: #000000;
+        background-color: var(--color-black-hex);
         position: relative;
       }
 
@@ -315,7 +324,7 @@
         z-index: 100;
 
         .burger-brick {
-          background-color: #ffffff;
+          background-color: var(--color-white-hex);
         }
 
         .burger-brick:first-child {

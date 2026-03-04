@@ -17,9 +17,9 @@
 }
 
 .dropdown-trigger:hover,
-.dropdown-trigger[aria-expanded="true"],
+.dropdown-trigger[aria-expanded='true'],
 .dropdown-trigger.active {
-  color: #00965E;
+  color: #00965e;
 }
 
 .dropdown-trigger::after {
@@ -29,20 +29,20 @@
   left: 0.75rem;
   right: 0.75rem;
   height: 2px;
-  background-color: #00965E;
+  background-color: #00965e;
   transform: scaleX(0);
   transition: transform 0.2s ease;
 }
 
 .dropdown-trigger:hover::after,
-.dropdown-trigger[aria-expanded="true"]::after,
+.dropdown-trigger[aria-expanded='true']::after,
 .dropdown-trigger.active::after {
   transform: scaleX(1);
 }
 
 .dropdown-trigger:hover,
-.dropdown-trigger[aria-expanded="true"] {
-  color: #00965E;
+.dropdown-trigger[aria-expanded='true'] {
+  color: #00965e;
 }
 
 .dropdown-trigger:focus {
@@ -58,7 +58,7 @@
   opacity: 0.6;
 }
 
-[aria-expanded="true"] .arrow-icon {
+[aria-expanded='true'] .arrow-icon {
   transform: rotate(180deg);
 }
 
@@ -110,7 +110,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #00965E;
+  background-color: #00965e;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -138,7 +138,9 @@
   min-width: 12px;
   flex-shrink: 0;
   margin-left: auto;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
   opacity: 0.7;
 }
 
@@ -174,11 +176,11 @@
 
   :host-context(.arv-header-nav-menu) .dropdown-trigger:hover,
   :host-context(.arv-header-nav-menu) .dropdown-trigger.active,
-  :host-context(.arv-header-nav-menu) .dropdown-trigger[aria-expanded="true"],
+  :host-context(.arv-header-nav-menu) .dropdown-trigger[aria-expanded='true'],
   :host-context(.mobile-nav) .dropdown-trigger:hover,
   :host-context(.mobile-nav) .dropdown-trigger.active,
-  :host-context(.mobile-nav) .dropdown-trigger[aria-expanded="true"] {
-    color: #00965E;
+  :host-context(.mobile-nav) .dropdown-trigger[aria-expanded='true'] {
+    color: #00965e;
   }
 
   :host-context(.arv-header-nav-menu) .dropdown-menu,
@@ -187,7 +189,7 @@
     box-shadow: none;
     margin: 0.5rem 0;
     padding-left: 1rem;
-    border-left: 3px solid #00965E;
+    border-left: 3px solid #00965e;
     min-width: auto;
     width: 100%;
     max-height: none;
@@ -200,7 +202,7 @@
     box-shadow: none;
     margin: 0.5rem 0;
     padding-left: 1rem;
-    border-left: 3px solid #00965E;
+    border-left: 3px solid #00965e;
     min-width: auto;
     width: 100%;
     max-height: none;
