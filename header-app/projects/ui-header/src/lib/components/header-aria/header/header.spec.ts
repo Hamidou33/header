@@ -1,4 +1,4 @@
-import '../../../../test-setup';
+import '@test-setup';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Header } from './header.component';
