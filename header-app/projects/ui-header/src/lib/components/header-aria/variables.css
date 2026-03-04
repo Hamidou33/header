@@ -1,4 +1,4 @@
-/* CSS Variables - Colors only */
+/* CSS Variables - Colors and Spacing */
 :root {
   /* Base colors in RGB format (for use with rgb() function) */
   --color-white: 255 255 255;
@@ -11,4 +11,13 @@
   --color-white-hex: #ffffff;
   --color-black-hex: #000000;
   --color-primary-hex: #00965e;
+
+  /* Spacing scale */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 0.75rem; /* 12px */
+  --spacing-lg: 1rem; /* 16px */
+  --spacing-xl: 1.25rem; /* 20px */
+  --spacing-2xl: 1.5rem; /* 24px */
+  --spacing-3xl: 2rem; /* 32px */
 }
