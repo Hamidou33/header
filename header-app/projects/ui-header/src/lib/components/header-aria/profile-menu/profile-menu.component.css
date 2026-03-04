@@ -1,4 +1,3 @@
-@import '../variables.css';
 .profile-section {
   margin-left: auto;
   padding-left: 1.5rem;
@@ -21,15 +20,15 @@
 }
 
 .profile-button:hover,
-.profile-button[aria-expanded='true'] {
-  color: #00965e;
+.profile-button[aria-expanded="true"] {
+  color: #00965E;
 }
 
 .profile-button:hover .profile-name,
-.profile-button[aria-expanded='true'] .profile-name,
+.profile-button[aria-expanded="true"] .profile-name,
 .profile-button:hover .profile-email,
-.profile-button[aria-expanded='true'] .profile-email {
-  color: #00965e;
+.profile-button[aria-expanded="true"] .profile-email {
+  color: #00965E;
 }
 
 .profile-button::after {
@@ -39,13 +38,13 @@
   left: 0.75rem;
   right: 0.75rem;
   height: 2px;
-  background-color: #00965e;
+  background-color: #00965E;
   transform: scaleX(0);
   transition: transform 0.2s ease;
 }
 
 .profile-button:hover::after,
-.profile-button[aria-expanded='true']::after {
+.profile-button[aria-expanded="true"]::after {
   transform: scaleX(1);
 }
 
@@ -89,7 +88,7 @@
   opacity: 0.875;
 }
 
-[aria-expanded='true'] .arrow-icon {
+[aria-expanded="true"] .arrow-icon {
   transform: rotate(180deg);
 }
 
@@ -180,7 +179,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #00965e;
+  background-color: #00965E;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -207,9 +206,7 @@
   min-width: 12px;
   flex-shrink: 0;
   margin-left: auto;
-  transition:
-    transform 0.2s ease,
-    opacity 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
   opacity: 0.7;
 }
 
@@ -252,10 +249,10 @@
   }
 
   :host-context(.arv-header-nav-menu) .profile-button:hover,
-  :host-context(.arv-header-nav-menu) .profile-button[aria-expanded='true'],
+  :host-context(.arv-header-nav-menu) .profile-button[aria-expanded="true"],
   :host-context(.mobile-profile-item) .profile-button:hover,
-  :host-context(.mobile-profile-item) .profile-button[aria-expanded='true'] {
-    color: #00965e;
+  :host-context(.mobile-profile-item) .profile-button[aria-expanded="true"] {
+    color: #00965E;
   }
 
   :host-context(.arv-header-nav-menu) .profile-name,
@@ -264,10 +261,10 @@
   }
 
   :host-context(.arv-header-nav-menu) .profile-button:hover .profile-name,
-  :host-context(.arv-header-nav-menu) .profile-button[aria-expanded='true'] .profile-name,
+  :host-context(.arv-header-nav-menu) .profile-button[aria-expanded="true"] .profile-name,
   :host-context(.mobile-profile-item) .profile-button:hover .profile-name,
-  :host-context(.mobile-profile-item) .profile-button[aria-expanded='true'] .profile-name {
-    color: #00965e;
+  :host-context(.mobile-profile-item) .profile-button[aria-expanded="true"] .profile-name {
+    color: #00965E;
   }
 
   :host-context(.arv-header-nav-menu) .profile-email,
@@ -285,7 +282,7 @@
     box-shadow: none;
     margin: 0.5rem 0;
     padding-left: 1rem;
-    border-left: 3px solid #00965e;
+    border-left: 3px solid #00965E;
     min-width: auto;
     width: 100%;
     max-height: none;
@@ -298,7 +295,7 @@
     box-shadow: none;
     margin: 0.5rem 0;
     padding-left: 1rem;
-    border-left: 3px solid #00965e;
+    border-left: 3px solid #00965E;
     min-width: auto;
     width: 100%;
     max-height: none;
