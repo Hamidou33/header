@@ -1,3 +1,4 @@
+@import '../variables.css';
 :host {
   display: block;
   width: 100%;
@@ -10,16 +11,16 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    min-height: 3rem;
-    max-height: 4rem;
-    padding: 0 1rem;
+    gap: var(--spacing-md);
+    min-height: var(--header-height-min);
+    max-height: var(--header-height-max);
+    padding: 0 var(--spacing-lg);
     background-color: rgb(var(--header-normal-background-color, 255 255 255));
     color: rgb(var(--header-normal-text-color, 26 26 26));
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
 
     &.arv-header-nav_rounded {
-      border-radius: 8px;
+      border-radius: var(--border-radius-md);
 
       .sticky & {
         border-top-left-radius: 0;
@@ -28,13 +29,13 @@
     }
 
     .sticky & {
-      max-height: 3rem;
+      max-height: var(--header-height-min);
     }
 
     .arv-header-nav-brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: var(--spacing-md);
       min-width: 0;
       flex: 1 1 auto;
     }
@@ -42,7 +43,7 @@
     .arv-header-nav-content {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: var(--spacing-md);
       min-width: 0;
       flex: 1 1 auto;
     }
@@ -155,55 +156,63 @@
       }
 
       @media (max-width: 767px) {
-      .arv-header-nav_item {
-        width: 100%;
+        .arv-header-nav_item {
+          width: 100%;
 
-        ui-nav-link, app-nav-link {
-          ::ng-deep .nav-link {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
+          ui-nav-link,
+          app-nav-link {
+            ::ng-deep .nav-link {
+              color: var(--text-white);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
 
-            &:hover, &.active {
-              color: #00965E;
+              &:hover,
+              &.active {
+                color: var(--text-primary);
+              }
+            }
+          }
+
+          ui-dropdown,
+          app-dropdown {
+            ::ng-deep .dropdown-trigger {
+              color: var(--text-white);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
+
+              &:hover,
+              &.active,
+              &[aria-expanded='true'] {
+                color: var(--text-primary);
+              }
+
+              .arrow-icon {
+                opacity: 1;
+              }
             }
           }
         }
 
-        ui-dropdown, app-dropdown {
-          ::ng-deep .dropdown-trigger {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
+        /* Styles pour le dropdown More en mobile */
+        & > .arv-header-nav_item {
+          ui-dropdown,
+          app-dropdown {
+            ::ng-deep .dropdown-trigger {
+              color: var(--text-white);
+              font-size: 1rem;
+              padding: 1rem 1.25rem;
+              width: 100%;
 
-            &:hover, &.active, &[aria-expanded="true"] {
-              color: #00965E;
-            }
-
-            .arrow-icon {
-              opacity: 1;
-            }
-          }
-        }
-      }
-
-      /* Styles pour le dropdown More en mobile */
-      & > .arv-header-nav_item {
-        ui-dropdown, app-dropdown {
-          ::ng-deep .dropdown-trigger {
-            color: #ffffff;
-            font-size: 1rem;
-            padding: 1rem 1.25rem;
-            width: 100%;
-
-            &:hover, &.active, &[aria-expanded="true"] {
-              color: #00965E;
+              &:hover,
+              &.active,
+              &[aria-expanded='true'] {
+                color: var(--text-primary);
+              }
             }
           }
         }
-      }
       }
 
       @media (min-width: 768px) {
@@ -218,7 +227,7 @@
         transform: translateX(0);
         background-color: rgb(var(--header-normal-background-color, 255 255 255));
         color: rgb(var(--header-normal-text-color, 26 26 26));
-        font-size: 0.875rem;
+        font-size: var(--font-size-sm);
         flex: 1 1 auto;
         min-width: 0;
         flex-wrap: nowrap;
@@ -228,7 +237,7 @@
         display: flex;
         margin-bottom: 1rem;
         column-gap: 0.5rem;
-        color: #ffffff;
+        color: var(--text-white);
         justify-items: center;
         cursor: pointer;
 
@@ -237,7 +246,7 @@
         }
 
         svg {
-          color: #ffffff;
+          color: var(--text-white);
         }
       }
 
@@ -307,7 +316,7 @@
         height: 2px;
         transition: all 0.3s ease-in-out;
         border-radius: 2px;
-        background-color: #000000;
+        background-color: var(--text-black);
         position: relative;
       }
 
@@ -315,7 +324,7 @@
         z-index: 100;
 
         .burger-brick {
-          background-color: #ffffff;
+          background-color: var(--text-white);
         }
 
         .burger-brick:first-child {
