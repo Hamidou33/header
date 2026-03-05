@@ -176,38 +176,45 @@
 
   :host-context(.mobile-profile-item) .profile-button {
     width: 100%;
-    padding: 1rem 1.25rem;
+    padding: 0 1.25rem;
+    min-height: 3.5rem;
+    box-sizing: border-box;
   }
 
   :host-context(.arv-header-nav-menu) .profile-menu,
   :host-context(.mobile-profile-item) .profile-menu {
     position: static;
     box-shadow: none;
-    margin: 0.5rem 0;
-    padding-left: 1rem;
+    margin: 0;
+    padding-left: 1.25rem;
     border-left: 3px solid #00965e;
     min-width: auto;
     width: 100%;
     max-height: none;
     overflow: visible;
+    background: rgba(255, 255, 255, 0.03);
   }
 
   :host-context(.arv-header-nav-menu) .profile-submenu,
   :host-context(.mobile-profile-item) .profile-submenu {
     position: static;
     box-shadow: none;
-    margin: 0.5rem 0;
-    padding-left: 1rem;
+    margin: 0;
+    padding-left: 1.25rem;
     border-left: 3px solid #00965e;
     min-width: auto;
     width: 100%;
     max-height: none;
     overflow: visible;
+    background: rgba(255, 255, 255, 0.03);
   }
 
   :host-context(.arv-header-nav-menu) .profile-menu-item,
   :host-context(.mobile-profile-item) .profile-menu-item {
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
+    padding: 0 1.25rem;
+    min-height: 3.5rem;
+    font-size: 1.25rem; /* 20px */
+    display: flex;
+    align-items: center;
   }
 }

@@ -67,6 +67,8 @@ export class NavCenter implements AfterViewInit, OnDestroy {
 
   readonly isMobile = signal(this.checkIfMobile());
   readonly mobileMenuOpen = signal(false);
+  readonly navigationStack = signal<NavItem[][]>([]);
+  readonly currentMenuTitle = signal<string>('');
   private readonly visibleCount = signal<number>(0);
   private resizeObserver?: ResizeObserver;
   private recalcQueued = false;
@@ -121,12 +123,64 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   }
 
   toggleMobileMenu() {
-    this.mobileMenuOpen.update(isOpen => !isOpen);
+    this.mobileMenuOpen.update(isOpen => {
+      const nextOpen = !isOpen;
+      if (nextOpen) {
+        // Reset navigation stack to first level
+        this.navigationStack.set([this.items()]);
+        this.currentMenuTitle.set('');
+      }
+      return nextOpen;
+    });
   }
 
   closeMobileMenu() {
     this.mobileMenuOpen.set(false);
+    this.navigationStack.set([]);
+    this.currentMenuTitle.set('');
   }
+
+  navigateToSubMenu(item: NavItem, event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    if (item.subMenu && item.subMenu.length > 0) {
+      // On convertit les DropdownItem en NavItem pour la pile si nécessaire
+      // En réalité NavItem et DropdownItem sont compatibles ici
+      const subItems = item.subMenu as NavItem[];
+      this.navigationStack.update(stack => [...stack, subItems]);
+      this.currentMenuTitle.set(item.label);
+    }
+  }
+
+  goBack(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.navigationStack.update(stack => {
+      if (stack.length > 1) {
+        const newStack = stack.slice(0, -1);
+        // On récupère le titre du parent si possible
+        // Pour faire simple, on pourrait stocker les titres dans une pile aussi
+        // Mais ici on va juste vider si on revient au premier niveau
+        if (newStack.length === 1) {
+          this.currentMenuTitle.set('');
+        }
+        return newStack;
+      } else {
+        // Si on est au premier niveau, "Retour" ferme le menu
+        this.closeMobileMenu();
+        return [];
+      }
+    });
+  }
+
+  getCurrentLevelItems = computed(() => {
+    const stack = this.navigationStack();
+    return stack.length > 0 ? stack[stack.length - 1] : [];
+  });
 
   onClickMainLogo() {
     this.clickMainLogo.emit();

@@ -44,12 +44,15 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      flex: 0 0 50%; /* Occupe 50% de la largeur pour que la zone suivante commence au centre */
+      flex: 1 1 auto; /* En mobile, prend tout l'espace pour pousser le burger à droite */
       min-width: 0;
       height: 100%;
+      justify-content: space-between;
 
       @media (min-width: 768px) {
+        flex: 0 0 50%; /* Retour à 50% sur desktop pour le centrage du menu */
         overflow: hidden;
+        justify-content: flex-start;
       }
     }
 
@@ -77,17 +80,20 @@
 
     /* ZONE 2: Nav-Center (commence au centre) - Menus alignés à droite */
     .arv-header-nav-center-zone {
-      display: flex;
+      display: flex; /* Toujours flexible pour permettre au menu mobile d'être visible */
       align-items: stretch;
-      flex: 1 1 auto;
+      flex: 0 0 0px; /* Pas de largeur sur mobile pour laisser la zone gauche prendre tout l'espace */
       min-width: 0;
       justify-content: flex-end; /* Alignement des items à la fin de la zone comme demandé */
       margin-left: 0;
-      overflow: hidden; /* Empêche le débordement visuel avant le calcul */
+      overflow: visible; /* Autoriser l'affichage du menu mobile en dehors */
       height: 100%;
 
       @media (min-width: 768px) {
+        display: flex;
+        flex: 1 1 auto; /* Reprend l'espace disponible sur desktop */
         justify-content: flex-end;
+        overflow: hidden; /* Réactiver l'overflow caché sur desktop pour le calcul des items */
       }
     }
 
@@ -226,70 +232,119 @@
       position: fixed;
       z-index: 100;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: stretch;
       justify-content: flex-start;
       width: 100%;
-      height: auto;
+      height: 100vh;
       margin: 0;
-      padding: 1rem;
-      overflow-x: hidden;
-      overflow-y: scroll;
-      column-gap: 0.25rem;
+      padding: 0;
+      overflow: hidden;
       transform: translateX(100vw); /* Slide depuis la droite */
       transition: transform 0.3s ease-in-out;
-      background-color: rgb(var(--header-normal-dropdown-background-color, 26 26 26));
-      color: rgb(var(--header-normal-dropdown-text-color, 255 255 255));
+      background-color: #172328;
+      color: #ffffff;
       font-size: 1.25rem;
       list-style: none;
       inset: 0;
-      row-gap: 1.25rem;
       flex-wrap: nowrap; /* Empêche le wrap sur desktop */
 
       &.show {
         transform: translateX(0) !important;
+
+        .arv-header-nav_item {
+          animation: slideInLeft 0.3s ease-out forwards;
+        }
       }
 
-      &::before {
-        content: unset;
+      .arv-header-nav-menu-header {
+        display: flex;
+        align-items: center;
+        min-height: 4rem;
+        padding: 0 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 1rem;
+        background: #172328;
+
+        &.submenu-header {
+        }
+      }
+
+      .arv-header-nav-menu-title {
+        margin: 0;
+        font-size: 1.25rem; /* 20px */
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .arv-header-nav-menu-mobile-container {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .arv-header-nav-menu-level {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        transition: transform 0.3s ease-in-out;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      .mobile-nav-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 3.5rem;
+        padding: 0 1.25rem;
+        background: none;
+        border: none;
+        color: #ffffff;
+        font-size: 1.25rem; /* 20px */
+        font-weight: 500;
+        cursor: pointer;
+        text-align: left;
+        border-radius: 0;
+        box-sizing: border-box;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .arrow-icon-right {
+          width: 18px;
+          height: 18px;
+          opacity: 0.6;
+        }
       }
 
       @media (max-width: 767px) {
+        .arv-header-nav-menu-main {
+          display: none; /* Masqué en mobile car les items sont dans la navigationStack */
+        }
+
         .arv-header-nav_item {
           width: 100%;
+          display: flex;
+          align-items: stretch;
 
           ui-nav-link,
           app-nav-link {
-            ::ng-deep .nav-link {
-              color: #ffffff;
-              font-size: 1rem;
-              padding: 1rem 1.25rem;
-              width: 100%;
-
-              &:hover,
-              &.active {
-                color: #00965e;
-              }
-            }
+            width: 100%;
+            display: flex;
           }
 
           ui-dropdown,
           app-dropdown {
-            ::ng-deep .dropdown-trigger {
-              color: #ffffff;
-              font-size: 1rem;
-              padding: 1rem 1.25rem;
-              width: 100%;
-
-              &:hover,
-              &.active,
-              &[aria-expanded='true'] {
-                color: #00965e;
-              }
-
-              .arrow-icon {
-                opacity: 1;
-              }
-            }
+            width: 100%;
+            display: flex;
           }
         }
 
@@ -297,18 +352,8 @@
         & > .arv-header-nav_item {
           ui-dropdown,
           app-dropdown {
-            ::ng-deep .dropdown-trigger {
-              color: #ffffff;
-              font-size: 1rem;
-              padding: 1rem 1.25rem;
-              width: 100%;
-
-              &:hover,
-              &.active,
-              &[aria-expanded='true'] {
-                color: #00965e;
-              }
-            }
+            width: 100%;
+            display: flex;
           }
         }
       }
@@ -320,6 +365,7 @@
         align-items: center;
         justify-content: flex-start; /* Menus alignés à gauche */
         height: 100%;
+        width: auto;
         padding: unset;
         overflow: hidden;
         transform: translateX(0);
@@ -330,24 +376,19 @@
         min-width: 0;
         flex-wrap: nowrap;
         gap: 0.25rem; /* Espacement entre les items de menu */
-      }
 
-      .arv-header-nav-menu-back {
-        display: flex;
-        margin-bottom: 1rem;
-        column-gap: 0.5rem;
-        color: #ffffff;
-        justify-items: center;
-        cursor: pointer;
+        &.show {
+          .arv-header-nav_item {
+            animation: none;
+          }
+        }
 
-        @media (min-width: 768px) {
+        .arv-header-nav-menu-header,
+        .arv-header-nav-menu-mobile-container {
           display: none;
         }
-
-        svg {
-          color: #ffffff;
-        }
       }
+
 
       .arv-header-nav-menu-main {
         display: contents;
@@ -357,8 +398,8 @@
         display: block;
         width: 100%;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 1rem;
-        margin-top: 0.5rem;
+        padding-top: 0;
+        margin-top: 0;
 
         @media (min-width: 768px) {
           display: none;
@@ -399,10 +440,10 @@
       padding: 0;
       cursor: pointer;
       gap: 5px;
-      margin-right: 0.75rem;
 
       @media (min-width: 768px) {
         display: none;
+        margin-right: 0.75rem;
       }
 
       &.burger-icon__display-desktop {
@@ -417,7 +458,7 @@
 
       .burger-brick {
         width: 24px;
-        height: 2px;
+        height: 3px;
         transition: all 0.3s ease-in-out;
         border-radius: 2px;
         background-color: #000000;
@@ -425,14 +466,14 @@
       }
 
       &.open {
-        z-index: 100;
+        z-index: 101;
 
         .burger-brick {
           background-color: #ffffff;
         }
 
         .burger-brick:first-child {
-          transform: translateY(7px) rotate(45deg);
+          transform: translateY(8px) rotate(45deg);
         }
 
         .burger-brick.middle {
@@ -441,7 +482,7 @@
         }
 
         .burger-brick:last-child {
-          transform: translateY(-7px) rotate(-45deg);
+          transform: translateY(-8px) rotate(-45deg);
         }
       }
     }
@@ -493,5 +534,16 @@
         gap: 0;
       }
     }
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

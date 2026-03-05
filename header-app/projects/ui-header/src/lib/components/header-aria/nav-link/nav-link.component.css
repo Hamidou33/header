@@ -48,6 +48,13 @@
   :host-context(.arv-header-nav-menu) .nav-link,
   :host-context(.mobile-nav) .nav-link {
     color: #ffffff;
+    font-size: 1.25rem; /* 20px */
+    padding: 0 1.25rem;
+    width: 100%;
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
   }
 
   :host-context(.arv-header-nav-menu) .nav-link:hover,
@@ -55,6 +62,11 @@
   :host-context(.mobile-nav) .nav-link:hover,
   :host-context(.mobile-nav) .nav-link.active {
     color: #00965e;
+  }
+
+  :host-context(.arv-header-nav-menu) .nav-link::after,
+  :host-context(.mobile-nav) .nav-link::after {
+    display: none;
   }
 }
 

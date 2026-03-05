@@ -42,7 +42,7 @@ export class NavHeaderAvatar {
       return words[0].charAt(0).toUpperCase();
     }
 
-    return (words[0].charAt(0) + '.' + words[words.length - 1].charAt(0).toUpperCase() + '.');
+    return (words[0].charAt(0).toUpperCase() + ' ' + words[words.length - 1].charAt(0).toUpperCase());
   }
 
   getSizeClass(): string {

@@ -1,21 +1,6 @@
 <section class="arv-header-nav" [class.arv-header-nav_rounded]="rounded()">
   <!-- Zone 1: Nav-Left (1/3 max) - Logo principal + Logo secondaire/Tag -->
   <div class="arv-header-nav-left-zone">
-    <!-- Burger menu (mobile only) -->
-    <section
-      class="burger"
-      [class.burger-icon__display-desktop]="burgerIcon()"
-      [class.burger-icon__left]="burgerIconPos() === 'left'"
-      [class.open]="mobileMenuOpen()"
-      (click)="toggleMobileMenu()"
-      role="button"
-      title="burger icon"
-    >
-      <div class="burger-brick"></div>
-      <div class="burger-brick middle"></div>
-      <div class="burger-brick"></div>
-    </section>
-
     <a [routerLink]="mainLogoUrl()" [title]="mainLogoTitle()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
       @if (mainLogoPath() || (themeLogoPath$() | async); as logoSrc) {
         <img
@@ -36,72 +21,113 @@
         <ng-content select="[slot=nav-left]"></ng-content>
       </section>
     }
+
+    <!-- Burger menu (mobile only) -->
+    <section
+      class="burger"
+      [class.burger-icon__display-desktop]="burgerIcon()"
+      [class.burger-icon__left]="burgerIconPos() === 'left'"
+      [class.open]="mobileMenuOpen()"
+      (click)="mobileMenuOpen() ? goBack($event) : toggleMobileMenu()"
+      role="button"
+      title="burger icon"
+    >
+      <div class="burger-brick"></div>
+      <div class="burger-brick middle"></div>
+      <div class="burger-brick"></div>
+    </section>
   </div>
 
   <!-- Zone 2: Nav-Center (2/3) - Menus alignés à droite + More -->
   <div #navContent class="arv-header-nav-center-zone">
     <nav #navMenu id="nav" class="arv-header-nav-menu" role="navigation" [class.show]="mobileMenuOpen()">
-      <div class="arv-header-nav-menu-back" (click)="toggleMobileMenu()">
-        <svg width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M21.2189 13C21.2189 13.5469 20.7812 13.9766 20.2734 13.9766H6.99219L12.1875 18.8984C12.5781 19.25 12.5781 19.875 12.2266 20.2656C11.875 20.6562 11.25 20.6562 10.8594 20.3047L4.21875 14.0547C4.0625 13.8984 3.98438 13.7031 3.98438 13.5C3.98438 13.2969 4.0625 13.1016 4.21875 12.9453L10.8594 6.69531C11.25 6.34375 11.875 6.34375 12.2266 6.73438C12.5781 7.125 12.5781 7.75 12.1875 8.10156L6.99219 13.0234H20.2734C20.7812 13.0234 21.2189 13.4531 21.2189 14V13Z"
-            fill="currentColor"
-          />
-        </svg>
-        <span lang="fr">Retour</span>
+      <div class="arv-header-nav-menu-header" [class.submenu-header]="navigationStack().length > 1">
+        @if (currentMenuTitle()) {
+          <h2 class="arv-header-nav-menu-title">{{ currentMenuTitle() }}</h2>
+        }
       </div>
 
-      @if (showHeaderNavMobileTop()) {
+      @if (showHeaderNavMobileTop() && navigationStack().length === 1) {
         <div class="arv-header-nav-menu-pre-mobile">
           <ng-content select="[slot=pre-nav-mobile]"></ng-content>
         </div>
       }
 
-      <div id="mainNav" class="arv-header-nav-menu-main" ngMenuBar>
-        @for (item of visibleItems(); track $index) {
-          <div class="arv-header-nav_item">
-            @if (item.subMenu) {
+      <!-- Menu Mobile avec glissement -->
+      @if (isMobile()) {
+        <div class="arv-header-nav-menu-mobile-container">
+          @for (levelItems of navigationStack(); track $index; let levelIndex = $index) {
+            <div class="arv-header-nav-menu-level" [style.transform]="'translateX(' + (100 * (levelIndex - (navigationStack().length - 1))) + '%)'">
+              @for (item of levelItems; track $index) {
+                <div class="arv-header-nav_item" [style.animation-delay]="levelIndex === 0 ? ($index * 0.05) + 's' : '0s'">
+                  @if (item.subMenu && item.subMenu.length > 0) {
+                    <button class="mobile-nav-trigger" (click)="navigateToSubMenu(item, $event)">
+                      <span>{{ item.label }}</span>
+                      <svg class="arrow-icon-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  } @else {
+                    <ui-nav-link
+                      [label]="item.label"
+                      [link]="item.link"
+                      [active]="item.active || false"
+                      [useAriaMenu]="true"
+                      (itemClick)="closeMobileMenu()" />
+                  }
+                </div>
+              }
+
+              @if (levelIndex === 0 && showProfile() && userProfile()) {
+                <div class="arv-header-nav_item mobile-profile-item">
+                  <ui-nav-right
+                    class="mobile-profile"
+                    [user]="userProfile()!"
+                    [menuItems]="profileMenuItems()"
+                    [showAvatar]="showAvatar()"
+                    [showEmail]="showEmail()"
+                    [showIcons]="showIcons()"
+                    (itemClick)="closeMobileMenu()" />
+                </div>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <!-- Mode Desktop classique -->
+        <div id="mainNav" class="arv-header-nav-menu-main" ngMenuBar>
+          @for (item of visibleItems(); track $index) {
+            <div class="arv-header-nav_item">
+              @if (item.subMenu) {
+                <ui-dropdown
+                  [label]="item.label"
+                  [items]="item.subMenu"
+                  [active]="item.active || false"
+                  (itemClick)="closeMobileMenu()" />
+              } @else {
+                <ui-nav-link
+                  [label]="item.label"
+                  [link]="item.link"
+                  [active]="item.active || false"
+                  [useAriaMenu]="true"
+                  (itemClick)="closeMobileMenu()" />
+              }
+            </div>
+          }
+
+          @if (moreItems().length > 0) {
+            <div class="arv-header-nav_item">
               <ui-dropdown
-                [label]="item.label"
-                [items]="item.subMenu"
-                [active]="item.active || false"
+                label="More"
+                [items]="moreItems()"
+                [active]="isMoreActive()"
                 (itemClick)="closeMobileMenu()" />
-            } @else {
-              <ui-nav-link
-                [label]="item.label"
-                [link]="item.link"
-                [active]="item.active || false"
-                [useAriaMenu]="true"
-                (itemClick)="closeMobileMenu()" />
-            }
-          </div>
-        }
-
-        @if (showProfile() && userProfile() && isMobile()) {
-          <div class="arv-header-nav_item mobile-profile-item">
-            <ui-nav-right
-              class="mobile-profile"
-              [user]="userProfile()!"
-              [menuItems]="profileMenuItems()"
-              [showAvatar]="showAvatar()"
-              [showEmail]="showEmail()"
-              [showIcons]="showIcons()"
-              (itemClick)="closeMobileMenu()" />
-          </div>
-        }
-      </div>
-
-      @if (moreItems().length > 0) {
-        <div class="arv-header-nav_item">
-          <ui-dropdown
-            label="More"
-            [items]="moreItems()"
-            [active]="isMoreActive()"
-            (itemClick)="closeMobileMenu()" />
+            </div>
+          }
         </div>
       }
 
-      @if (showHeaderNavMobileBottom()) {
+      @if (showHeaderNavMobileBottom() && navigationStack().length === 1) {
         <div class="arv-header-nav-menu-post-mobile">
           <ng-content select="[slot=post-nav-mobile]"></ng-content>
         </div>
