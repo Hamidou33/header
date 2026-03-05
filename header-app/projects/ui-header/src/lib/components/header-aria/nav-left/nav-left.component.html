@@ -1,0 +1,20 @@
+<div class="nav-left-container">
+  @if (secondaryLogoPath()) {
+    <a [routerLink]="secondaryLogoUrl()" class="nav-left-logo">
+      <img [src]="secondaryLogoPath()" [alt]="secondaryLogoAlt()" class="nav-left-logo-img" />
+    </a>
+  }
+
+  @if (showSeparator() && (secondaryLogoPath() || tagText())) {
+    <div class="nav-left-separator"></div>
+  }
+
+  @if (tagText()) {
+    <span class="nav-left-tag" [attr.data-variant]="tagVariant()">
+      {{ tagText() }}
+    </span>
+  }
+
+  <!-- Slot for custom content -->
+  <ng-content></ng-content>
+</div>
