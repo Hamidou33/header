@@ -52,7 +52,7 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   showHeaderNavMobileTop = input<boolean>(true);
   showHeaderNavMobileBottom = input<boolean>(true);
   showHeaderNavRight = input<boolean>(true);
-  burgerIcon = input<boolean>(true);
+  burgerIcon = input<boolean>(false);
   burgerIconPos = input<'left' | 'right'>('right');
 
   // New Profile inputs
