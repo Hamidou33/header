@@ -13,14 +13,14 @@ import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 
 const meta: Meta<NavCenter> = {
   title: 'Header ARIA/Nav Center',
-  component: Nav,
+  component: NavCenter,
   tags: ['autodocs'],
   parameters: {
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [Nav, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavCenter, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
