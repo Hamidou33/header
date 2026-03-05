@@ -11,8 +11,7 @@
     "lint:fix": "ng lint --fix",
     "test:lib": "ng test ui-header",
     "storybook": "ng run ui-header:storybook",
-    "build-storybook": "ng run ui-header:build-storybook",
-    "postinstall": "node -e \"try{require('fs').rmSync('projects/ui-header/node_modules',{recursive:true,force:true})}catch(e){}\""
+    "build-storybook": "ng run ui-header:build-storybook"
   },
   "prettier": {
     "printWidth": 100,
