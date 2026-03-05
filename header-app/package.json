@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "test:lib": "vitest run --config projects/ui-header/vitest.config.ts",
+    "test:lib": "ng test ui-header",
     "storybook": "ng run ui-header:storybook",
     "build-storybook": "ng run ui-header:build-storybook",
     "postinstall": "node -e \"try{require('fs').rmSync('projects/ui-header/node_modules',{recursive:true,force:true})}catch(e){}\""
@@ -43,18 +43,15 @@
     "zone.js": "^0.16.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "~2.3.1",
-    "@analogjs/vitest-angular": "~2.3.1",
     "@angular-devkit/architect": "^0.2102.0",
     "@angular-devkit/build-angular": "^21.2.0",
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
     "@storybook/angular": "^10.2.14",
-    "jsdom": "^27.1.0",
+    "happy-dom": "^16.7.0",
     "ng-packagr": "^21.2.0",
     "storybook": "^10.2.14",
-    "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "typescript": "~5.9.2"
   }
 }

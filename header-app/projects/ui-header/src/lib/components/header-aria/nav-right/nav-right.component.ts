@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { NavHeaderAvatar } from '../nav-header-avatar/nav-header-avatar.component';
 import type { DropdownItem, UserProfile } from '../../../models';
 
-// Re-export for backward compatibility
 export type { UserProfile };
 
 @Component({
@@ -20,6 +20,7 @@ export type { UserProfile };
     MenuContent,
     CdkMenuModule,
     OverlayModule,
+    NavHeaderAvatar,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
   templateUrl: './nav-right.component.html',
@@ -27,11 +28,14 @@ export type { UserProfile };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavRight {
+  private static readonly SCROLL_DELAY_MS = 100;
+
   user = input.required<UserProfile>();
   menuItems = input<DropdownItem[]>([]);
-  showAvatar = input<boolean>(false);
+  showAvatar = input<boolean>(true);
   showEmail = input<boolean>(false);
   showIcons = input<boolean>(false);
+  avatarSize = input<'small' | 'medium' | 'large'>('medium');
 
   profileMenu = viewChild<Menu<string>>('profileMenu');
 
@@ -39,32 +43,60 @@ export class NavRight {
   itemClick = output<void>();
 
   constructor() {
-    effect(() => {
-      const menuRef = this.profileMenu();
-      if (menuRef && !menuRef.visible()) {
-        this.openSubmenuIndex.set(null);
-      }
-    });
+    this.setupMenuVisibilityWatcher();
   }
 
   toggleSubmenu(index: number, event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const isOpening = this.openSubmenuIndex() !== index;
-    this.openSubmenuIndex.set(isOpening ? index : null);
+    this.preventEventPropagation(event);
 
-    if (isOpening) {
-      const element = event.currentTarget as HTMLElement;
-      setTimeout(() => {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+    const shouldOpen = this.shouldOpenSubmenu(index);
+    this.updateSubmenuState(shouldOpen ? index : null);
+
+    if (shouldOpen) {
+      this.scrollSubmenuIntoView(event.currentTarget as HTMLElement);
     }
   }
 
   onItemClick() {
     this.itemClick.emit();
   }
+
+  private setupMenuVisibilityWatcher() {
+    effect(() => {
+      const menuRef = this.profileMenu();
+      if (menuRef && !menuRef.visible()) {
+        this.closeAllSubmenus();
+      }
+    });
+  }
+
+  private preventEventPropagation(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  private shouldOpenSubmenu(index: number): boolean {
+    return this.openSubmenuIndex() !== index;
+  }
+
+  private updateSubmenuState(index: number | null) {
+    this.openSubmenuIndex.set(index);
+  }
+
+  private closeAllSubmenus() {
+    this.openSubmenuIndex.set(null);
+  }
+
+  private scrollSubmenuIntoView(element: HTMLElement) {
+    setTimeout(() => {
+      if (element?.scrollIntoView) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, NavRight.SCROLL_DELAY_MS);
+  }
 }
 
-// Backward compatibility alias
 export { NavRight as ProfileMenu };

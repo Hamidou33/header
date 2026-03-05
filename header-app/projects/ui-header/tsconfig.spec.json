@@ -6,10 +6,7 @@
     "outDir": "../../out-tsc/spec",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "types": ["vitest/globals"],
-    "paths": {
-      "@test-setup": ["./src/test-setup.ts"]
-    }
+    "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "vitest.config.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
 }

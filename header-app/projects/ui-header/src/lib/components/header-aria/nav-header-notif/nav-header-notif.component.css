@@ -1,0 +1,112 @@
+.notif-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.notif-container:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.notif-container:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+.notif-container.has-notifications .notif-icon {
+  color: #1976d2;
+}
+
+.notif-small {
+  padding: 6px;
+}
+
+.notif-small .notif-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.notif-medium {
+  padding: 8px;
+}
+
+.notif-medium .notif-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.notif-large {
+  padding: 10px;
+}
+
+.notif-large .notif-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.notif-icon {
+  width: 24px;
+  height: 24px;
+  color: #616161;
+  transition: color 0.2s ease;
+}
+
+.notif-icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.notif-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: white;
+  background-color: #f44336;
+  border: 2px solid white;
+}
+
+.notif-badge.notif-default {
+  background-color: #757575;
+}
+
+.notif-badge.notif-primary {
+  background-color: #1976d2;
+}
+
+.notif-badge.notif-danger {
+  background-color: #f44336;
+}
+
+.notif-small .notif-badge {
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+  top: 2px;
+  right: 2px;
+}
+
+.notif-large .notif-badge {
+  min-width: 20px;
+  height: 20px;
+  font-size: 12px;
+  top: 6px;
+  right: 6px;
+}

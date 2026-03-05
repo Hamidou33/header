@@ -110,25 +110,27 @@
   </div>
 
   <!-- Zone 3: Nav-Right - Pipe separator + Profile dropdown -->
-  <div class="arv-header-nav-right-zone">
-    <div class="arv-header-nav-pipe-separator"></div>
+  @if ((showProfile() && userProfile() && !isMobile()) || showHeaderNavRight()) {
+    <div #navRight class="arv-header-nav-right-zone">
+      <div class="arv-header-nav-pipe-separator"></div>
 
-    @if (showProfile() && userProfile() && !isMobile()) {
-      <ui-nav-right
-        class="arv-header-nav-profile"
-        [user]="userProfile()!"
-        [menuItems]="profileMenuItems()"
-        [showAvatar]="showAvatar()"
-        [showEmail]="showEmail()"
-        [showIcons]="showIcons()" />
-    }
+      @if (showProfile() && userProfile() && !isMobile()) {
+        <ui-nav-right
+          class="arv-header-nav-profile"
+          [user]="userProfile()!"
+          [menuItems]="profileMenuItems()"
+          [showAvatar]="showAvatar()"
+          [showEmail]="showEmail()"
+          [showIcons]="showIcons()" />
+      }
 
-    @if (showHeaderNavRight()) {
-      <section #navRight class="arv-header-nav-right-content">
-        <ng-content select="[slot=nav-right]"></ng-content>
-      </section>
-    }
-  </div>
+      @if (showHeaderNavRight()) {
+        <section class="arv-header-nav-right-content">
+          <ng-content select="[slot=nav-right]"></ng-content>
+        </section>
+      }
+    </div>
+  }
 
   <!-- Hidden measurement zone for calculating menu widths -->
   <div class="arv-header-nav-measure" aria-hidden="true">

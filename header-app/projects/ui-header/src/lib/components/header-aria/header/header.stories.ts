@@ -79,9 +79,9 @@ const meta: Meta<Header> = {
     sticky: true,
     showNav: true,
     showProfile: true,
-    showAvatar: false,
-    showEmail: false,
-    showIcons: false,
+    showAvatar: true,
+    showEmail: true,
+    showIcons: true,
     isHeaderFixed: false,
     showHeaderPreNav: true,
     showHeaderPostNav: true,
@@ -103,6 +103,10 @@ const meta: Meta<Header> = {
         [showHeaderPostNavMobile]="showHeaderPostNavMobile"
         [sticky]="sticky"
         [showNav]="showNav">
+        <div slot="nav-left" style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="https://via.placeholder.com/80x28/00965e/ffffff?text=Partner" alt="Partner logo" style="max-height: 28px;">
+          <span style="background: #f59e0b; color: white; padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DEV</span>
+        </div>
       </ui-header>
     `,
   }),

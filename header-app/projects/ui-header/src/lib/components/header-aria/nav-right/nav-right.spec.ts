@@ -1,5 +1,3 @@
-import '@test-setup';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NavRight, UserProfile } from './nav-right.component';
 import { provideRouter } from '@angular/router';
@@ -7,13 +5,14 @@ import { provideRouter } from '@angular/router';
 describe('NavRight Component', () => {
   let fixture: ComponentFixture<NavRight>;
   let component: NavRight;
+
   const mockUser: UserProfile = {
     name: 'John Doe',
     email: 'john@example.com',
     avatar: 'avatar.jpg',
   };
 
-  beforeEach(() => {
+  const createComponent = () => {
     TestBed.configureTestingModule({
       imports: [NavRight],
       providers: [provideRouter([])],
@@ -21,7 +20,9 @@ describe('NavRight Component', () => {
     fixture = TestBed.createComponent(NavRight);
     fixture.componentRef.setInput('user', mockUser);
     component = fixture.componentInstance;
-  });
+  };
+
+  beforeEach(createComponent);
 
   afterEach(() => {
     fixture?.destroy();
@@ -31,13 +32,14 @@ describe('NavRight Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit itemClick event', () => {
-    let emitted = false;
+  it('should emit event when item is clicked', () => {
+    let eventEmitted = false;
     component.itemClick.subscribe(() => {
-      emitted = true;
+      eventEmitted = true;
     });
 
     component.onItemClick();
-    expect(emitted).toBe(true);
+
+    expect(eventEmitted).toBe(true);
   });
 });

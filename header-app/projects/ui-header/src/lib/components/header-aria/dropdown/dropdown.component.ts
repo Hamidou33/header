@@ -6,7 +6,6 @@ import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/m
 import { OverlayModule } from '@angular/cdk/overlay';
 import type { DropdownItem } from '../../../models';
 
-// Re-export for backward compatibility
 export type { DropdownItem };
 
 @Component({
@@ -27,6 +26,8 @@ export type { DropdownItem };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dropdown {
+  private static readonly SCROLL_DELAY_MS = 100;
+
   label = input<string>('');
   items = input<DropdownItem[]>([]);
   active = input<boolean>(false);
@@ -38,31 +39,58 @@ export class Dropdown {
   itemClick = output<void>();
 
   constructor() {
-    effect(() => {
-      const menuRef = this.menu();
-      if (menuRef && !menuRef.visible()) {
-        this.openSubmenuIndex.set(null);
-      }
-    });
+    this.setupMenuVisibilityWatcher();
   }
 
   toggleSubmenu(index: number, event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const isOpening = this.openSubmenuIndex() !== index;
-    this.openSubmenuIndex.set(isOpening ? index : null);
+    this.preventEventPropagation(event);
 
-    if (isOpening) {
-      const element = event.currentTarget as HTMLElement;
-      setTimeout(() => {
-        if (element && element.scrollIntoView) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
+    const shouldOpen = this.shouldOpenSubmenu(index);
+    this.updateSubmenuState(shouldOpen ? index : null);
+
+    if (shouldOpen) {
+      this.scrollSubmenuIntoView(event.currentTarget as HTMLElement);
     }
   }
 
   onItemClick() {
     this.itemClick.emit();
+  }
+
+  private setupMenuVisibilityWatcher() {
+    effect(() => {
+      const menuRef = this.menu();
+      if (menuRef && !menuRef.visible()) {
+        this.closeAllSubmenus();
+      }
+    });
+  }
+
+  private preventEventPropagation(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  private shouldOpenSubmenu(index: number): boolean {
+    return this.openSubmenuIndex() !== index;
+  }
+
+  private updateSubmenuState(index: number | null) {
+    this.openSubmenuIndex.set(index);
+  }
+
+  private closeAllSubmenus() {
+    this.openSubmenuIndex.set(null);
+  }
+
+  private scrollSubmenuIntoView(element: HTMLElement) {
+    setTimeout(() => {
+      if (element?.scrollIntoView) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, Dropdown.SCROLL_DELAY_MS);
   }
 }

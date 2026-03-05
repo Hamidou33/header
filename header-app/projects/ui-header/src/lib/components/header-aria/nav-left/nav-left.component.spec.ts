@@ -1,13 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavLeft } from './nav-left.component';
 import { provideRouter } from '@angular/router';
-import '@test-setup';
 
 describe('NavLeft', () => {
   let component: NavLeft;
   let fixture: ComponentFixture<NavLeft>;
 
-  beforeEach(async () => {
+  const createComponent = async () => {
     await TestBed.configureTestingModule({
       imports: [NavLeft],
       providers: [provideRouter([])],
@@ -16,54 +15,71 @@ describe('NavLeft', () => {
     fixture = TestBed.createComponent(NavLeft);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  };
+
+  const setInput = (name: string, value: unknown) => {
+    fixture.componentRef.setInput(name, value);
+    fixture.detectChanges();
+  };
+
+  const queryElement = (selector: string): HTMLElement | null => {
+    return fixture.nativeElement.querySelector(selector);
+  };
+
+  beforeEach(createComponent);
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display secondary logo when provided', () => {
-    fixture.componentRef.setInput('secondaryLogoPath', 'test-logo.png');
-    fixture.detectChanges();
+  describe('Secondary Logo', () => {
+    it('should display logo when path is provided', () => {
+      setInput('secondaryLogoPath', 'test-logo.png');
 
-    const logo = fixture.nativeElement.querySelector('.nav-left-logo-img');
-    expect(logo).toBeTruthy();
-    expect(logo.src).toContain('test-logo.png');
+      const logo = queryElement('.nav-left-logo-img') as HTMLImageElement;
+
+      expect(logo).toBeTruthy();
+      expect(logo.src).toContain('test-logo.png');
+    });
   });
 
-  it('should display tag when tagText is provided', () => {
-    fixture.componentRef.setInput('tagText', 'PRO');
-    fixture.detectChanges();
+  describe('Tag Display', () => {
+    it('should display tag with provided text', () => {
+      setInput('tagText', 'PRO');
 
-    const tag = fixture.nativeElement.querySelector('.nav-left-tag');
-    expect(tag).toBeTruthy();
-    expect(tag.textContent?.trim()).toBe('PRO');
+      const tag = queryElement('.nav-left-tag');
+
+      expect(tag).toBeTruthy();
+      expect(tag?.textContent?.trim()).toBe('PRO');
+    });
+
+    it('should apply variant attribute to tag', () => {
+      setInput('tagText', 'TEST');
+      setInput('tagVariant', 'success');
+
+      const tag = queryElement('.nav-left-tag');
+
+      expect(tag?.getAttribute('data-variant')).toBe('success');
+    });
   });
 
-  it('should apply correct tag variant class', () => {
-    fixture.componentRef.setInput('tagText', 'TEST');
-    fixture.componentRef.setInput('tagVariant', 'success');
-    fixture.detectChanges();
+  describe('Separator Visibility', () => {
+    it('should show separator when enabled', () => {
+      setInput('secondaryLogoPath', 'logo.png');
+      setInput('showSeparator', true);
 
-    const tag = fixture.nativeElement.querySelector('.nav-left-tag');
-    expect(tag.getAttribute('data-variant')).toBe('success');
-  });
+      const separator = queryElement('.nav-left-separator');
 
-  it('should show separator when showSeparator is true', () => {
-    fixture.componentRef.setInput('secondaryLogoPath', 'logo.png');
-    fixture.componentRef.setInput('showSeparator', true);
-    fixture.detectChanges();
+      expect(separator).toBeTruthy();
+    });
 
-    const separator = fixture.nativeElement.querySelector('.nav-left-separator');
-    expect(separator).toBeTruthy();
-  });
+    it('should hide separator when disabled', () => {
+      setInput('secondaryLogoPath', 'logo.png');
+      setInput('showSeparator', false);
 
-  it('should not show separator when showSeparator is false', () => {
-    fixture.componentRef.setInput('secondaryLogoPath', 'logo.png');
-    fixture.componentRef.setInput('showSeparator', false);
-    fixture.detectChanges();
+      const separator = queryElement('.nav-left-separator');
 
-    const separator = fixture.nativeElement.querySelector('.nav-left-separator');
-    expect(separator).toBeFalsy();
+      expect(separator).toBeFalsy();
+    });
   });
 });

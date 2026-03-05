@@ -1,5 +1,3 @@
-import '@test-setup';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NavLink } from './nav-link.component';
 import { provideRouter } from '@angular/router';
@@ -8,14 +6,16 @@ describe('NavLink Component', () => {
   let fixture: ComponentFixture<NavLink>;
   let component: NavLink;
 
-  beforeEach(() => {
+  const createComponent = () => {
     TestBed.configureTestingModule({
       imports: [NavLink],
       providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(NavLink);
     component = fixture.componentInstance;
-  });
+  };
+
+  beforeEach(createComponent);
 
   afterEach(() => {
     fixture?.destroy();
@@ -25,13 +25,14 @@ describe('NavLink Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit itemClick event when link is clicked', () => {
-    let emitted = false;
+  it('should emit event when link is clicked', () => {
+    let eventEmitted = false;
     component.itemClick.subscribe(() => {
-      emitted = true;
+      eventEmitted = true;
     });
 
     component.onLinkClick();
-    expect(emitted).toBe(true);
+
+    expect(eventEmitted).toBe(true);
   });
 });

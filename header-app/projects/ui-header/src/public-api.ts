@@ -7,3 +7,5 @@ export * from './lib/components/header-aria/nav-left/nav-left.component';
 export * from './lib/components/header-aria/nav-right/nav-right.component';
 export * from './lib/components/header-aria/nav-link/nav-link.component';
 export * from './lib/components/header-aria/dropdown/dropdown.component';
+export * from './lib/components/header-aria/nav-header-avatar/nav-header-avatar.component';
+export * from './lib/components/header-aria/nav-header-notif/nav-header-notif.component';

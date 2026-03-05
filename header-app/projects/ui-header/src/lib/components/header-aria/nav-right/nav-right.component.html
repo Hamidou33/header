@@ -5,26 +5,14 @@
     #origin
     #trigger="ngMenuTrigger"
     [menu]="profileMenu()"
+    [attr.aria-expanded]="trigger.expanded()"
     aria-label="Profile menu">
-    @if (showAvatar()) {
-      <span class="profile-avatar">{{ user().avatar }}</span>
-    }
-    <div class="profile-info">
-      <span class="profile-name">{{ user().name }}</span>
-      @if (showEmail()) {
-        <span class="profile-email">{{ user().email }}</span>
-      }
-    </div>
-    <svg
-      class="arrow-icon"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      aria-hidden="true">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
+    <ui-nav-header-avatar
+      [userName]="user().name"
+      [avatarUrl]="''"
+      [size]="avatarSize()"
+      [clickable]="false"
+    />
   </button>
 
   <ng-template
@@ -38,9 +26,6 @@
     <div ngMenu class="profile-menu" #profileMenu="ngMenu">
       <ng-template ngMenuContent>
         <div class="profile-menu-header">
-          @if (showAvatar()) {
-            <span class="profile-menu-avatar">{{ user().avatar }}</span>
-          }
           <div class="profile-menu-info">
             <strong class="profile-menu-name">{{ user().name }}</strong>
             @if (showEmail()) {

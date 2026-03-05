@@ -22,23 +22,13 @@
             [profileMenuItems]="profileMenuItems()"
             [showAvatar]="showAvatar()"
             [showEmail]="showEmail()"
-            [showIcons]="showIcons()">
+            [showIcons]="showIcons()"
+            [showHeaderSecondLogo]="true">
             <div slot="nav-left">
               <ng-content select="[slot=nav-left]"></ng-content>
             </div>
             <div slot="nav-right">
-              @if (showProfile() && userProfile()) {
-                <ui-nav-right
-                  class="arv-header_profile"
-                  [user]="userProfile()!"
-                  [menuItems]="profileMenuItems()"
-                  [showAvatar]="showAvatar()"
-                  [showEmail]="showEmail()"
-                  [showIcons]="showIcons()" />
-              }
-              <div class="arv-header-nav-right-extra">
-                <ng-content select="[slot=nav-right]"></ng-content>
-              </div>
+              <ng-content select="[slot=nav-right]"></ng-content>
             </div>
             <div slot="pre-nav-mobile">
               <ng-content select="[slot=pre-nav-mobile]"></ng-content>

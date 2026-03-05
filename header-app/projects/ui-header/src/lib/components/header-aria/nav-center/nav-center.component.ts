@@ -22,7 +22,6 @@ import { NavRight } from '../nav-right/nav-right.component';
 import type { NavItem, DropdownItem, UserProfile } from '../../../models';
 import { Observable, of } from 'rxjs';
 
-// Re-export for backward compatibility
 export type { NavItem };
 
 @Component({
@@ -33,11 +32,13 @@ export type { NavItem };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavCenter implements AfterViewInit, OnDestroy {
+  private static readonly MOBILE_BREAKPOINT = '(max-width: 768px)';
+  private static readonly DESKTOP_BREAKPOINT = '(min-width: 768px)';
+  private static readonly PROFILE_GAP_PX = 4;
+
   items = input<NavItem[]>([]);
   maxVisibleItems = input<number>(99);
-  readonly isMobile = signal(window.matchMedia('(max-width: 768px)').matches);
 
-  // Inputs issus des images
   rounded = input<boolean>(true);
   mainLogoUrl = input<string>('/');
   mainLogoTitle = input<string>('Home');
@@ -55,7 +56,6 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   burgerIcon = input<boolean>(false);
   burgerIconPos = input<'left' | 'right'>('right');
 
-  // New Profile inputs
   showProfile = input<boolean>(false);
   userProfile = input<UserProfile | null>(null);
   profileMenuItems = input<DropdownItem[]>([]);
@@ -63,41 +63,65 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   showEmail = input<boolean>(false);
   showIcons = input<boolean>(false);
 
-  // Outputs
   clickMainLogo = output<void>();
 
-  mobileMenuOpen = signal(false);
+  readonly isMobile = signal(this.checkIfMobile());
+  readonly mobileMenuOpen = signal(false);
   private readonly visibleCount = signal<number>(0);
   private resizeObserver?: ResizeObserver;
   private recalcQueued = false;
-  private readonly profileGapPx = 4;
 
   @ViewChild('navMenu') navMenu?: ElementRef<HTMLElement>;
   @ViewChild('navContent') navContent?: ElementRef<HTMLElement>;
-  @ViewChildren('measureItem', { read: ElementRef }) measureItems?: QueryList<
-    ElementRef<HTMLElement>
-  >;
+  @ViewChildren('measureItem', { read: ElementRef }) measureItems?: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('measureMore') measureMore?: ElementRef<HTMLElement>;
   @ViewChild('navRight') navRight?: ElementRef<HTMLElement>;
 
-  constructor() {
-    effect(() => {
-      const items = this.items();
-      if (!this.measureItems?.length) {
-        this.visibleCount.set(items.length);
-      }
-      this.maxVisibleItems();
-      this.scheduleRecalculate();
-    });
+  visibleItems = computed(() => {
+    const allItems = this.items();
+    const count = this.visibleCount();
 
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    mediaQuery.addEventListener('change', (e) => {
-      this.isMobile.set(e.matches);
-    });
+    if (allItems.length === 0) {
+      return [];
+    }
+
+    const maxCount = Math.min(count, allItems.length);
+    return allItems.slice(0, maxCount);
+  });
+
+  moreItems = computed<DropdownItem[]>(() => {
+    const allItems = this.items();
+    const count = this.visibleCount();
+
+    if (allItems.length <= count) {
+      return [];
+    }
+
+    return this.convertToDropdownItems(allItems.slice(count));
+  });
+
+  isMoreActive = computed(() => {
+    return this.moreItems().some((item) => item.active);
+  });
+
+  constructor() {
+    this.setupItemsWatcher();
+    this.setupMediaQueryListener();
+  }
+
+  ngAfterViewInit() {
+    this.setupMeasureItemsWatcher();
+    this.scheduleRecalculate();
+    this.waitForFontsAndRecalculate();
+    this.setupResizeObserver();
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
   }
 
   toggleMobileMenu() {
-    this.mobileMenuOpen.set(!this.mobileMenuOpen());
+    this.mobileMenuOpen.update(isOpen => !isOpen);
   }
 
   closeMobileMenu() {
@@ -108,71 +132,75 @@ export class NavCenter implements AfterViewInit, OnDestroy {
     this.clickMainLogo.emit();
   }
 
-  ngAfterViewInit() {
-    this.measureItems?.changes.subscribe(() => this.scheduleRecalculate());
-    this.scheduleRecalculate();
-
-    if (typeof document !== 'undefined' && 'fonts' in document) {
-      // Recalculate after fonts load to avoid late text width changes.
-      (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(() =>
-        this.scheduleRecalculate(),
-      );
-    }
-
-    if (typeof ResizeObserver !== 'undefined') {
-      this.resizeObserver = new ResizeObserver(() => this.scheduleRecalculate());
-      if (this.navMenu?.nativeElement) {
-        this.resizeObserver.observe(this.navMenu.nativeElement);
+  private setupItemsWatcher() {
+    effect(() => {
+      const items = this.items();
+      if (!this.measureItems?.length) {
+        this.visibleCount.set(items.length);
       }
-      if (this.navContent?.nativeElement) {
-        this.resizeObserver.observe(this.navContent.nativeElement);
-      }
-      if (this.navRight?.nativeElement) {
-        this.resizeObserver.observe(this.navRight.nativeElement);
-      }
-    }
+      this.maxVisibleItems();
+      this.scheduleRecalculate();
+    });
   }
 
-  ngOnDestroy() {
-    this.resizeObserver?.disconnect();
+  private setupMediaQueryListener() {
+    const mediaQuery = window.matchMedia(NavCenter.MOBILE_BREAKPOINT);
+    mediaQuery.addEventListener('change', (event) => {
+      this.isMobile.set(event.matches);
+    });
   }
 
-  visibleItems = computed(() => {
-    const allItems = this.items();
-    const count = this.visibleCount();
-    if (!allItems.length) {
-      return [];
-    }
-    return allItems.slice(0, Math.min(count, allItems.length));
-  });
+  private setupMeasureItemsWatcher() {
+    this.measureItems?.changes.subscribe(() => {
+      this.scheduleRecalculate();
+    });
+  }
 
-  moreItems = computed<DropdownItem[]>(() => {
-    const allItems = this.items();
-    const count = this.visibleCount();
-    if (allItems.length <= count) {
-      return [];
+  private waitForFontsAndRecalculate() {
+    if (typeof document === 'undefined' || !('fonts' in document)) {
+      return;
     }
-    return allItems.slice(count).map((item) => ({
-      label: item.label,
-      link: item.link,
-      icon: '', // Default icon if needed
-      active: item.active,
-      subMenu: item.subMenu,
-    }));
-  });
 
-  isMoreActive = computed(() => {
-    return this.moreItems().some((item) => item.active);
-  });
+    const fontsApi = (document as Document & { fonts?: FontFaceSet }).fonts;
+    fontsApi?.ready.then(() => {
+      this.scheduleRecalculate();
+    });
+  }
+
+  private setupResizeObserver() {
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.scheduleRecalculate();
+    });
+
+    this.observeElements([
+      this.navMenu?.nativeElement,
+      this.navContent?.nativeElement,
+      this.navRight?.nativeElement,
+    ]);
+  }
+
+  private observeElements(elements: (HTMLElement | undefined)[]) {
+    elements.forEach(element => {
+      if (element) {
+        this.resizeObserver?.observe(element);
+      }
+    });
+  }
 
   private scheduleRecalculate() {
     if (this.recalcQueued) {
       return;
     }
+
     if (typeof window === 'undefined') {
       this.visibleCount.set(this.items().length);
       return;
     }
+
     this.recalcQueued = true;
     requestAnimationFrame(() => {
       this.recalcQueued = false;
@@ -182,51 +210,92 @@ export class NavCenter implements AfterViewInit, OnDestroy {
 
   private recalculate() {
     const allItems = this.items();
-    if (!allItems.length) {
+
+    if (allItems.length === 0) {
       this.visibleCount.set(0);
       return;
     }
 
-    if (!this.isDesktop()) {
+    if (this.isMobileView()) {
       this.visibleCount.set(allItems.length);
       return;
     }
 
+    const count = this.calculateVisibleItemsCount(allItems);
+    const maxAllowed = this.getMaxAllowedItems(allItems);
+    this.visibleCount.set(Math.min(count, maxAllowed));
+  }
+
+  private calculateVisibleItemsCount(allItems: NavItem[]): number {
     const navEl = this.navMenu?.nativeElement;
     const measureEls = this.measureItems?.toArray() ?? [];
+
     if (!navEl || measureEls.length === 0) {
-      this.visibleCount.set(allItems.length);
-      return;
+      return allItems.length;
     }
 
     const availableWidth = this.getAvailableWidth(navEl);
     const moreWidth = this.measureMore?.nativeElement?.offsetWidth ?? 0;
-    const rects = measureEls.map((el) => el.nativeElement.getBoundingClientRect());
-    const baseLeft = rects[0]?.left ?? 0;
-    const gap = rects.length > 1 ? Math.max(0, rects[1].left - rects[0].right) : this.getGap(navEl);
+    const measurements = this.getMeasurements(measureEls, navEl);
 
+    return this.countItemsThatFit(
+      allItems,
+      measurements,
+      availableWidth,
+      moreWidth
+    );
+  }
+
+  private getMeasurements(measureEls: ElementRef<HTMLElement>[], navEl: HTMLElement) {
+    const rects = measureEls.map(el => el.nativeElement.getBoundingClientRect());
+    const baseLeft = rects[0]?.left ?? 0;
+    const gap = this.calculateGapBetweenItems(rects, navEl);
+
+    return { rects, baseLeft, gap };
+  }
+
+  private calculateGapBetweenItems(rects: DOMRect[], navEl: HTMLElement): number {
+    if (rects.length > 1) {
+      return Math.max(0, rects[1].left - rects[0].right);
+    }
+    return this.extractGapFromStyles(navEl);
+  }
+
+  private countItemsThatFit(
+    allItems: NavItem[],
+    measurements: { rects: DOMRect[]; baseLeft: number; gap: number },
+    availableWidth: number,
+    moreWidth: number
+  ): number {
+    const { rects, gap } = measurements;
     let count = 0;
+    let accumulatedWidth = 0;
+
     for (let i = 0; i < allItems.length; i += 1) {
-      const itemRight = rects[i]?.right ?? baseLeft;
-      const nextTotal = itemRight - baseLeft;
-      const remaining = allItems.length - (i + 1);
-      if (remaining > 0) {
-        const withMore = nextTotal + gap + moreWidth;
-        if (withMore > availableWidth) {
+      const itemWidth = rects[i]?.width ?? 0;
+      const gapWidth = i > 0 ? gap : 0;
+      const remainingItems = allItems.length - (i + 1);
+
+      if (remainingItems > 0) {
+        const widthWithMore = accumulatedWidth + gapWidth + itemWidth + gap + moreWidth;
+        if (widthWithMore > availableWidth) {
           break;
         }
-      } else if (nextTotal > availableWidth) {
-        break;
+      } else {
+        const totalWidth = accumulatedWidth + gapWidth + itemWidth;
+        if (totalWidth > availableWidth) {
+          break;
+        }
       }
+
+      accumulatedWidth += gapWidth + itemWidth;
       count += 1;
     }
 
-    const cap = this.maxVisibleItems();
-    const maxAllowed = cap > 0 ? cap : allItems.length;
-    this.visibleCount.set(Math.min(count, maxAllowed));
+    return count;
   }
 
-  private getGap(element: HTMLElement): number {
+  private extractGapFromStyles(element: HTMLElement): number {
     const styles = window.getComputedStyle(element);
     const gapValue = styles.columnGap || styles.gap || '0px';
     const gap = parseFloat(gapValue);
@@ -236,20 +305,48 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   private getAvailableWidth(navEl: HTMLElement): number {
     const contentEl = this.navContent?.nativeElement;
     const rightEl = this.navRight?.nativeElement;
+
     if (!contentEl || !rightEl) {
-      return Math.max(0, navEl.clientWidth - this.profileGapPx);
+      return Math.max(0, navEl.clientWidth - NavCenter.PROFILE_GAP_PX);
     }
 
     const contentRect = contentEl.getBoundingClientRect();
     const rightRect = rightEl.getBoundingClientRect();
-    const contentGap = this.getGap(contentEl);
-    return Math.max(0, rightRect.left - contentRect.left - contentGap - this.profileGapPx);
+
+    // On calcule l'espace entre le début de la zone centrale et le début de la zone de droite
+    return Math.max(
+      0,
+      rightRect.left - contentRect.left - NavCenter.PROFILE_GAP_PX
+    );
   }
 
-  private isDesktop(): boolean {
-    return typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches;
+  private getMaxAllowedItems(allItems: NavItem[]): number {
+    const cap = this.maxVisibleItems();
+    return cap > 0 ? cap : allItems.length;
+  }
+
+  private isMobileView(): boolean {
+    return !this.isDesktopView();
+  }
+
+  private isDesktopView(): boolean {
+    return typeof window !== 'undefined' &&
+           window.matchMedia(NavCenter.DESKTOP_BREAKPOINT).matches;
+  }
+
+  private checkIfMobile(): boolean {
+    return window.matchMedia(NavCenter.MOBILE_BREAKPOINT).matches;
+  }
+
+  private convertToDropdownItems(items: NavItem[]): DropdownItem[] {
+    return items.map(item => ({
+      label: item.label,
+      link: item.link,
+      icon: '',
+      active: item.active,
+      subMenu: item.subMenu,
+    }));
   }
 }
 
-// Backward compatibility alias
 export { NavCenter as Nav };
