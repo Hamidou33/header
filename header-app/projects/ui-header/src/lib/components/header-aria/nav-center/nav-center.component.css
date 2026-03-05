@@ -458,7 +458,7 @@
 
       .burger-brick {
         width: 24px;
-        height: 3px;
+        height: 2px;
         transition: all 0.3s ease-in-out;
         border-radius: 2px;
         background-color: #000000;
@@ -473,7 +473,7 @@
         }
 
         .burger-brick:first-child {
-          transform: translateY(8px) rotate(45deg);
+          transform: translateY(7px) rotate(45deg);
         }
 
         .burger-brick.middle {
@@ -482,7 +482,7 @@
         }
 
         .burger-brick:last-child {
-          transform: translateY(-8px) rotate(-45deg);
+          transform: translateY(-7px) rotate(-45deg);
         }
       }
     }
