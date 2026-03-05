@@ -8,27 +8,14 @@
   @if (showHeaderPostNav()) {
     <section #postnav class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
       <div class="arv-header_main">
-        <div class="arv-header-logo-container">
-          <a [routerLink]="mainLogoUrl()" [title]="mainLogoTitle()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
-            @if (mainLogoPath() || (themeLogoPath$() | async); as logoSrc) {
-              <img
-                id="logo-partner-header"
-                [src]="logoSrc!"
-                [alt]="mainLogoAlt() || (themeLogoAlt$() | async)"
-                [style.max-width.px]="logoWidth()"
-                [style.height.px]="logoHeight()"
-                [width]="logoWidth()"
-                [height]="logoHeight()"
-              />
-            }
-          </a>
-        </div>
-
         @if (showNav()) {
           <ui-nav-center
             class="arv-header-nav"
             [items]="menuItems()"
             [maxVisibleItems]="maxVisibleItems()"
+            [mainLogoUrl]="logoUrl()"
+            [mainLogoTitle]="companyName()"
+            [mainLogoPath]="logoPath()"
             [rounded]="rounded()"
             [showProfile]="showProfile()"
             [userProfile]="userProfile()"

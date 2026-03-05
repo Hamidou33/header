@@ -40,6 +40,14 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   maxVisibleItems = input<number>(99);
 
   rounded = input<boolean>(true);
+  mainLogoUrl = input<string>('/');
+  mainLogoTitle = input<string>('Home');
+  mainLogoPath = input<string | null>(null);
+  themeLogoPath$ = input<Observable<string | null>>(of(null));
+  mainLogoAlt = input<string>('Logo');
+  themeLogoAlt$ = input<Observable<string | null>>(of(null));
+  logoWidth = input<number>(140);
+  logoHeight = input<number>(32);
 
   showHeaderSecondLogo = input<boolean>(false);
   showHeaderNavMobileTop = input<boolean>(true);
@@ -54,6 +62,8 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   showAvatar = input<boolean>(false);
   showEmail = input<boolean>(false);
   showIcons = input<boolean>(false);
+
+  clickMainLogo = output<void>();
 
   readonly isMobile = signal(this.checkIfMobile());
   readonly mobileMenuOpen = signal(false);
@@ -171,6 +181,10 @@ export class NavCenter implements AfterViewInit, OnDestroy {
     const stack = this.navigationStack();
     return stack.length > 0 ? stack[stack.length - 1] : [];
   });
+
+  onClickMainLogo() {
+    this.clickMainLogo.emit();
+  }
 
   private setupItemsWatcher() {
     effect(() => {

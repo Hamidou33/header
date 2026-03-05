@@ -306,11 +306,9 @@ export const WithSecondaryLogoAndTag: Story = {
         [showHeaderPostNav]="showHeaderPostNav"
         [showHeaderPostNavMobile]="showHeaderPostNavMobile"
         [sticky]="sticky"
-        [showNav]="showNav"
-        [mainLogoPath]="'https://via.placeholder.com/100x28/333/ffffff?text=Partner+Logo'"
-        [mainLogoUrl]="'#'"
-        [mainLogoTitle]="'Partner Logo'">
+        [showNav]="showNav">
         <div slot="nav-left" style="display: flex; align-items: center; gap: 0.75rem;">
+          <img src="https://via.placeholder.com/100x28/333/ffffff?text=Partner+Logo" alt="Partner" style="max-height: 28px;">
           <span style="background: #f3f4f6; color: #1a1a1a; padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; border: 1px solid #d1d5db;">Business</span>
         </div>
       </ui-header>
@@ -339,15 +337,13 @@ export const FullFeatured: Story = {
         [showHeaderPostNav]="showHeaderPostNav"
         [showHeaderPostNavMobile]="showHeaderPostNavMobile"
         [sticky]="sticky"
-        [showNav]="showNav"
-        [mainLogoPath]="'https://via.placeholder.com/80x28/00965e/ffffff?text=Arval'"
-        [mainLogoUrl]="'#'"
-        [mainLogoTitle]="'Arval'">
+        [showNav]="showNav">
         <div slot="pre-header-desktop" style="background: #1a1a1a; color: white; padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 0.75rem;">🎉 Special offer: Get 20% off on all services!</span>
           <button style="background: #00965e; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Learn More</button>
         </div>
         <div slot="nav-left" style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="https://via.placeholder.com/80x28/00965e/ffffff?text=Arval" alt="Arval" style="max-height: 28px;">
           <span style="background: linear-gradient(135deg, #00965e 0%, #007a4d 100%); color: white; padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,150,94,0.2);">Premium</span>
         </div>
         <div slot="nav-right" style="display: flex; align-items: center; gap: 0.75rem;">
