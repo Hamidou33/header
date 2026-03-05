@@ -2,25 +2,19 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
-import { NavCenter } from './nav-center.component';
+import { NavHeaderCenter } from './nav-header-center.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
-
-/**
- * Nav component with Angular Aria dropdown menus.
- * All inputs are input() signals.
- */
-
-const meta: Meta<NavCenter> = {
+const meta: Meta<NavHeaderCenter> = {
   title: 'Header ARIA/Nav Center',
-  component: NavCenter,
+  component: NavHeaderCenter,
   tags: ['autodocs'],
   parameters: {
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [NavCenter, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavHeaderCenter, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
@@ -34,25 +28,9 @@ const meta: Meta<NavCenter> = {
       control: 'object',
       description: 'Navigation menu items',
     },
-    mainLogoTitle: {
-      control: 'text',
-      description: 'Main logo title',
-    },
-    mainLogoUrl: {
-      control: 'text',
-      description: 'Main logo URL',
-    },
-    mainLogoPath: {
-      control: 'text',
-      description: 'Path to logo image',
-    },
     rounded: {
       control: 'boolean',
       description: 'Rounded corners',
-    },
-    showHeaderSecondLogo: {
-      control: 'boolean',
-      description: 'Show second logo slot',
     },
     showHeaderNavMobileTop: {
       control: 'boolean',
@@ -83,20 +61,16 @@ const meta: Meta<NavCenter> = {
 };
 
 export default meta;
-type Story = StoryObj<NavCenter>;
+type Story = StoryObj<NavHeaderCenter>;
 
 export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav-center
+      <ui-nav-header-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
-        [mainLogoTitle]="mainLogoTitle"
-        [mainLogoUrl]="mainLogoUrl"
-        [mainLogoPath]="mainLogoPath"
         [rounded]="rounded"
-        [showHeaderSecondLogo]="showHeaderSecondLogo"
         [showHeaderNavMobileTop]="showHeaderNavMobileTop"
         [showHeaderNavMobileBottom]="showHeaderNavMobileBottom"
         [showHeaderNavRight]="showHeaderNavRight"
@@ -109,15 +83,11 @@ export const Default: Story = {
         [showEmail]="showEmail"
         [showIcons]="showIcons">
         <div slot="nav-left" style="font-size: 0.875rem; color: #666;">🏢 Partner</div>
-      </ui-nav-center>
+      </ui-nav-header-center>
     `,
   }),
   args: {
-    mainLogoTitle: 'My Company',
-    mainLogoUrl: '/',
-    mainLogoPath: '/logo-header.svg',
     rounded: true,
-    showHeaderSecondLogo: true,
     showHeaderNavMobileTop: true,
     showHeaderNavMobileBottom: true,
     showHeaderNavRight: true,
@@ -163,22 +133,16 @@ export const SimpleLinks: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav-center
+      <ui-nav-header-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
-        [mainLogoTitle]="mainLogoTitle"
-        [mainLogoUrl]="mainLogoUrl"
-        [mainLogoPath]="mainLogoPath"
         [rounded]="rounded"
         [burgerIcon]="burgerIcon"
         [burgerIconPos]="burgerIconPos">
-      </ui-nav-center>
+      </ui-nav-header-center>
     `,
   }),
   args: {
-    mainLogoTitle: 'My Company',
-    mainLogoUrl: '/',
-    mainLogoPath: '/logo-header.svg',
     rounded: true,
     burgerIcon: false,
     burgerIconPos: 'right',
@@ -197,12 +161,9 @@ export const WithDropdowns: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav-center
+      <ui-nav-header-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
-        [mainLogoTitle]="mainLogoTitle"
-        [mainLogoUrl]="mainLogoUrl"
-        [mainLogoPath]="mainLogoPath"
         [rounded]="rounded"
         [showHeaderNavMobileTop]="showHeaderNavMobileTop"
         [showHeaderNavMobileBottom]="showHeaderNavMobileBottom"
@@ -219,13 +180,10 @@ export const WithDropdowns: Story = {
         <div slot="post-nav-mobile" style="background: #f3f4f6; padding: 15px; margin-top: 10px; border-radius: 6px;">
           📞 Support: 1-800-123-4567
         </div>
-      </ui-nav-center>
+      </ui-nav-header-center>
     `,
   }),
   args: {
-    mainLogoTitle: 'My Company',
-    mainLogoUrl: '/',
-    mainLogoPath: '/logo-header.svg',
     rounded: true,
     showHeaderNavMobileTop: true,
     showHeaderNavMobileBottom: true,
@@ -294,9 +252,6 @@ export const WithDropdowns: Story = {
 
 export const ManyItems: Story = {
   args: {
-    mainLogoTitle: 'My Company',
-    mainLogoUrl: '/',
-    mainLogoPath: '/logo-header.svg',
     rounded: true,
     burgerIcon: false,
     burgerIconPos: 'right',
@@ -384,3 +339,4 @@ export const Mobile: Story = {
     ],
   },
 };
+

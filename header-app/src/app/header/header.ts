@@ -44,7 +44,7 @@ export class Header {
   showHeaderPostNav = input<boolean>(true);
   showHeaderPostNavMobile = input<boolean>(false); // Pour la classe arv-header_post-header-desktop--show
 
-  sticky = input<boolean>(true);
+  sticky = input<boolean>(false);
   showNav = input<boolean>(true);
 
   companyName = input<string>('My Company');

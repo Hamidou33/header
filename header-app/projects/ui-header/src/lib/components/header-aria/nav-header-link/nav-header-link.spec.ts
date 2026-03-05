@@ -1,17 +1,17 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { NavLink } from './nav-link.component';
+import { NavHeaderLink } from './nav-header-link.component';
 import { provideRouter } from '@angular/router';
 
-describe('NavLink Component', () => {
-  let fixture: ComponentFixture<NavLink>;
-  let component: NavLink;
+describe('NavHeaderLink Component', () => {
+  let fixture: ComponentFixture<NavHeaderLink>;
+  let component: NavHeaderLink;
 
   const createComponent = () => {
     TestBed.configureTestingModule({
-      imports: [NavLink],
+      imports: [NavHeaderLink],
       providers: [provideRouter([])],
     });
-    fixture = TestBed.createComponent(NavLink);
+    fixture = TestBed.createComponent(NavHeaderLink);
     component = fixture.componentInstance;
   };
 
@@ -36,3 +36,4 @@ describe('NavLink Component', () => {
     expect(eventEmitted).toBe(true);
   });
 });
+

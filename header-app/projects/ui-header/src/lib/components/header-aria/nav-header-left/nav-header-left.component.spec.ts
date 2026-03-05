@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavLeft } from './nav-left.component';
+import { NavHeaderLeft } from './nav-header-left.component';
 import { provideRouter } from '@angular/router';
 
-describe('NavLeft', () => {
-  let component: NavLeft;
-  let fixture: ComponentFixture<NavLeft>;
+describe('NavHeaderLeft', () => {
+  let component: NavHeaderLeft;
+  let fixture: ComponentFixture<NavHeaderLeft>;
 
   const createComponent = async () => {
     await TestBed.configureTestingModule({
-      imports: [NavLeft],
+      imports: [NavHeaderLeft],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NavLeft);
+    fixture = TestBed.createComponent(NavHeaderLeft);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -83,3 +83,4 @@ describe('NavLeft', () => {
     });
   });
 });
+

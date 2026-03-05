@@ -1,32 +1,51 @@
 <header class="arv-header" [class.sticky]="sticky()" [class.arv-header_pre-header-desktop--show]="showHeaderPreNav() && !isHeaderFixed()">
   @if (showHeaderPreNav() && !isHeaderFixed()) {
-    <section #prenav class="arv-header_pre-header-desktop">
+    <section class="arv-header_pre-header-desktop">
       <ng-content select="[slot=pre-header-desktop]"></ng-content>
     </section>
   }
 
   @if (showHeaderPostNav()) {
-    <section #postnav class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
+    <section class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
       <div class="arv-header_main">
+        <div class="arv-header-logo-zone">
+          <a [routerLink]="logoUrl()" [title]="companyName()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
+            @if (logoPath() || (themeLogoPath$() | async); as logoSrc) {
+              <img
+                id="logo-partner-header"
+                [ngSrc]="logoSrc!"
+                [alt]="mainLogoAlt() || (themeLogoAlt$() | async)"
+                [style.max-width.px]="logoWidth()"
+                [style.height.px]="logoHeight()"
+                [width]="logoWidth()"
+                [height]="logoHeight()"
+              />
+            }
+          </a>
+
+          <div class="arv-header-nav-left-slot">
+            <ng-content select="[slot=nav-left]"></ng-content>
+          </div>
+
+          <div class="arv-header-logo-pipe"></div>
+        </div>
+
+        <div class="arv-header-nav-right-extra">
+          <ng-content select="[slot=nav-right]"></ng-content>
+        </div>
+
         @if (showNav()) {
-          <ui-nav-center
-            class="arv-header-nav"
+          <ui-nav-header-center
+            class="arv-header-nav-container"
             [items]="menuItems()"
             [maxVisibleItems]="maxVisibleItems()"
-            [mainLogoUrl]="logoUrl()"
-            [mainLogoTitle]="companyName()"
-            [mainLogoPath]="logoPath()"
             [rounded]="rounded()"
             [showProfile]="showProfile()"
             [userProfile]="userProfile()"
             [profileMenuItems]="profileMenuItems()"
             [showAvatar]="showAvatar()"
             [showEmail]="showEmail()"
-            [showIcons]="showIcons()"
-            [showHeaderSecondLogo]="true">
-            <div slot="nav-left">
-              <ng-content select="[slot=nav-left]"></ng-content>
-            </div>
+            [showIcons]="showIcons()">
             <div slot="nav-right">
               <ng-content select="[slot=nav-right]"></ng-content>
             </div>
@@ -36,7 +55,7 @@
             <div slot="post-nav-mobile">
               <ng-content select="[slot=post-nav-mobile]"></ng-content>
             </div>
-          </ui-nav-center>
+          </ui-nav-header-center>
         }
 
         <ng-content></ng-content>
@@ -45,3 +64,4 @@
     </section>
   }
 </header>
+

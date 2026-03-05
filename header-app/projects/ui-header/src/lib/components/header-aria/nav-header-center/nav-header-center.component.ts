@@ -13,25 +13,25 @@ import {
   effect,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
-import { NavLink } from '../nav-link/nav-link.component';
+import { NavHeaderLink } from '../nav-header-link/nav-header-link.component';
 import { Dropdown } from '../dropdown/dropdown.component';
-import { NavRight } from '../nav-right/nav-right.component';
+import { NavHeaderRight } from '../nav-header-right/nav-header-right.component';
 import type { NavItem, DropdownItem, UserProfile } from '../../../models';
 import { Observable, of } from 'rxjs';
 
 export type { NavItem };
 
 @Component({
-  selector: 'ui-nav-center',
-  imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown, NavRight],
-  templateUrl: './nav-center.component.html',
-  styleUrl: './nav-center.component.css',
+  selector: 'ui-nav-header-center',
+  imports: [CommonModule, MenuBar, RouterModule, NavHeaderLink, Dropdown, NavHeaderRight],
+  templateUrl: './nav-header-center.component.html',
+  styleUrl: './nav-header-center.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavCenter implements AfterViewInit, OnDestroy {
+export class NavHeaderCenter implements AfterViewInit, OnDestroy {
   private static readonly MOBILE_BREAKPOINT = '(max-width: 768px)';
   private static readonly DESKTOP_BREAKPOINT = '(min-width: 768px)';
   private static readonly PROFILE_GAP_PX = 4;
@@ -40,16 +40,7 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   maxVisibleItems = input<number>(99);
 
   rounded = input<boolean>(true);
-  mainLogoUrl = input<string>('/');
-  mainLogoTitle = input<string>('Home');
-  mainLogoPath = input<string | null>(null);
-  themeLogoPath$ = input<Observable<string | null>>(of(null));
-  mainLogoAlt = input<string>('Logo');
-  themeLogoAlt$ = input<Observable<string | null>>(of(null));
-  logoWidth = input<number>(140);
-  logoHeight = input<number>(32);
 
-  showHeaderSecondLogo = input<boolean>(false);
   showHeaderNavMobileTop = input<boolean>(true);
   showHeaderNavMobileBottom = input<boolean>(true);
   showHeaderNavRight = input<boolean>(true);
@@ -182,10 +173,6 @@ export class NavCenter implements AfterViewInit, OnDestroy {
     return stack.length > 0 ? stack[stack.length - 1] : [];
   });
 
-  onClickMainLogo() {
-    this.clickMainLogo.emit();
-  }
-
   private setupItemsWatcher() {
     effect(() => {
       const items = this.items();
@@ -198,7 +185,7 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   }
 
   private setupMediaQueryListener() {
-    const mediaQuery = window.matchMedia(NavCenter.MOBILE_BREAKPOINT);
+    const mediaQuery = window.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT);
     mediaQuery.addEventListener('change', (event) => {
       this.isMobile.set(event.matches);
     });
@@ -361,7 +348,7 @@ export class NavCenter implements AfterViewInit, OnDestroy {
     const rightEl = this.navRight?.nativeElement;
 
     if (!contentEl || !rightEl) {
-      return Math.max(0, navEl.clientWidth - NavCenter.PROFILE_GAP_PX);
+      return Math.max(0, navEl.clientWidth - NavHeaderCenter.PROFILE_GAP_PX);
     }
 
     const contentRect = contentEl.getBoundingClientRect();
@@ -370,7 +357,7 @@ export class NavCenter implements AfterViewInit, OnDestroy {
     // On calcule l'espace entre le début de la zone centrale et le début de la zone de droite
     return Math.max(
       0,
-      rightRect.left - contentRect.left - NavCenter.PROFILE_GAP_PX
+      rightRect.left - contentRect.left - NavHeaderCenter.PROFILE_GAP_PX
     );
   }
 
@@ -385,11 +372,11 @@ export class NavCenter implements AfterViewInit, OnDestroy {
 
   private isDesktopView(): boolean {
     return typeof window !== 'undefined' &&
-           window.matchMedia(NavCenter.DESKTOP_BREAKPOINT).matches;
+           window.matchMedia(NavHeaderCenter.DESKTOP_BREAKPOINT).matches;
   }
 
   private checkIfMobile(): boolean {
-    return window.matchMedia(NavCenter.MOBILE_BREAKPOINT).matches;
+    return window.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT).matches;
   }
 
   private convertToDropdownItems(items: NavItem[]): DropdownItem[] {
@@ -403,4 +390,5 @@ export class NavCenter implements AfterViewInit, OnDestroy {
   }
 }
 
-export { NavCenter as Nav };
+export { NavHeaderCenter as Nav };
+

@@ -52,7 +52,7 @@ describe('NavHeaderAvatar Component', () => {
       const initials = queryElement('.avatar-initials');
 
       expect(initials).toBeTruthy();
-      expect(initials?.textContent?.trim()).toBe('J.D.');
+      expect(initials?.textContent?.trim()).toBe('J D');
     });
 
     it('should display single initial for single word name', () => {
@@ -61,10 +61,10 @@ describe('NavHeaderAvatar Component', () => {
       expect(component.getInitials()).toBe('J');
     });
 
-    it('should format initials with dots for multi-word names', () => {
+    it('should format initials with space for multi-word names', () => {
       setInput('userName', 'John Doe');
 
-      expect(component.getInitials()).toBe('J.D.');
+      expect(component.getInitials()).toBe('J D');
     });
   });
 

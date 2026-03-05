@@ -10,7 +10,7 @@ import type { DropdownItem, UserProfile } from '../../../models';
 export type { UserProfile };
 
 @Component({
-  selector: 'ui-nav-right',
+  selector: 'ui-nav-header-right',
   imports: [
     CommonModule,
     RouterModule,
@@ -23,11 +23,11 @@ export type { UserProfile };
     NavHeaderAvatar,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
-  templateUrl: './nav-right.component.html',
-  styleUrl: './nav-right.component.css',
+  templateUrl: './nav-header-right.component.html',
+  styleUrl: './nav-header-right.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavRight {
+export class NavHeaderRight {
   private static readonly SCROLL_DELAY_MS = 100;
 
   user = input.required<UserProfile>();
@@ -95,8 +95,9 @@ export class NavRight {
           block: 'start'
         });
       }
-    }, NavRight.SCROLL_DELAY_MS);
+    }, NavHeaderRight.SCROLL_DELAY_MS);
   }
 }
 
-export { NavRight as ProfileMenu };
+export { NavHeaderRight as ProfileMenu };
+

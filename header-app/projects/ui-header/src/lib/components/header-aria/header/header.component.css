@@ -6,6 +6,11 @@
   right: 0;
   left: 0;
 
+  @media (max-width: 767px) {
+    top: 0;
+    margin-top: 0;
+  }
+
   @media (min-width: 768px) {
     position: relative;
     inset: unset;
@@ -21,11 +26,11 @@
   }
 
   ::ng-deep {
-    .arv-header.arv-header_pre-header-desktop--show {
-      @media (min-width: 768px) {
-        .arv-header-nav {
-          border-bottom-right-radius: 0 !important;
-          border-bottom-left-radius: 0 !important;
+    .arv-header_pre-header-desktop--show {
+      .arv-header-nav-container {
+        @media (min-width: 768px) {
+          border-bottom-right-radius: 8px !important;
+          border-bottom-left-radius: 8px !important;
         }
       }
     }
@@ -34,6 +39,22 @@
 
 .arv-header {
   margin-top: 0;
+
+  @media (max-width: 767px) {
+    margin-top: 0;
+  }
+
+  &.sticky {
+    @media (min-width: 768px) {
+      position: sticky;
+      z-index: 1030;
+      top: 0;
+    }
+  }
+
+  &.arv-header_pre-header-desktop--show {
+    /* Styles spécifiques si nécessaire */
+  }
 
   @media (min-width: 768px) {
     margin-top: 1.5rem;
@@ -49,10 +70,107 @@
 .arv-header_main {
   display: flex;
   align-items: stretch;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0;
   width: 100%;
   height: 100%;
+  position: relative;
+
+  @media (max-width: 767px) {
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.arv-header-logo-zone {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 101;
+  flex: 0 0 auto;
+
+  @media (max-width: 767px) {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    padding: 0 1rem;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    flex: 0 0 50%;
+    box-sizing: border-box;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.arv-header-nav-left-slot {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 1.5rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+}
+
+.arv-header-logo-pipe {
+  height: 0.875rem;
+  border-left: 1px solid rgb(var(--header-normal-separator-color, 209 213 219));
+  display: none;
+  flex-shrink: 0;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.arv-header-nav-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Laisse passer les clics vers le logo sur mobile */
+
+  @media (min-width: 768px) {
+    position: relative;
+    pointer-events: auto;
+    flex: 0 0 50%;
+    display: flex;
+  }
+}
+
+::ng-deep .arv-header-nav-container .arv-header-nav {
+  pointer-events: auto; /* Réactive les pointer-events pour le contenu de la nav */
+}
+
+.arv-header-nav-logo {
+  display: flex;
+  align-items: center;
+
+
+  @media (max-width: 767px) {
+    pointer-events: auto;
+    margin-top: 20px;
+  }
+
+  @media (min-width: 767px) {
+    margin-top: 10px;
+  }
+
+  img {
+    max-height: 32px;
+    width: auto;
+    height: auto;
+    transition: max-height 0.25s ease-in-out;
+  }
 }
 
 .arv-header_profile {
@@ -65,7 +183,18 @@
 }
 
 .arv-header-nav-right-extra {
-  display: block;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  z-index: 101;
+
+  &:empty {
+    display: none;
+  }
 
   @media (min-width: 768px) {
     display: none;
@@ -99,20 +228,45 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
-  padding: 0 1rem;
-  border-top: 1px solid rgb(var(--color-gray));
+  padding: 0;
+  border: 1px solid rgb(var(--color-gray));
   background: rgb(var(--color-white));
   gap: 0;
   font-size: 0.75rem;
+  min-height: 4rem;
+  border-radius: 8px;
+
+  @media (max-width: 767px) {
+    border-radius: 0;
+  }
 
   @media (min-width: 768px) {
-    border-radius: 8px;
     height: 4rem;
+    padding: 0 1rem;
   }
 
   .sticky & {
+    @media (max-width: 767px) {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      &::before {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
     @media (min-width: 768px) {
       height: 4rem;
+      border-radius: 8px;
+
+      &::before {
+        border-radius: 8px;
+      }
     }
   }
 
@@ -126,5 +280,9 @@
     height: 100%;
     border-radius: 8px;
     box-shadow: 0 0 7px 3px rgb(23 35 40 / 15%);
+
+    @media (max-width: 767px) {
+      border-radius: 0;
+    }
   }
 }

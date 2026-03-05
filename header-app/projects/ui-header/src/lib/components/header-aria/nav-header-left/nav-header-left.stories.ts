@@ -1,20 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
-import { NavLeft } from './nav-left.component';
+import { NavHeaderLeft } from './nav-header-left.component';
 
-/**
- * Nav-Left component for header's left zone
- * Supports secondary logo, tags, badges, and custom content via slot
- */
-
-const meta: Meta<NavLeft> = {
+const meta: Meta<NavHeaderLeft> = {
   title: 'Header ARIA/Nav Left',
-  component: NavLeft,
+  component: NavHeaderLeft,
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [NavLeft],
+      imports: [NavHeaderLeft],
     }),
     applicationConfig({
       providers: [provideRouter([{ path: '**', redirectTo: '' }], withHashLocation())],
@@ -50,7 +45,7 @@ const meta: Meta<NavLeft> = {
 };
 
 export default meta;
-type Story = StoryObj<NavLeft>;
+type Story = StoryObj<NavHeaderLeft>;
 
 export const Default: Story = {
   args: {
@@ -130,7 +125,7 @@ export const WithCustomContent: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav-left
+      <ui-nav-header-left
         [secondaryLogoPath]="secondaryLogoPath"
         [secondaryLogoAlt]="secondaryLogoAlt"
         [showSeparator]="showSeparator">
@@ -139,7 +134,7 @@ export const WithCustomContent: Story = {
           <span style="color: #6b7280; font-size: 0.75rem;">•</span>
           <span style="color: #1a1a1a; font-size: 0.75rem; font-weight: 500;">Fleet: 250 vehicles</span>
         </div>
-      </ui-nav-left>
+      </ui-nav-header-left>
     `,
   }),
   args: {
@@ -153,7 +148,7 @@ export const MultipleElements: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav-left
+      <ui-nav-header-left
         [secondaryLogoPath]="secondaryLogoPath"
         [secondaryLogoAlt]="secondaryLogoAlt"
         [tagText]="tagText"
@@ -162,7 +157,7 @@ export const MultipleElements: Story = {
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <span style="background: #3b82f6; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 600;">v2.0</span>
         </div>
-      </ui-nav-left>
+      </ui-nav-header-left>
     `,
   }),
   args: {
@@ -184,3 +179,4 @@ export const Playground: Story = {
     showSeparator: true,
   },
 };
+

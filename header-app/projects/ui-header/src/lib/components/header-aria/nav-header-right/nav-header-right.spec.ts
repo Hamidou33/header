@@ -1,10 +1,10 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { NavRight, UserProfile } from './nav-right.component';
+import { NavHeaderRight, UserProfile } from './nav-header-right.component';
 import { provideRouter } from '@angular/router';
 
-describe('NavRight Component', () => {
-  let fixture: ComponentFixture<NavRight>;
-  let component: NavRight;
+describe('NavHeaderRight Component', () => {
+  let fixture: ComponentFixture<NavHeaderRight>;
+  let component: NavHeaderRight;
 
   const mockUser: UserProfile = {
     name: 'John Doe',
@@ -14,10 +14,10 @@ describe('NavRight Component', () => {
 
   const createComponent = () => {
     TestBed.configureTestingModule({
-      imports: [NavRight],
+      imports: [NavHeaderRight],
       providers: [provideRouter([])],
     });
-    fixture = TestBed.createComponent(NavRight);
+    fixture = TestBed.createComponent(NavHeaderRight);
     fixture.componentRef.setInput('user', mockUser);
     component = fixture.componentInstance;
   };
@@ -43,3 +43,4 @@ describe('NavRight Component', () => {
     expect(eventEmitted).toBe(true);
   });
 });
+

@@ -23,11 +23,20 @@
       .sticky & {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+
+        @media (max-width: 767px) {
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
       }
     }
 
     .sticky & {
       max-height: 3rem;
+    }
+
+    @media (max-width: 767px) {
+      padding: 0;
     }
 
     .arv-header-nav-brand {
@@ -95,6 +104,7 @@
     }
 
     .arv-header-nav-logo {
+
       img {
         /* max-width: 140px; */
         max-height: 32px;
@@ -305,6 +315,7 @@
       padding: 0;
       cursor: pointer;
       gap: 5px;
+      margin-right: 0.5rem;
 
       @media (min-width: 768px) {
         display: none;

@@ -27,45 +27,72 @@
       padding: 0 1rem;
     }
 
+    @media (max-width: 767px) {
+      padding: 0;
+      border-radius: 0;
+
+      &.arv-header-nav_rounded {
+        border-radius: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
     &.arv-header-nav_rounded {
       border-radius: 8px;
 
       .sticky & {
+        @media (max-width: 767px) {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        @media (min-width: 768px) {
+          border-radius: 8px;
+        }
+      }
+    }
+
+    :host-context(.sticky) &.arv-header-nav_rounded {
+      @media (max-width: 767px) {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      @media (min-width: 768px) {
+        border-radius: 8px;
       }
     }
 
     .sticky & {
     }
 
-    /* ZONE 1: Nav-Left - Logo principal + Second logo/tag */
+    /* ZONE 1: Nav-Left - Burger (on mobile) */
     .arv-header-nav-left-zone {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      flex: 1 1 auto; /* En mobile, prend tout l'espace pour pousser le burger à droite */
+      flex: 0 0 auto; /* Ne prend que la place nÃ©cessaire pour le burger */
+      margin-left: auto; /* Pousse le burger tout Ã  droite */
       min-width: 0;
       height: 100%;
-      justify-content: space-between;
+      justify-content: flex-end;
 
       @media (min-width: 768px) {
-        flex: 0 0 50%; /* Retour à 50% sur desktop pour le centrage du menu */
+        flex: 0 0 0px; /* Pas de contenu nav-left sur desktop dans ce composant */
+        margin-left: 0;
         overflow: hidden;
-        justify-content: flex-start;
       }
     }
 
     .arv-header-nav-left-separator {
       display: none;
-
-      @media (min-width: 768px) {
-        display: block;
-        height: 0.875rem;
-        border-left: 1px solid rgb(var(--header-normal-separator-color, 209 213 219));
-        margin: 0 0.75rem;
-        flex-shrink: 0;
-      }
     }
 
     .arv-header-nav-left-content {
@@ -80,11 +107,11 @@
 
     /* ZONE 2: Nav-Center (commence au centre) - Menus alignés à droite */
     .arv-header-nav-center-zone {
-      display: flex; /* Toujours flexible pour permettre au menu mobile d'être visible */
+      display: flex; /* Toujours flexible pour permettre au menu mobile d'etre visible */
       align-items: stretch;
       flex: 0 0 0px; /* Pas de largeur sur mobile pour laisser la zone gauche prendre tout l'espace */
       min-width: 0;
-      justify-content: flex-end; /* Alignement des items à la fin de la zone comme demandé */
+      justify-content: flex-end; /* Alignement des items a la fin de la zone */
       margin-left: 0;
       overflow: visible; /* Autoriser l'affichage du menu mobile en dehors */
       height: 100%;
@@ -93,11 +120,11 @@
         display: flex;
         flex: 1 1 auto; /* Reprend l'espace disponible sur desktop */
         justify-content: flex-end;
-        overflow: hidden; /* Réactiver l'overflow caché sur desktop pour le calcul des items */
+        overflow: hidden; /* Overflow cache sur desktop pour le calcul des items */
       }
     }
 
-    /* ZONE 3: Nav-Right - Pipe + Profile */
+    /* ZONE 3: Nav-Right - Pipe separator + Profile dropdown */
     .arv-header-nav-right-zone {
       display: none;
 
@@ -107,7 +134,7 @@
         gap: 0.75rem;
         flex: 0 0 auto;
         flex-shrink: 0;
-        margin-left: 0.75rem; /* Ajout d'une marge pour éviter le rognage de "More" */
+        margin-left: 0.75rem;
         height: 100%;
       }
     }
@@ -118,7 +145,7 @@
       align-self: center;
     }
 
-.arv-header-nav-profile {
+    .arv-header-nav-profile {
       display: flex;
       align-items: stretch;
       height: 100%;
@@ -196,13 +223,7 @@
     }
 
     .arv-header-nav-logo {
-      img {
-        /* max-width: 140px; */
-        max-height: 32px;
-        width: auto;
-        height: auto;
-        transition: max-height 0.25s ease-in-out;
-      }
+      display: none;
     }
 
     .arv-header-nav-measure {
@@ -246,7 +267,7 @@
       font-size: 1.25rem;
       list-style: none;
       inset: 0;
-      flex-wrap: nowrap; /* Empêche le wrap sur desktop */
+      flex-wrap: nowrap; /* EmpÃªche le wrap sur desktop */
 
       &.show {
         transform: translateX(0) !important;
@@ -335,7 +356,7 @@
 
       @media (max-width: 767px) {
         .arv-header-nav-menu-main {
-          display: none; /* Masqué en mobile car les items sont dans la navigationStack */
+          display: none; /* MasquÃ© en mobile car les items sont dans la navigationStack */
         }
 
         .arv-header-nav_item {
@@ -343,7 +364,7 @@
           display: flex;
           align-items: stretch;
 
-          ui-nav-link,
+          ui-nav-header-link,
           app-nav-link {
             width: 100%;
             display: flex;
@@ -371,7 +392,7 @@
         position: unset;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-start; /* Menus alignés à gauche */
+        justify-content: flex-start; /* Menus alignÃ©s Ã  gauche */
         height: 100%;
         width: auto;
         padding: unset;
@@ -448,6 +469,8 @@
       padding: 0;
       cursor: pointer;
       gap: 5px;
+      margin-right: 0.5rem;
+      z-index: 102;
 
       @media (min-width: 768px) {
         display: none;
@@ -474,7 +497,7 @@
       }
 
       &.open {
-        z-index: 101;
+        z-index: 102;
 
         .burger-brick {
           background-color: #ffffff;
@@ -555,3 +578,6 @@
     transform: translateX(0);
   }
 }
+
+
+

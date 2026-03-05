@@ -87,11 +87,17 @@ const meta: Meta<Header> = {
     showHeaderPostNav: true,
     showHeaderPostNavMobile: false,
     maxVisibleItems: 99,
+    logoPath: '/logo-header.svg',
+    companyName: 'Arval',
+    logoUrl: '/',
   },
   render: (args) => ({
     props: args,
     template: `
       <ui-header
+        [logoUrl]="logoUrl"
+        [companyName]="companyName"
+        [logoPath]="logoPath"
         [showProfile]="showProfile"
         [showAvatar]="showAvatar"
         [showEmail]="showEmail"
@@ -229,11 +235,14 @@ export const WithRealLogo: Story = {
   render: (args) => ({
     props: {
       ...args,
-      logoPath: 'https://via.placeholder.com/140x32/0066cc/ffffff?text=My+Company',
+      logoPath: '/logo-header.svg',
       companyName: 'My Company',
     },
     template: `
       <ui-header
+        [logoUrl]="logoUrl"
+        [companyName]="companyName"
+        [logoPath]="logoPath"
         [showProfile]="showProfile"
         [showAvatar]="showAvatar"
         [showEmail]="showEmail"
@@ -296,6 +305,9 @@ export const WithSecondaryLogoAndTag: Story = {
     props: args,
     template: `
       <ui-header
+        [logoUrl]="logoUrl"
+        [companyName]="companyName"
+        [logoPath]="logoPath"
         [showProfile]="showProfile"
         [showAvatar]="showAvatar"
         [showEmail]="showEmail"
@@ -318,6 +330,9 @@ export const WithSecondaryLogoAndTag: Story = {
     showAvatar: true,
     showEmail: false,
     showIcons: false,
+    logoPath: '/logo-header.svg',
+    companyName: 'Arval',
+    logoUrl: '/',
   },
 };
 
@@ -327,6 +342,9 @@ export const FullFeatured: Story = {
     props: args,
     template: `
       <ui-header
+        [logoUrl]="logoUrl"
+        [companyName]="companyName"
+        [logoPath]="logoPath"
         [showProfile]="showProfile"
         [showAvatar]="showAvatar"
         [showEmail]="showEmail"

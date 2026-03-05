@@ -1,8 +1,10 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { NavCenter } from '../nav-center/nav-center.component';
+import { RouterModule } from '@angular/router';
+import { NavHeaderCenter } from '../nav-header-center/nav-header-center.component';
 import { UserProfile } from '../../../models';
+import { Observable, of } from 'rxjs';
 
 interface SubMenuItem {
   label: string;
@@ -25,7 +27,7 @@ interface ProfileMenuItem {
 
 @Component({
   selector: 'ui-header',
-  imports: [CommonModule, CdkMenuModule, NavCenter],
+  imports: [CommonModule, NgOptimizedImage, CdkMenuModule, RouterModule, NavHeaderCenter],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +39,11 @@ export class Header {
   showIcons = input<boolean>(false);
   maxVisibleItems = input<number>(99);
   logoPath = input<string | null>('/logo-header.svg');
+  themeLogoPath$ = input<Observable<string | null>>(of(null));
+  mainLogoAlt = input<string>('Logo');
+  themeLogoAlt$ = input<Observable<string | null>>(of(null));
+  logoWidth = input<number>(140);
+  logoHeight = input<number>(32);
   rounded = input<boolean>(true);
 
   // Nouveaux signaux basés sur les images
@@ -45,11 +52,17 @@ export class Header {
   showHeaderPostNav = input<boolean>(true);
   showHeaderPostNavMobile = input<boolean>(false); // Pour la classe arv-header_post-header-desktop--show
 
-  sticky = input<boolean>(true);
+  sticky = input<boolean>(false);
   showNav = input<boolean>(true);
 
   companyName = input<string>('My Company');
-  logoUrl = input<string>('🏢');
+  logoUrl = input<string>('/');
+
+  clickMainLogo = output<void>();
+
+  onClickMainLogo() {
+    this.clickMainLogo.emit();
+  }
 
   userProfile = input<UserProfile | null>({
     name: 'John Doe',
@@ -173,3 +186,4 @@ export class Header {
     },
   ]);
 }
+

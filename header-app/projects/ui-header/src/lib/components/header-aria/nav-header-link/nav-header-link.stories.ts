@@ -3,22 +3,22 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import { MenuBar } from '@angular/aria/menu';
-import { NavLink } from './nav-link.component';
+import { NavHeaderLink } from './nav-header-link.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 
 /**
- * NavLink component - a simple navigation link.
+ * NavHeaderLink component - a simple navigation link.
  * All inputs are input() signals.
  */
 
-const meta: Meta<NavLink> = {
-  title: 'Header ARIA/NavLink',
-  component: NavLink,
+const meta: Meta<NavHeaderLink> = {
+  title: 'Header ARIA/NavHeaderLink',
+  component: NavHeaderLink,
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [NavLink, MenuBar, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavHeaderLink, MenuBar, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
@@ -59,20 +59,20 @@ const meta: Meta<NavLink> = {
       <div
         ngMenuBar
         style="display: inline-flex; align-items: center; gap: 12px; padding: 16px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <ui-nav-link
+        <ui-nav-header-link
           [label]="label"
           [link]="link"
           [icon]="icon"
           [active]="active"
           [measureOnly]="measureOnly"
-          [useAriaMenu]="useAriaMenu"></ui-nav-link>
+          [useAriaMenu]="useAriaMenu"></ui-nav-header-link>
       </div>
     `,
   }),
 };
 
 export default meta;
-type Story = StoryObj<NavLink>;
+type Story = StoryObj<NavHeaderLink>;
 
 export const Default: Story = {
   args: {
@@ -139,14 +139,15 @@ export const Mobile: Story = {
     props: args,
     template: `
       <div class="mobile-nav" style="background: #1a1a1a; padding: 16px; min-height: 100vh;">
-        <ui-nav-link
+        <ui-nav-header-link
           [label]="label"
           [link]="link"
           [icon]="icon"
           [active]="active"
           [measureOnly]="measureOnly"
-          [useAriaMenu]="useAriaMenu"></ui-nav-link>
+          [useAriaMenu]="useAriaMenu"></ui-nav-header-link>
       </div>
     `,
   }),
 };
+

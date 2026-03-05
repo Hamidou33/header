@@ -2,25 +2,25 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
-import { NavRight } from './nav-right.component';
+import { NavHeaderRight } from './nav-header-right.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 
 /**
- * NavRight component with user avatar and dropdown menu.
+ * NavHeaderRight component with user avatar and dropdown menu.
  * All inputs are input() signals (except user which is input.required).
  */
 
-const meta: Meta<NavRight> = {
-  title: 'Header ARIA/NavRight',
-  component: NavRight,
+const meta: Meta<NavHeaderRight> = {
+  title: 'Header ARIA/NavHeaderRight',
+  component: NavHeaderRight,
   tags: ['autodocs'],
   parameters: {
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [NavRight, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavHeaderRight, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
     }),
     applicationConfig({
       providers: [
@@ -55,20 +55,20 @@ const meta: Meta<NavRight> = {
     props: args,
     template: `
       <div style="display: flex; justify-content: flex-end; padding: 16px; background: #f9fafb;">
-        <ui-nav-right
+        <ui-nav-header-right
           [user]="user"
           [menuItems]="menuItems"
           [showAvatar]="showAvatar"
           [showEmail]="showEmail"
           [showIcons]="showIcons">
-        </ui-nav-right>
+        </ui-nav-header-right>
       </div>
     `,
   }),
 };
 
 export default meta;
-type Story = StoryObj<NavRight>;
+type Story = StoryObj<NavHeaderRight>;
 
 export const Default: Story = {
   args: {
@@ -197,14 +197,15 @@ export const Mobile: Story = {
     props: args,
     template: `
       <div class="mobile-profile-item" style="background: #1a1a1a; padding: 16px; min-height: 100vh;">
-        <ui-nav-right
+        <ui-nav-header-right
           [user]="user"
           [menuItems]="menuItems"
           [showAvatar]="showAvatar"
           [showEmail]="showEmail"
           [showIcons]="showIcons">
-        </ui-nav-right>
+        </ui-nav-header-right>
       </div>
     `,
   }),
 };
+
