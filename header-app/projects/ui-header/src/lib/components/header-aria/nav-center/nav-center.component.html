@@ -1,22 +1,7 @@
 <section class="arv-header-nav" [class.arv-header-nav_rounded]="rounded()">
   <!-- Zone 1: Nav-Left (1/3 max) - Logo principal + Logo secondaire/Tag -->
   <div class="arv-header-nav-left-zone">
-    <a [routerLink]="mainLogoUrl()" [title]="mainLogoTitle()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
-      @if (mainLogoPath() || (themeLogoPath$() | async); as logoSrc) {
-        <img
-          id="logo-partner-header"
-          [ngSrc]="logoSrc!"
-          [alt]="mainLogoAlt() || (themeLogoAlt$() | async)"
-          [style.max-width.px]="logoWidth()"
-          [style.height.px]="logoHeight()"
-          [width]="logoWidth()"
-          [height]="logoHeight()"
-        />
-      }
-    </a>
-
     @if (showHeaderSecondLogo()) {
-      <div class="arv-header-nav-left-separator"></div>
       <section class="arv-header-nav-left-content">
         <ng-content select="[slot=nav-left]"></ng-content>
       </section>

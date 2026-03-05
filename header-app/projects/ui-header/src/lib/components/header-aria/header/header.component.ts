@@ -1,8 +1,9 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { NavCenter } from '../nav-center/nav-center.component';
 import { UserProfile } from '../../../models';
+import { Observable, of } from 'rxjs';
 
 interface SubMenuItem {
   label: string;
@@ -38,6 +39,16 @@ export class Header {
   maxVisibleItems = input<number>(99);
   logoPath = input<string | null>('/logo-header.svg');
   rounded = input<boolean>(true);
+
+  // Inputs liés au logo principal (transférés de NavCenter)
+  mainLogoUrl = input<string>('/');
+  mainLogoTitle = input<string>('Home');
+  mainLogoPath = input<string | null>(null);
+  themeLogoPath$ = input<Observable<string | null>>(of(null));
+  mainLogoAlt = input<string>('Logo');
+  themeLogoAlt$ = input<Observable<string | null>>(of(null));
+  logoWidth = input<number>(140);
+  logoHeight = input<number>(32);
 
   // Nouveaux signaux basés sur les images
   isHeaderFixed = input<boolean>(false);
@@ -172,4 +183,10 @@ export class Header {
       link: '/events',
     },
   ]);
+
+  clickMainLogo = output<void>();
+
+  onClickMainLogo() {
+    this.clickMainLogo.emit();
+  }
 }
