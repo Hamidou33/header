@@ -11,11 +11,13 @@
   @media (min-width: 768px) {
     position: relative;
     inset: unset;
+    margin-top: var(--spacing-3xl);
 
     &.sticky {
       position: sticky;
       z-index: 1030;
       top: 0;
+      margin-top: var(--spacing-3xl);
       margin-bottom: var(--spacing-3xl);
     }
   }
