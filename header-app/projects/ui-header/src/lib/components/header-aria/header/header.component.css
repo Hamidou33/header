@@ -1,5 +1,3 @@
-@import '../variables.css';
-
 :host {
   display: block;
   position: sticky;
@@ -11,14 +9,14 @@
   @media (min-width: 768px) {
     position: relative;
     inset: unset;
-    margin-top: var(--spacing-3xl);
+    margin-top: 1.5rem;
 
     &.sticky {
       position: sticky;
       z-index: 1030;
       top: 0;
-      margin-top: var(--spacing-3xl);
-      margin-bottom: var(--spacing-3xl);
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
     }
   }
 
@@ -38,7 +36,7 @@
   margin-top: 0;
 
   @media (min-width: 768px) {
-    margin-top: var(--spacing-3xl);
+    margin-top: 1.5rem;
   }
 }
 
@@ -58,7 +56,7 @@
 
 .arv-header_profile {
   display: none;
-  margin-right: var(--spacing-sm);
+  margin-right: 0.5rem;
 
   @media (min-width: 768px) {
     display: block;
@@ -79,18 +77,18 @@
   justify-content: space-between;
   margin-top: -2rem;
   font-size: 1.125rem;
-  gap: var(--spacing-2xl);
+  gap: 1.5rem;
 
   @media (min-width: 768px) {
     display: flex;
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: 0.5rem 1rem;
     font-size: 0.75rem;
     gap: 0;
   }
 
   &:empty {
-    padding: var(--spacing-lg);
+    padding: 1rem;
   }
 }
 
@@ -100,10 +98,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: 0.5rem 1rem;
   border-top: 1px solid rgb(var(--color-gray));
   background: rgb(var(--color-white));
-  gap: var(--spacing-2xl);
+  gap: 1.5rem;
   font-size: 0.75rem;
 
   @media (min-width: 768px) {
