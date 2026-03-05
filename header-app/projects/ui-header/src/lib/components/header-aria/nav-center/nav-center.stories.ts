@@ -89,7 +89,7 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav
+      <ui-nav-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
         [mainLogoTitle]="mainLogoTitle"
@@ -101,14 +101,15 @@ export const Default: Story = {
         [showHeaderNavMobileBottom]="showHeaderNavMobileBottom"
         [showHeaderNavRight]="showHeaderNavRight"
         [burgerIcon]="burgerIcon"
-        [burgerIconPos]="burgerIconPos">
+        [burgerIconPos]="burgerIconPos"
+        [showProfile]="showProfile"
+        [userProfile]="userProfile"
+        [profileMenuItems]="profileMenuItems"
+        [showAvatar]="showAvatar"
+        [showEmail]="showEmail"
+        [showIcons]="showIcons">
         <div slot="nav-left" style="font-size: 0.875rem; color: #666;">🏢 Partner</div>
-        <div slot="nav-right" style="padding: 0 10px;">
-          <button style="padding: 6px 12px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer;">
-            👤 Login
-          </button>
-        </div>
-      </ui-nav>
+      </ui-nav-center>
     `,
   }),
   args: {
@@ -120,9 +121,35 @@ export const Default: Story = {
     showHeaderNavMobileTop: true,
     showHeaderNavMobileBottom: true,
     showHeaderNavRight: true,
-    burgerIcon: true,
+    burgerIcon: false,
     burgerIconPos: 'right',
     maxVisibleItems: 99,
+    showProfile: true,
+    showAvatar: true,
+    showEmail: true,
+    showIcons: true,
+    userProfile: {
+      name: 'John Doe',
+      email: 'john.doe@company.com',
+      avatar: 'JD',
+    },
+    profileMenuItems: [
+      {
+        label: 'My Profile',
+        link: '/profile',
+        icon: 'user',
+      },
+      {
+        label: 'Settings',
+        link: '/settings',
+        icon: 'gear',
+      },
+      {
+        label: 'Logout',
+        link: '/logout',
+        icon: 'logout',
+      },
+    ],
     items: [
       { label: 'Home', link: '/home' },
       { label: 'About', link: '/about' },
@@ -136,7 +163,7 @@ export const SimpleLinks: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav
+      <ui-nav-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
         [mainLogoTitle]="mainLogoTitle"
@@ -145,7 +172,7 @@ export const SimpleLinks: Story = {
         [rounded]="rounded"
         [burgerIcon]="burgerIcon"
         [burgerIconPos]="burgerIconPos">
-      </ui-nav>
+      </ui-nav-center>
     `,
   }),
   args: {
@@ -153,7 +180,7 @@ export const SimpleLinks: Story = {
     mainLogoUrl: '/',
     mainLogoPath: '/logo-header.svg',
     rounded: true,
-    burgerIcon: true,
+    burgerIcon: false,
     burgerIconPos: 'right',
     maxVisibleItems: 99,
     items: [
@@ -170,7 +197,7 @@ export const WithDropdowns: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <ui-nav
+      <ui-nav-center
         [items]="items"
         [maxVisibleItems]="maxVisibleItems"
         [mainLogoTitle]="mainLogoTitle"
@@ -179,19 +206,20 @@ export const WithDropdowns: Story = {
         [rounded]="rounded"
         [showHeaderNavMobileTop]="showHeaderNavMobileTop"
         [showHeaderNavMobileBottom]="showHeaderNavMobileBottom"
-        [showHeaderNavRight]="showHeaderNavRight">
-        <div slot="nav-right" style="padding: 0 10px;">
-          <button style="padding: 6px 12px; border-radius: 6px; border: 1px solid #0066cc; background: #0066cc; color: white; cursor: pointer;">
-            Sign Up
-          </button>
-        </div>
+        [showHeaderNavRight]="showHeaderNavRight"
+        [showProfile]="showProfile"
+        [userProfile]="userProfile"
+        [profileMenuItems]="profileMenuItems"
+        [showAvatar]="showAvatar"
+        [showEmail]="showEmail"
+        [showIcons]="showIcons">
         <div slot="pre-nav-mobile" style="background: #f9fafb; padding: 15px; margin-bottom: 10px; border-radius: 6px;">
           📱 Mobile Header Content
         </div>
         <div slot="post-nav-mobile" style="background: #f3f4f6; padding: 15px; margin-top: 10px; border-radius: 6px;">
           📞 Support: 1-800-123-4567
         </div>
-      </ui-nav>
+      </ui-nav-center>
     `,
   }),
   args: {
@@ -203,6 +231,32 @@ export const WithDropdowns: Story = {
     showHeaderNavMobileBottom: true,
     showHeaderNavRight: true,
     maxVisibleItems: 99,
+    showProfile: true,
+    showAvatar: true,
+    showEmail: true,
+    showIcons: true,
+    userProfile: {
+      name: 'Alice Smith',
+      email: 'alice.smith@company.com',
+      avatar: 'AS',
+    },
+    profileMenuItems: [
+      {
+        label: 'My Profile',
+        link: '/profile',
+        icon: 'user',
+      },
+      {
+        label: 'Settings',
+        link: '/settings',
+        icon: 'gear',
+      },
+      {
+        label: 'Logout',
+        link: '/logout',
+        icon: 'logout',
+      },
+    ],
     items: [
       {
         label: 'Products',
@@ -244,7 +298,7 @@ export const ManyItems: Story = {
     mainLogoUrl: '/',
     mainLogoPath: '/logo-header.svg',
     rounded: true,
-    burgerIcon: true,
+    burgerIcon: false,
     burgerIconPos: 'right',
     maxVisibleItems: 99,
     items: [
