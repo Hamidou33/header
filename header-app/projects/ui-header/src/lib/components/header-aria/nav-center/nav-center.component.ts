@@ -18,7 +18,7 @@ import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
 import { NavLink } from '../nav-link/nav-link.component';
 import { Dropdown } from '../dropdown/dropdown.component';
-import { ProfileMenu } from '../profile-menu/profile-menu.component';
+import { NavRight } from '../nav-right/nav-right.component';
 import type { NavItem, DropdownItem, UserProfile } from '../../../models';
 import { Observable, of } from 'rxjs';
 
@@ -26,13 +26,13 @@ import { Observable, of } from 'rxjs';
 export type { NavItem };
 
 @Component({
-  selector: 'ui-nav',
-  imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown, ProfileMenu],
-  templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css',
+  selector: 'ui-nav-center',
+  imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown, NavRight],
+  templateUrl: './nav-center.component.html',
+  styleUrl: './nav-center.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Nav implements AfterViewInit, OnDestroy {
+export class NavCenter implements AfterViewInit, OnDestroy {
   items = input<NavItem[]>([]);
   maxVisibleItems = input<number>(99);
   readonly isMobile = signal(window.matchMedia('(max-width: 768px)').matches);
@@ -250,3 +250,6 @@ export class Nav implements AfterViewInit, OnDestroy {
     return typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches;
   }
 }
+
+// Backward compatibility alias
+export { NavCenter as Nav };

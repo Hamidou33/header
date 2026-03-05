@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
-import { Nav } from './nav.component';
+import { NavCenter } from './nav-center.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 
@@ -11,8 +11,8 @@ import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
  * All inputs are input() signals.
  */
 
-const meta: Meta<Nav> = {
-  title: 'Header ARIA/Nav',
+const meta: Meta<NavCenter> = {
+  title: 'Header ARIA/Nav Center',
   component: Nav,
   tags: ['autodocs'],
   parameters: {
@@ -83,7 +83,7 @@ const meta: Meta<Nav> = {
 };
 
 export default meta;
-type Story = StoryObj<Nav>;
+type Story = StoryObj<NavCenter>;
 
 export const Default: Story = {
   render: (args) => ({

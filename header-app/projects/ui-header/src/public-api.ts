@@ -2,11 +2,11 @@ export * from './lib/models';
 
 // Native ARIA version (Angular 21+)
 export * from './lib/components/header-aria/header/header.component';
-export * from './lib/components/header-aria/nav/nav.component';
+export * from './lib/components/header-aria/nav-center/nav-center.component';
 export * from './lib/components/header-aria/nav-left/nav-left.component';
+export * from './lib/components/header-aria/nav-right/nav-right.component';
 export * from './lib/components/header-aria/nav-link/nav-link.component';
 export * from './lib/components/header-aria/dropdown/dropdown.component';
-export * from './lib/components/header-aria/profile-menu/profile-menu.component';
 
 // CDK version (@angular/cdk/menu)
 export * from './lib/components/header-cdk/header/header-cdk';

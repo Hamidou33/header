@@ -79,7 +79,7 @@
 
         @if (showProfile() && userProfile() && isMobile()) {
           <div class="arv-header-nav_item mobile-profile-item">
-            <ui-profile-menu
+            <ui-nav-right
               class="mobile-profile"
               [user]="userProfile()!"
               [menuItems]="profileMenuItems()"
@@ -114,7 +114,7 @@
     <div class="arv-header-nav-pipe-separator"></div>
 
     @if (showProfile() && userProfile() && !isMobile()) {
-      <ui-profile-menu
+      <ui-nav-right
         class="arv-header-nav-profile"
         [user]="userProfile()!"
         [menuItems]="profileMenuItems()"

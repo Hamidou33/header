@@ -1,12 +1,12 @@
 import '@test-setup';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ProfileMenu, UserProfile } from './profile-menu.component';
+import { NavRight, UserProfile } from './nav-right.component';
 import { provideRouter } from '@angular/router';
 
-describe('ProfileMenu Component', () => {
-  let fixture: ComponentFixture<ProfileMenu>;
-  let component: ProfileMenu;
+describe('NavRight Component', () => {
+  let fixture: ComponentFixture<NavRight>;
+  let component: NavRight;
   const mockUser: UserProfile = {
     name: 'John Doe',
     email: 'john@example.com',
@@ -15,10 +15,10 @@ describe('ProfileMenu Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ProfileMenu],
+      imports: [NavRight],
       providers: [provideRouter([])],
     });
-    fixture = TestBed.createComponent(ProfileMenu);
+    fixture = TestBed.createComponent(NavRight);
     fixture.componentRef.setInput('user', mockUser);
     component = fixture.componentInstance;
   });

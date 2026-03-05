@@ -9,7 +9,7 @@
     <section #postnav class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
       <div class="arv-header_main">
         @if (showNav()) {
-          <ui-nav
+          <ui-nav-center
             class="arv-header-nav"
             [items]="menuItems()"
             [maxVisibleItems]="maxVisibleItems()"
@@ -28,7 +28,7 @@
             </div>
             <div slot="nav-right">
               @if (showProfile() && userProfile()) {
-                <ui-profile-menu
+                <ui-nav-right
                   class="arv-header_profile"
                   [user]="userProfile()!"
                   [menuItems]="profileMenuItems()"
@@ -46,7 +46,7 @@
             <div slot="post-nav-mobile">
               <ng-content select="[slot=post-nav-mobile]"></ng-content>
             </div>
-          </ui-nav>
+          </ui-nav-center>
         }
 
         <ng-content></ng-content>

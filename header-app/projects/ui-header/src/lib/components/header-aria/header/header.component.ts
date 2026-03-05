@@ -1,8 +1,8 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { Nav } from '../nav/nav.component';
-import { ProfileMenu } from '../profile-menu/profile-menu.component';
+import { NavCenter } from '../nav-center/nav-center.component';
+import { NavRight } from '../nav-right/nav-right.component';
 import { UserProfile } from '../../../models';
 
 interface SubMenuItem {
@@ -26,7 +26,7 @@ interface ProfileMenuItem {
 
 @Component({
   selector: 'ui-header',
-  imports: [CommonModule, CdkMenuModule, Nav, ProfileMenu],
+  imports: [CommonModule, CdkMenuModule, NavCenter, NavRight],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

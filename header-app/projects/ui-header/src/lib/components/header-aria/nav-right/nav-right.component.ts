@@ -10,7 +10,7 @@ import type { DropdownItem, UserProfile } from '../../../models';
 export type { UserProfile };
 
 @Component({
-  selector: 'ui-profile-menu',
+  selector: 'ui-nav-right',
   imports: [
     CommonModule,
     RouterModule,
@@ -22,11 +22,11 @@ export type { UserProfile };
     OverlayModule,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
-  templateUrl: './profile-menu.component.html',
-  styleUrl: './profile-menu.component.css',
+  templateUrl: './nav-right.component.html',
+  styleUrl: './nav-right.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileMenu {
+export class NavRight {
   user = input.required<UserProfile>();
   menuItems = input<DropdownItem[]>([]);
   showAvatar = input<boolean>(false);
@@ -65,3 +65,6 @@ export class ProfileMenu {
     this.itemClick.emit();
   }
 }
+
+// Backward compatibility alias
+export { NavRight as ProfileMenu };

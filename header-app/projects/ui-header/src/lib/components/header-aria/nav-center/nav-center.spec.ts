@@ -1,19 +1,19 @@
 import '@test-setup';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { Nav, NavItem } from './nav.component';
+import { NavCenter, NavItem } from './nav-center.component';
 import { provideRouter } from '@angular/router';
 
-describe('Nav Component', () => {
-  let fixture: ComponentFixture<Nav>;
-  let component: Nav;
+describe('NavCenter Component', () => {
+  let fixture: ComponentFixture<NavCenter>;
+  let component: NavCenter;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [Nav],
+      imports: [NavCenter],
       providers: [provideRouter([])],
     });
-    fixture = TestBed.createComponent(Nav);
+    fixture = TestBed.createComponent(NavCenter);
     component = fixture.componentInstance;
   });
 
