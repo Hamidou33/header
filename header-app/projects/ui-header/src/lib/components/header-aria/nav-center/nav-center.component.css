@@ -297,6 +297,12 @@
         overflow-y: auto;
         overflow-x: hidden;
         box-sizing: border-box;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Edge/IE */
+
+        &::-webkit-scrollbar {
+          display: none; /* Chrome/Safari/Edge */
+        }
       }
 
       .mobile-nav-trigger {
