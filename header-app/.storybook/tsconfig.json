@@ -12,6 +12,8 @@
     }
   },
   "include": [
+    "../projects/ui-header/src/lib/components/header-aria/header/header.component.ts",
+    "../projects/ui-header/src/lib/components/header-aria/header/header.defaults.ts",
     "../projects/**/*.stories.ts",
     "../.storybook/**/*"
   ],

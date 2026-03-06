@@ -1,25 +1,28 @@
-<section class="arv-header-nav" [class.arv-header-nav_rounded]="rounded()">
-  <!-- Zone 1: Nav-Left (Burger only on mobile) -->
+﻿<section class="arv-header-nav" [class.arv-header-nav_rounded]="rounded()">
   <div class="arv-header-nav-left-zone">
-    <!-- Burger menu (mobile only) -->
     <section
       class="burger"
+      data-testid="mobile-burger"
       [class.burger-icon__display-desktop]="burgerIcon()"
       [class.burger-icon__left]="burgerIconPos() === 'left'"
       [class.open]="mobileMenuOpen()"
       (click)="mobileMenuOpen() ? goBack($event) : toggleMobileMenu()"
       role="button"
-      title="burger icon"
-    >
+      title="burger icon">
       <div class="burger-brick"></div>
       <div class="burger-brick middle"></div>
       <div class="burger-brick"></div>
     </section>
   </div>
 
-  <!-- Zone 2: Nav-Center (2/3) - Menus alignés à droite + More -->
   <div #navContent class="arv-header-nav-center-zone">
-    <nav #navMenu id="nav" class="arv-header-nav-menu" role="navigation" [class.show]="mobileMenuOpen()">
+    <nav
+      #navMenu
+      id="nav"
+      class="arv-header-nav-menu"
+      role="navigation"
+      data-testid="center-nav-menu"
+      [class.show]="mobileMenuOpen()">
       <div class="arv-header-nav-menu-header" [class.submenu-header]="navigationStack().length > 1">
         @if (currentMenuTitle()) {
           <h2 class="arv-header-nav-menu-title">{{ currentMenuTitle() }}</h2>
@@ -32,17 +35,22 @@
         </div>
       }
 
-      <!-- Menu Mobile avec glissement -->
       @if (isMobile()) {
         <div class="arv-header-nav-menu-mobile-container">
           @for (levelItems of navigationStack(); track $index; let levelIndex = $index) {
-            <div class="arv-header-nav-menu-level" [style.transform]="'translateX(' + (100 * (levelIndex - (navigationStack().length - 1))) + '%)'">
-              @for (item of levelItems; track $index) {
-                <div class="arv-header-nav_item" [style.animation-delay]="levelIndex === 0 ? ($index * 0.05) + 's' : '0s'">
-                  @if (item.subMenu && item.subMenu.length > 0) {
+            <div class="arv-header-nav-menu-level" [style.transform]="getMobileLevelTransform(levelIndex)">
+              @for (item of levelItems; track item.label; let itemIndex = $index) {
+                <div class="arv-header-nav_item" [style.animation-delay]="getMobileItemAnimationDelay(levelIndex, itemIndex)">
+                  @if (item.subMenu?.length) {
                     <button class="mobile-nav-trigger" (click)="navigateToSubMenu(item, $event)">
                       <span>{{ item.label }}</span>
-                      <svg class="arrow-icon-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <svg
+                        class="arrow-icon-right"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2">
                         <polyline points="9 18 15 12 9 6"></polyline>
                       </svg>
                     </button>
@@ -50,7 +58,7 @@
                     <ui-nav-header-link
                       [label]="item.label"
                       [link]="item.link"
-                      [active]="item.active || false"
+                      [active]="item.active ?? false"
                       [useAriaMenu]="true"
                       (itemClick)="closeMobileMenu()" />
                   }
@@ -73,21 +81,20 @@
           }
         </div>
       } @else {
-        <!-- Mode Desktop classique -->
         <div id="mainNav" class="arv-header-nav-menu-main" ngMenuBar>
-          @for (item of visibleItems(); track $index) {
+          @for (item of visibleItems(); track item.label) {
             <div class="arv-header-nav_item">
-              @if (item.subMenu) {
+              @if (item.subMenu?.length) {
                 <ui-dropdown
                   [label]="item.label"
-                  [items]="item.subMenu"
-                  [active]="item.active || false"
+                  [items]="item.subMenu ?? []"
+                  [active]="item.active ?? false"
                   (itemClick)="closeMobileMenu()" />
               } @else {
                 <ui-nav-header-link
                   [label]="item.label"
                   [link]="item.link"
-                  [active]="item.active || false"
+                  [active]="item.active ?? false"
                   [useAriaMenu]="true"
                   (itemClick)="closeMobileMenu()" />
               }
@@ -114,7 +121,6 @@
     </nav>
   </div>
 
-  <!-- Zone 3: Nav-Right - Pipe separator + Profile dropdown -->
   @if ((showProfile() && userProfile() && !isMobile()) || showHeaderNavRight()) {
     <div #navRight class="arv-header-nav-right-zone">
       <div class="arv-header-nav-pipe-separator"></div>
@@ -137,21 +143,20 @@
     </div>
   }
 
-  <!-- Hidden measurement zone for calculating menu widths -->
   <div class="arv-header-nav-measure" aria-hidden="true">
-    @for (item of items(); track $index) {
+    @for (item of items(); track item.label) {
       <span class="arv-header-nav-measure-item" #measureItem>
-        @if (item.subMenu) {
+        @if (item.subMenu?.length) {
           <ui-dropdown
             [label]="item.label"
-            [items]="item.subMenu"
-            [active]="item.active || false"
+            [items]="item.subMenu ?? []"
+            [active]="item.active ?? false"
             [measureOnly]="true" />
         } @else {
           <ui-nav-header-link
             [label]="item.label"
             [link]="item.link"
-            [active]="item.active || false"
+            [active]="item.active ?? false"
             [useAriaMenu]="true"
             [measureOnly]="true" />
         }
@@ -162,4 +167,3 @@
     </span>
   </div>
 </section>
-

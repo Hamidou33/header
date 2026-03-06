@@ -1,4 +1,4 @@
-:host {
+﻿:host {
   display: block;
   width: 100%;
   flex: 1 1 auto;
@@ -78,8 +78,8 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      flex: 0 0 auto; /* Ne prend que la place nÃ©cessaire pour le burger */
-      margin-left: auto; /* Pousse le burger tout Ã  droite */
+      flex: 0 0 auto; /* Ne prend que la place nÃƒÂ©cessaire pour le burger */
+      margin-left: auto; /* Pousse le burger tout ÃƒÂ  droite */
       min-width: 0;
       height: 100%;
       justify-content: flex-end;
@@ -105,7 +105,7 @@
       white-space: nowrap;
     }
 
-    /* ZONE 2: Nav-Center (commence au centre) - Menus alignés à droite */
+    /* ZONE 2: Nav-Center (commence au centre) - Menus alignÃ©s Ã  droite */
     .arv-header-nav-center-zone {
       display: flex; /* Toujours flexible pour permettre au menu mobile d'etre visible */
       align-items: stretch;
@@ -267,7 +267,7 @@
       font-size: 1.25rem;
       list-style: none;
       inset: 0;
-      flex-wrap: nowrap; /* EmpÃªche le wrap sur desktop */
+      flex-wrap: nowrap; /* EmpÃƒÂªche le wrap sur desktop */
 
       &.show {
         transform: translateX(0) !important;
@@ -356,7 +356,7 @@
 
       @media (max-width: 767px) {
         .arv-header-nav-menu-main {
-          display: none; /* MasquÃ© en mobile car les items sont dans la navigationStack */
+          display: none; /* MasquÃƒÂ© en mobile car les items sont dans la navigationStack */
         }
 
         .arv-header-nav_item {
@@ -392,7 +392,7 @@
         position: unset;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-start; /* Menus alignÃ©s Ã  gauche */
+        justify-content: flex-start; /* Menus alignÃƒÂ©s ÃƒÂ  gauche */
         height: 100%;
         width: auto;
         padding: unset;
@@ -578,6 +578,7 @@
     transform: translateX(0);
   }
 }
+
 
 
 

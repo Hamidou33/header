@@ -1,4 +1,4 @@
-@if (!measureOnly()) {
+﻿@if (!measureOnly()) {
   @if (useAriaMenu()) {
     <a
       [routerLink]="link()"
@@ -6,6 +6,7 @@
       [class.active]="active()"
       ngMenuItem
       [value]="label()"
+      data-testid="nav-link"
       (click)="onLinkClick()">
       @if (icon()) {
         <span class="nav-icon">{{ icon() }}</span>
@@ -18,6 +19,7 @@
       class="nav-link"
       [class.active]="active()"
       cdkMenuItem
+      data-testid="nav-link"
       (click)="onLinkClick()">
       @if (icon()) {
         <span class="nav-icon">{{ icon() }}</span>
@@ -26,7 +28,7 @@
     </a>
   }
 } @else {
-  <span class="nav-link" aria-hidden="true">
+  <span class="nav-link" aria-hidden="true" data-testid="nav-link-measure">
     @if (icon()) {
       <span class="nav-icon">{{ icon() }}</span>
     }

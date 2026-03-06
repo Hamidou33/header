@@ -1,9 +1,9 @@
-import { Component, input, viewChild, signal, effect, output, ChangeDetectionStrategy } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 import type { DropdownItem } from '../../../models';
 
 export type { DropdownItem };
@@ -28,36 +28,37 @@ export type { DropdownItem };
 export class Dropdown {
   private static readonly SCROLL_DELAY_MS = 100;
 
-  label = input<string>('');
-  items = input<DropdownItem[]>([]);
-  active = input<boolean>(false);
-  measureOnly = input<boolean>(false);
+  readonly label = input('');
+  readonly items = input<DropdownItem[]>([]);
+  readonly active = input(false);
+  readonly measureOnly = input(false);
 
-  menu = viewChild<Menu<string>>('menu');
+  readonly menu = viewChild<Menu<string>>('menu');
 
-  openSubmenuIndex = signal<number | null>(null);
-  itemClick = output<void>();
+  readonly openSubmenuIndex = signal<number | null>(null);
+  readonly itemClick = output<void>();
 
   constructor() {
     this.setupMenuVisibilityWatcher();
   }
 
-  toggleSubmenu(index: number, event: Event) {
+  toggleSubmenu(index: number, event: Event): void {
     this.preventEventPropagation(event);
 
     const shouldOpen = this.shouldOpenSubmenu(index);
     this.updateSubmenuState(shouldOpen ? index : null);
 
-    if (shouldOpen) {
-      this.scrollSubmenuIntoView(event.currentTarget as HTMLElement);
+    const target = this.getCurrentTargetElement(event);
+    if (shouldOpen && target) {
+      this.scrollSubmenuIntoView(target);
     }
   }
 
-  onItemClick() {
+  onItemClick(): void {
     this.itemClick.emit();
   }
 
-  private setupMenuVisibilityWatcher() {
+  private setupMenuVisibilityWatcher(): void {
     effect(() => {
       const menuRef = this.menu();
       if (menuRef && !menuRef.visible()) {
@@ -66,7 +67,7 @@ export class Dropdown {
     });
   }
 
-  private preventEventPropagation(event: Event) {
+  private preventEventPropagation(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
   }
@@ -75,22 +76,24 @@ export class Dropdown {
     return this.openSubmenuIndex() !== index;
   }
 
-  private updateSubmenuState(index: number | null) {
+  private updateSubmenuState(index: number | null): void {
     this.openSubmenuIndex.set(index);
   }
 
-  private closeAllSubmenus() {
+  private closeAllSubmenus(): void {
     this.openSubmenuIndex.set(null);
   }
 
-  private scrollSubmenuIntoView(element: HTMLElement) {
+  private getCurrentTargetElement(event: Event): HTMLElement | null {
+    return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+  }
+
+  private scrollSubmenuIntoView(element: HTMLElement): void {
     setTimeout(() => {
-      if (element?.scrollIntoView) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }, Dropdown.SCROLL_DELAY_MS);
   }
 }

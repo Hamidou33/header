@@ -1,24 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import { MenuBar } from '@angular/aria/menu';
 import { NavHeaderLink } from './nav-header-link.component';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
-
-/**
- * NavHeaderLink component - a simple navigation link.
- * All inputs are input() signals.
- */
 
 const meta: Meta<NavHeaderLink> = {
-  title: 'Header ARIA/NavHeaderLink',
+  title: 'Header ARIA/Nav Link',
   component: NavHeaderLink,
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderLink, MenuBar, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavHeaderLink, MenuBar],
     }),
     applicationConfig({
       providers: [
@@ -28,37 +20,26 @@ const meta: Meta<NavHeaderLink> = {
     }),
   ],
   argTypes: {
-    label: {
-      control: 'text',
-      description: 'Link label text',
-    },
-    link: {
-      control: 'text',
-      description: 'URL or route path',
-    },
-    icon: {
-      control: 'text',
-      description: 'Icon (emoji or text)',
-    },
-    active: {
-      control: 'boolean',
-      description: 'Active state',
-    },
-    measureOnly: {
-      control: 'boolean',
-      description: 'Render for measurement only',
-    },
-    useAriaMenu: {
-      control: 'boolean',
-      description: 'Use Angular Aria menu item',
-    },
+    label: { control: 'text', description: 'Link label text' },
+    link: { control: 'text', description: 'URL or route path' },
+    icon: { control: 'text', description: 'Optional icon' },
+    active: { control: 'boolean', description: 'Active state' },
+    measureOnly: { control: 'boolean', description: 'Render for width measurement only' },
+    useAriaMenu: { control: 'boolean', description: 'Use Angular aria menu item behavior' },
   },
-  render: (args) => ({
+  args: {
+    label: 'Home',
+    link: '/home',
+    active: false,
+    measureOnly: false,
+    useAriaMenu: true,
+  },
+  render: args => ({
     props: args,
     template: `
       <div
         ngMenuBar
-        style="display: inline-flex; align-items: center; gap: 12px; padding: 16px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        style="display:inline-flex;align-items:center;gap:12px;padding:16px;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
         <ui-nav-header-link
           [label]="label"
           [link]="link"
@@ -74,24 +55,13 @@ const meta: Meta<NavHeaderLink> = {
 export default meta;
 type Story = StoryObj<NavHeaderLink>;
 
-export const Default: Story = {
-  args: {
-    label: 'Home',
-    link: '/home',
-    active: false,
-    measureOnly: false,
-    useAriaMenu: true,
-  },
-};
+export const Default: Story = {};
 
 export const WithIcon: Story = {
   args: {
     label: 'Products',
     link: '/products',
-    icon: '🛍️',
-    active: false,
-    measureOnly: false,
-    useAriaMenu: true,
+    icon: '\u{1F6CD}\u{FE0F}',
   },
 };
 
@@ -99,30 +69,15 @@ export const Active: Story = {
   args: {
     label: 'Current Page',
     link: '/current',
-    icon: '📍',
+    icon: '\u{1F4CD}',
     active: true,
-    measureOnly: false,
-    useAriaMenu: true,
   },
 };
 
-export const WithoutLink: Story = {
+export const MeasureOnly: Story = {
   args: {
-    label: 'Placeholder',
-    active: false,
-    measureOnly: false,
-    useAriaMenu: true,
-  },
-};
-
-export const LongLabel: Story = {
-  args: {
-    label: 'Very Long Navigation Link Label',
-    link: '/long-path',
-    icon: '📄',
-    active: false,
-    measureOnly: false,
-    useAriaMenu: true,
+    label: 'Measurement Item',
+    measureOnly: true,
   },
 };
 
@@ -132,13 +87,10 @@ export const Mobile: Story = {
       defaultViewport: 'mobile1',
     },
   },
-  args: {
-    ...Default.args,
-  },
-  render: (args) => ({
+  render: args => ({
     props: args,
     template: `
-      <div class="mobile-nav" style="background: #1a1a1a; padding: 16px; min-height: 100vh;">
+      <div style="background:#1a1a1a;padding:16px;min-height:100vh;">
         <ui-nav-header-link
           [label]="label"
           [link]="link"
@@ -150,4 +102,3 @@ export const Mobile: Story = {
     `,
   }),
 };
-

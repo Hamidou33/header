@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,37 +10,34 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavHeaderNotif {
-  notificationCount = input<number>(0);
-  maxCount = input<number>(99);
-  showBadge = input<boolean>(true);
-  iconUrl = input<string>('');
-  size = input<'small' | 'medium' | 'large'>('medium');
-  variant = input<'default' | 'primary' | 'danger'>('default');
+  readonly notificationCount = input(0);
+  readonly maxCount = input(99);
+  readonly showBadge = input(true);
+  readonly iconUrl = input('');
+  readonly size = input<'small' | 'medium' | 'large'>('medium');
+  readonly variant = input<'default' | 'primary' | 'danger'>('default');
 
-  notifClick = output<void>();
+  readonly notifClick = output<void>();
 
-  onNotifClick() {
-    this.notifClick.emit();
-  }
-
-  getDisplayCount(): string {
+  readonly hasNotifications = computed(() => this.notificationCount() > 0);
+  readonly sizeClass = computed(() => `notif-${this.size()}`);
+  readonly variantClass = computed(() => `notif-${this.variant()}`);
+  readonly displayCount = computed(() => {
     const count = this.notificationCount();
     const max = this.maxCount();
 
-    if (count === 0) return '';
-    if (count > max) return `${max}+`;
-    return count.toString();
-  }
+    if (count === 0) {
+      return '';
+    }
 
-  hasNotifications(): boolean {
-    return this.notificationCount() > 0;
-  }
+    if (count > max) {
+      return `${max}+`;
+    }
 
-  getSizeClass(): string {
-    return `notif-${this.size()}`;
-  }
+    return `${count}`;
+  });
 
-  getVariantClass(): string {
-    return `notif-${this.variant()}`;
+  onNotifClick(): void {
+    this.notifClick.emit();
   }
 }

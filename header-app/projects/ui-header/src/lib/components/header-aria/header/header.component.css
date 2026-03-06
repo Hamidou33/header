@@ -173,6 +173,21 @@
   }
 }
 
+.arv-header-nav-logo_hidden {
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.arv-header-logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgb(var(--header-normal-text-color, 26 26 26));
+}
+
 .arv-header_profile {
   display: none;
   margin-right: 0.5rem;

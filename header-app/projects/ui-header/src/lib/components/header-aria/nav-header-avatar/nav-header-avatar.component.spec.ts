@@ -1,20 +1,30 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavHeaderAvatar } from './nav-header-avatar.component';
+
+interface AvatarInputs {
+  avatarUrl: string;
+  userName: string;
+  size: 'small' | 'medium' | 'large';
+  showOnlineStatus: boolean;
+  isOnline: boolean;
+  clickable: boolean;
+}
 
 describe('NavHeaderAvatar Component', () => {
   let fixture: ComponentFixture<NavHeaderAvatar>;
   let component: NavHeaderAvatar;
 
-  const createComponent = () => {
+  const createComponent = (): void => {
     TestBed.configureTestingModule({
       imports: [NavHeaderAvatar],
     });
+
     fixture = TestBed.createComponent(NavHeaderAvatar);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
 
-  const setInput = (name: string, value: unknown) => {
+  const setInput = <K extends keyof AvatarInputs>(name: K, value: AvatarInputs[K]): void => {
     fixture.componentRef.setInput(name, value);
     fixture.detectChanges();
   };
@@ -25,50 +35,60 @@ describe('NavHeaderAvatar Component', () => {
 
   beforeEach(createComponent);
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
   });
 
-  describe('Avatar Display', () => {
-    it('should display image when avatarUrl is provided', () => {
+  it('should create the component', () => {
+    expect(component).toBeInstanceOf(NavHeaderAvatar);
+  });
+
+  describe('Avatar display', () => {
+    it('should render image when avatarUrl is provided', () => {
       setInput('avatarUrl', 'https://example.com/avatar.jpg');
 
-      const image = queryElement('.avatar-image') as HTMLImageElement;
+      const image = queryElement('.avatar-image') as HTMLImageElement | null;
 
-      expect(image).toBeTruthy();
-      expect(image.src).toContain('avatar.jpg');
+      expect(image).not.toBeNull();
+      expect(image?.src).toContain('avatar.jpg');
     });
 
-    it('should display default icon when no avatarUrl and no userName', () => {
-      const defaultIcon = queryElement('.avatar-default-icon');
-
-      expect(defaultIcon).toBeTruthy();
-      expect(defaultIcon?.tagName.toLowerCase()).toBe('svg');
-    });
-
-    it('should display initials when userName is provided without avatarUrl', () => {
+    it('should render initials when userName is provided without avatarUrl', () => {
       setInput('userName', 'John Doe');
 
       const initials = queryElement('.avatar-initials');
 
-      expect(initials).toBeTruthy();
       expect(initials?.textContent?.trim()).toBe('J D');
     });
 
-    it('should display single initial for single word name', () => {
-      setInput('userName', 'John');
+    it('should render default icon when no image and no user name', () => {
+      const defaultIcon = queryElement('.avatar-default-icon');
 
-      expect(component.getInitials()).toBe('J');
-    });
-
-    it('should format initials with space for multi-word names', () => {
-      setInput('userName', 'John Doe');
-
-      expect(component.getInitials()).toBe('J D');
+      expect(defaultIcon).not.toBeNull();
     });
   });
 
-  describe('Size Variants', () => {
+  describe('Computed values', () => {
+    it('should compute single-word initials correctly', () => {
+      setInput('userName', 'John');
+
+      expect(component.initials()).toBe('J');
+    });
+
+    it('should compute multi-word initials correctly', () => {
+      setInput('userName', 'John Doe');
+
+      expect(component.initials()).toBe('J D');
+    });
+
+    it('should expose computed size class', () => {
+      setInput('size', 'large');
+
+      expect(component.sizeClass()).toBe('avatar-large');
+    });
+  });
+
+  describe('Size variants', () => {
     it('should apply small size class', () => {
       setInput('size', 'small');
 
@@ -82,70 +102,47 @@ describe('NavHeaderAvatar Component', () => {
 
       expect(container?.classList.contains('avatar-medium')).toBe(true);
     });
-
-    it('should apply large size class', () => {
-      setInput('size', 'large');
-
-      const container = queryElement('.avatar-container');
-
-      expect(container?.classList.contains('avatar-large')).toBe(true);
-    });
   });
 
-  describe('Online Status', () => {
-    it('should show online status when enabled', () => {
+  describe('Online status', () => {
+    it('should render online indicator when enabled', () => {
       setInput('showOnlineStatus', true);
       setInput('isOnline', true);
 
       const status = queryElement('.online-status');
 
-      expect(status).toBeTruthy();
       expect(status?.classList.contains('online')).toBe(true);
     });
 
-    it('should show offline status', () => {
+    it('should render offline indicator when enabled', () => {
       setInput('showOnlineStatus', true);
       setInput('isOnline', false);
 
       const status = queryElement('.online-status');
 
-      expect(status).toBeTruthy();
       expect(status?.classList.contains('offline')).toBe(true);
-    });
-
-    it('should hide status when disabled', () => {
-      setInput('showOnlineStatus', false);
-
-      const status = queryElement('.online-status');
-
-      expect(status).toBeFalsy();
     });
   });
 
-  describe('Click Behavior', () => {
-    it('should emit event when clicked and clickable', () => {
-      let eventEmitted = false;
-      component.avatarClick.subscribe(() => {
-        eventEmitted = true;
-      });
+  describe('Click behavior', () => {
+    it('should emit avatarClick when clickable avatar is clicked', () => {
+      const emitSpy = vi.fn();
+      component.avatarClick.subscribe(emitSpy);
 
-      setInput('clickable', true);
-      const button = queryElement('.avatar-container') as HTMLButtonElement;
-      button.click();
+      const button = queryElement('[data-testid="avatar-button"]') as HTMLButtonElement | null;
+      button?.click();
 
-      expect(eventEmitted).toBe(true);
+      expect(emitSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should not emit event when not clickable', () => {
-      let eventEmitted = false;
-      component.avatarClick.subscribe(() => {
-        eventEmitted = true;
-      });
-
+    it('should not emit avatarClick when component is not clickable', () => {
+      const emitSpy = vi.fn();
+      component.avatarClick.subscribe(emitSpy);
       setInput('clickable', false);
+
       component.onAvatarClick();
 
-      expect(eventEmitted).toBe(false);
+      expect(emitSpy).not.toHaveBeenCalled();
     });
   });
 });

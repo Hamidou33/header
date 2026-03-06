@@ -10,12 +10,10 @@ const ensureMatchMedia = () => {
       matches: false,
       media: query,
       onchange: null,
-      addListener: () => {},
-      removeListener: () => {},
       addEventListener: () => {},
       removeEventListener: () => {},
       dispatchEvent: () => false,
-    }) as MediaQueryList;
+    }) as unknown as MediaQueryList;
     return;
   }
 
@@ -28,16 +26,8 @@ const ensureMatchMedia = () => {
   window.matchMedia = (query: string) => {
     const list = originalMatchMedia(query);
     if (typeof list.addEventListener !== 'function') {
-      list.addEventListener = (_event: string, listener: EventListenerOrEventListenerObject) => {
-        if (typeof list.addListener === 'function') {
-          list.addListener(listener as (this: MediaQueryList, ev: MediaQueryListEvent) => any);
-        }
-      };
-      list.removeEventListener = (_event: string, listener: EventListenerOrEventListenerObject) => {
-        if (typeof list.removeListener === 'function') {
-          list.removeListener(listener as (this: MediaQueryList, ev: MediaQueryListEvent) => any);
-        }
-      };
+      list.addEventListener = () => {};
+      list.removeEventListener = () => {};
     }
     return list;
   };

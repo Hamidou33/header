@@ -1,17 +1,13 @@
-<button
+﻿<button
   type="button"
   class="notif-container"
-  [class]="getSizeClass()"
+  [class]="sizeClass()"
   [class.has-notifications]="hasNotifications()"
   [attr.aria-label]="hasNotifications() ? notificationCount() + ' notifications' : 'No notifications'"
-  (click)="onNotifClick()"
->
+  data-testid="notif-button"
+  (click)="onNotifClick()">
   @if (iconUrl()) {
-    <img
-      [src]="iconUrl()"
-      alt="Notifications"
-      class="notif-icon-image"
-    />
+    <img [src]="iconUrl()" alt="Notifications" class="notif-icon-image" />
   } @else {
     <svg
       class="notif-icon"
@@ -21,8 +17,7 @@
       stroke="currentColor"
       stroke-width="2"
       stroke-linecap="round"
-      stroke-linejoin="round"
-    >
+      stroke-linejoin="round">
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
       <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
     </svg>
@@ -31,10 +26,9 @@
   @if (showBadge() && hasNotifications()) {
     <span
       class="notif-badge"
-      [class]="getVariantClass()"
-      [attr.aria-label]="getDisplayCount() + ' unread notifications'"
-    >
-      {{ getDisplayCount() }}
+      [class]="variantClass()"
+      [attr.aria-label]="displayCount() + ' unread notifications'">
+      {{ displayCount() }}
     </span>
   }
 </button>

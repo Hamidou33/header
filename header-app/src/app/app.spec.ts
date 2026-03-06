@@ -3,7 +3,7 @@ import { App } from './app';
 import { provideRouter } from '@angular/router';
 
 // Mock window.matchMedia for tests
-if (!window.matchMedia) {
+if (window.matchMedia === undefined) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: (query: string) => ({
@@ -28,7 +28,7 @@ describe('App', () => {
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(app).toBeInstanceOf(App);
   });
 
   it('should render title', async () => {

@@ -1,17 +1,17 @@
-import {
+﻿import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
-  input,
   computed,
-  signal,
+  effect,
+  ElementRef,
+  input,
+  OnDestroy,
   output,
+  QueryList,
+  signal,
   ViewChild,
   ViewChildren,
-  ElementRef,
-  QueryList,
-  AfterViewInit,
-  OnDestroy,
-  effect,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuBar } from '@angular/aria/menu';
@@ -19,8 +19,8 @@ import { RouterModule } from '@angular/router';
 import { NavHeaderLink } from '../nav-header-link/nav-header-link.component';
 import { Dropdown } from '../dropdown/dropdown.component';
 import { NavHeaderRight } from '../nav-header-right/nav-header-right.component';
-import type { NavItem, DropdownItem, UserProfile } from '../../../models';
-import { Observable, of } from 'rxjs';
+import type { DropdownItem, NavItem, UserProfile } from '../../../models';
+import { Subscription } from 'rxjs';
 
 export type { NavItem };
 
@@ -33,171 +33,199 @@ export type { NavItem };
 })
 export class NavHeaderCenter implements AfterViewInit, OnDestroy {
   private static readonly MOBILE_BREAKPOINT = '(max-width: 768px)';
-  private static readonly DESKTOP_BREAKPOINT = '(min-width: 768px)';
   private static readonly PROFILE_GAP_PX = 4;
 
-  items = input<NavItem[]>([]);
-  maxVisibleItems = input<number>(99);
+  readonly items = input<NavItem[]>([]);
+  readonly maxVisibleItems = input(99);
 
-  rounded = input<boolean>(true);
+  readonly rounded = input(true);
 
-  showHeaderNavMobileTop = input<boolean>(true);
-  showHeaderNavMobileBottom = input<boolean>(true);
-  showHeaderNavRight = input<boolean>(true);
-  burgerIcon = input<boolean>(false);
-  burgerIconPos = input<'left' | 'right'>('right');
+  readonly showHeaderNavMobileTop = input(true);
+  readonly showHeaderNavMobileBottom = input(true);
+  readonly showHeaderNavRight = input(true);
+  readonly burgerIcon = input(false);
+  readonly burgerIconPos = input<'left' | 'right'>('right');
 
-  showProfile = input<boolean>(false);
-  userProfile = input<UserProfile | null>(null);
-  profileMenuItems = input<DropdownItem[]>([]);
-  showAvatar = input<boolean>(false);
-  showEmail = input<boolean>(false);
-  showIcons = input<boolean>(false);
+  readonly showProfile = input(false);
+  readonly userProfile = input<UserProfile | null>(null);
+  readonly profileMenuItems = input<DropdownItem[]>([]);
+  readonly showAvatar = input(false);
+  readonly showEmail = input(false);
+  readonly showIcons = input(false);
 
-  clickMainLogo = output<void>();
+  readonly clickMainLogo = output<void>();
+  readonly mobileMenuOpenChange = output<boolean>();
 
-  readonly isMobile = signal(this.checkIfMobile());
+  readonly isMobile = signal(this.detectMobileState());
   readonly mobileMenuOpen = signal(false);
-  readonly navigationStack = signal<NavItem[][]>([]);
-  readonly currentMenuTitle = signal<string>('');
-  private readonly visibleCount = signal<number>(0);
+  readonly navigationStack = signal<DropdownItem[][]>([]);
+  readonly currentMenuTitle = signal('');
+
+  private readonly visibleCount = signal(0);
   private resizeObserver?: ResizeObserver;
   private recalcQueued = false;
+  private measureItemsChangesSubscription?: Subscription;
+  private mobileMediaQueryList?: MediaQueryList;
+
+  private readonly mediaQueryChangeHandler = (event: MediaQueryListEvent): void => {
+    this.isMobile.set(event.matches);
+    if (!event.matches) {
+      this.closeMobileMenu();
+    }
+  };
 
   @ViewChild('navMenu') navMenu?: ElementRef<HTMLElement>;
   @ViewChild('navContent') navContent?: ElementRef<HTMLElement>;
-  @ViewChildren('measureItem', { read: ElementRef }) measureItems?: QueryList<ElementRef<HTMLElement>>;
+  @ViewChildren('measureItem', { read: ElementRef })
+  measureItems?: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('measureMore') measureMore?: ElementRef<HTMLElement>;
   @ViewChild('navRight') navRight?: ElementRef<HTMLElement>;
 
-  visibleItems = computed(() => {
-    const allItems = this.items();
-    const count = this.visibleCount();
+  readonly effectiveVisibleCount = computed(() => {
+    const items = this.items();
+    const maxAllowed = this.getMaxAllowedItems(items.length);
+    return Math.min(this.visibleCount(), maxAllowed, items.length);
+  });
 
-    if (allItems.length === 0) {
+  readonly visibleItems = computed(() => {
+    const allItems = this.items();
+    const count = this.effectiveVisibleCount();
+
+    if (allItems.length === 0 || count <= 0) {
       return [];
     }
 
-    const maxCount = Math.min(count, allItems.length);
-    return allItems.slice(0, maxCount);
+    return allItems.slice(0, count);
   });
 
-  moreItems = computed<DropdownItem[]>(() => {
+  readonly moreItems = computed<DropdownItem[]>(() => {
     const allItems = this.items();
-    const count = this.visibleCount();
+    const count = this.effectiveVisibleCount();
 
     if (allItems.length <= count) {
       return [];
     }
 
-    return this.convertToDropdownItems(allItems.slice(count));
+    return this.cloneMenuItems(allItems.slice(count));
   });
 
-  isMoreActive = computed(() => {
-    return this.moreItems().some((item) => item.active);
-  });
+  readonly isMoreActive = computed(() => this.moreItems().some(item => item.active));
 
   constructor() {
     this.setupItemsWatcher();
     this.setupMediaQueryListener();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.setupMeasureItemsWatcher();
     this.scheduleRecalculate();
     this.waitForFontsAndRecalculate();
     this.setupResizeObserver();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+    this.measureItemsChangesSubscription?.unsubscribe();
+
+    if (this.mobileMediaQueryList) {
+      this.mobileMediaQueryList.removeEventListener('change', this.mediaQueryChangeHandler);
+    }
   }
 
-  toggleMobileMenu() {
+  toggleMobileMenu(): void {
     this.mobileMenuOpen.update(isOpen => {
       const nextOpen = !isOpen;
+
       if (nextOpen) {
-        // Reset navigation stack to first level
-        this.navigationStack.set([this.items()]);
+        this.navigationStack.set([this.cloneMenuItems(this.items())]);
         this.currentMenuTitle.set('');
       }
+
+      this.mobileMenuOpenChange.emit(nextOpen);
       return nextOpen;
     });
   }
 
-  closeMobileMenu() {
+  closeMobileMenu(): void {
     this.mobileMenuOpen.set(false);
     this.navigationStack.set([]);
     this.currentMenuTitle.set('');
+    this.mobileMenuOpenChange.emit(false);
   }
 
-  navigateToSubMenu(item: NavItem, event?: Event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
+  navigateToSubMenu(item: DropdownItem, event?: Event): void {
+    this.stopEvent(event);
+
+    if (!item.subMenu || item.subMenu.length === 0) {
+      return;
     }
-    if (item.subMenu && item.subMenu.length > 0) {
-      // On convertit les DropdownItem en NavItem pour la pile si nécessaire
-      // En réalité NavItem et DropdownItem sont compatibles ici
-      const subItems = item.subMenu as NavItem[];
-      this.navigationStack.update(stack => [...stack, subItems]);
-      this.currentMenuTitle.set(item.label);
-    }
+
+    this.navigationStack.update(stack => [...stack, this.cloneMenuItems(item.subMenu ?? [])]);
+    this.currentMenuTitle.set(item.label);
   }
 
-  goBack(event?: Event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  goBack(event?: Event): void {
+    this.stopEvent(event);
+
     this.navigationStack.update(stack => {
-      if (stack.length > 1) {
-        const newStack = stack.slice(0, -1);
-        // On récupère le titre du parent si possible
-        // Pour faire simple, on pourrait stocker les titres dans une pile aussi
-        // Mais ici on va juste vider si on revient au premier niveau
-        if (newStack.length === 1) {
-          this.currentMenuTitle.set('');
-        }
-        return newStack;
-      } else {
-        // Si on est au premier niveau, "Retour" ferme le menu
+      if (stack.length <= 1) {
         this.closeMobileMenu();
         return [];
       }
+
+      const newStack = stack.slice(0, -1);
+      if (newStack.length === 1) {
+        this.currentMenuTitle.set('');
+      }
+
+      return newStack;
     });
   }
 
-  getCurrentLevelItems = computed(() => {
-    const stack = this.navigationStack();
-    return stack.length > 0 ? stack[stack.length - 1] : [];
-  });
+  getMobileLevelTransform(levelIndex: number): string {
+    const shift = 100 * (levelIndex - (this.navigationStack().length - 1));
+    return `translateX(${shift}%)`;
+  }
 
-  private setupItemsWatcher() {
+  getMobileItemAnimationDelay(levelIndex: number, itemIndex: number): string {
+    return levelIndex === 0 ? `${itemIndex * 0.05}s` : '0s';
+  }
+
+  private setupItemsWatcher(): void {
     effect(() => {
       const items = this.items();
+
       if (!this.measureItems?.length) {
         this.visibleCount.set(items.length);
       }
+
       this.maxVisibleItems();
       this.scheduleRecalculate();
     });
   }
 
-  private setupMediaQueryListener() {
-    const mediaQuery = window.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT);
-    mediaQuery.addEventListener('change', (event) => {
-      this.isMobile.set(event.matches);
-    });
+  private setupMediaQueryListener(): void {
+    const windowRef = this.getWindow();
+    if (!windowRef?.matchMedia) {
+      return;
+    }
+
+    this.mobileMediaQueryList = windowRef.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT);
+    this.isMobile.set(this.mobileMediaQueryList.matches);
+    this.mobileMediaQueryList.addEventListener('change', this.mediaQueryChangeHandler);
   }
 
-  private setupMeasureItemsWatcher() {
-    this.measureItems?.changes.subscribe(() => {
+  private setupMeasureItemsWatcher(): void {
+    if (!this.measureItems) {
+      return;
+    }
+
+    this.measureItemsChangesSubscription = this.measureItems.changes.subscribe(() => {
       this.scheduleRecalculate();
     });
   }
 
-  private waitForFontsAndRecalculate() {
+  private waitForFontsAndRecalculate(): void {
     if (typeof document === 'undefined' || !('fonts' in document)) {
       return;
     }
@@ -208,7 +236,7 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     });
   }
 
-  private setupResizeObserver() {
+  private setupResizeObserver(): void {
     if (typeof ResizeObserver === 'undefined') {
       return;
     }
@@ -224,7 +252,7 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     ]);
   }
 
-  private observeElements(elements: (HTMLElement | undefined)[]) {
+  private observeElements(elements: Array<HTMLElement | undefined>): void {
     elements.forEach(element => {
       if (element) {
         this.resizeObserver?.observe(element);
@@ -232,24 +260,25 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     });
   }
 
-  private scheduleRecalculate() {
+  private scheduleRecalculate(): void {
     if (this.recalcQueued) {
       return;
     }
 
-    if (typeof window === 'undefined') {
+    const windowRef = this.getWindow();
+    if (!windowRef) {
       this.visibleCount.set(this.items().length);
       return;
     }
 
     this.recalcQueued = true;
-    requestAnimationFrame(() => {
+    windowRef.requestAnimationFrame(() => {
       this.recalcQueued = false;
       this.recalculate();
     });
   }
 
-  private recalculate() {
+  private recalculate(): void {
     const allItems = this.items();
 
     if (allItems.length === 0) {
@@ -257,13 +286,13 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.isMobileView()) {
+    if (this.isMobile()) {
       this.visibleCount.set(allItems.length);
       return;
     }
 
     const count = this.calculateVisibleItemsCount(allItems);
-    const maxAllowed = this.getMaxAllowedItems(allItems);
+    const maxAllowed = this.getMaxAllowedItems(allItems.length);
     this.visibleCount.set(Math.min(count, maxAllowed));
   }
 
@@ -279,43 +308,41 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     const moreWidth = this.measureMore?.nativeElement?.offsetWidth ?? 0;
     const measurements = this.getMeasurements(measureEls, navEl);
 
-    return this.countItemsThatFit(
-      allItems,
-      measurements,
-      availableWidth,
-      moreWidth
-    );
+    return this.countItemsThatFit(allItems, measurements, availableWidth, moreWidth);
   }
 
-  private getMeasurements(measureEls: ElementRef<HTMLElement>[], navEl: HTMLElement) {
+  private getMeasurements(measureEls: ElementRef<HTMLElement>[], navEl: HTMLElement): {
+    rects: DOMRect[];
+    gap: number;
+  } {
     const rects = measureEls.map(el => el.nativeElement.getBoundingClientRect());
-    const baseLeft = rects[0]?.left ?? 0;
     const gap = this.calculateGapBetweenItems(rects, navEl);
 
-    return { rects, baseLeft, gap };
+    return { rects, gap };
   }
 
   private calculateGapBetweenItems(rects: DOMRect[], navEl: HTMLElement): number {
     if (rects.length > 1) {
       return Math.max(0, rects[1].left - rects[0].right);
     }
+
     return this.extractGapFromStyles(navEl);
   }
 
   private countItemsThatFit(
     allItems: NavItem[],
-    measurements: { rects: DOMRect[]; baseLeft: number; gap: number },
+    measurements: { rects: DOMRect[]; gap: number },
     availableWidth: number,
-    moreWidth: number
+    moreWidth: number,
   ): number {
     const { rects, gap } = measurements;
     let count = 0;
     let accumulatedWidth = 0;
 
-    for (let i = 0; i < allItems.length; i += 1) {
-      const itemWidth = rects[i]?.width ?? 0;
-      const gapWidth = i > 0 ? gap : 0;
-      const remainingItems = allItems.length - (i + 1);
+    for (let index = 0; index < allItems.length; index += 1) {
+      const itemWidth = rects[index]?.width ?? 0;
+      const gapWidth = index > 0 ? gap : 0;
+      const remainingItems = allItems.length - (index + 1);
 
       if (remainingItems > 0) {
         const widthWithMore = accumulatedWidth + gapWidth + itemWidth + gap + moreWidth;
@@ -339,7 +366,7 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
   private extractGapFromStyles(element: HTMLElement): number {
     const styles = window.getComputedStyle(element);
     const gapValue = styles.columnGap || styles.gap || '0px';
-    const gap = parseFloat(gapValue);
+    const gap = Number.parseFloat(gapValue);
     return Number.isFinite(gap) ? gap : 0;
   }
 
@@ -354,41 +381,43 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     const contentRect = contentEl.getBoundingClientRect();
     const rightRect = rightEl.getBoundingClientRect();
 
-    // On calcule l'espace entre le début de la zone centrale et le début de la zone de droite
-    return Math.max(
-      0,
-      rightRect.left - contentRect.left - NavHeaderCenter.PROFILE_GAP_PX
-    );
+    return Math.max(0, rightRect.left - contentRect.left - NavHeaderCenter.PROFILE_GAP_PX);
   }
 
-  private getMaxAllowedItems(allItems: NavItem[]): number {
+  private getMaxAllowedItems(totalItems: number): number {
     const cap = this.maxVisibleItems();
-    return cap > 0 ? cap : allItems.length;
+    return cap > 0 ? cap : totalItems;
   }
 
-  private isMobileView(): boolean {
-    return !this.isDesktopView();
+  private detectMobileState(): boolean {
+    const windowRef = this.getWindow();
+    if (!windowRef?.matchMedia) {
+      return false;
+    }
+
+    return windowRef.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT).matches;
   }
 
-  private isDesktopView(): boolean {
-    return typeof window !== 'undefined' &&
-           window.matchMedia(NavHeaderCenter.DESKTOP_BREAKPOINT).matches;
+  private getWindow(): Window | null {
+    return typeof window === 'undefined' ? null : window;
   }
 
-  private checkIfMobile(): boolean {
-    return window.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT).matches;
-  }
-
-  private convertToDropdownItems(items: NavItem[]): DropdownItem[] {
+  private cloneMenuItems(items: ReadonlyArray<DropdownItem>): DropdownItem[] {
     return items.map(item => ({
       label: item.label,
       link: item.link,
-      icon: '',
+      icon: item.icon,
       active: item.active,
-      subMenu: item.subMenu,
+      subMenu: item.subMenu ? this.cloneMenuItems(item.subMenu) : undefined,
     }));
   }
+
+  private stopEvent(event?: Event): void {
+    if (!event) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }
-
-export { NavHeaderCenter as Nav };
-

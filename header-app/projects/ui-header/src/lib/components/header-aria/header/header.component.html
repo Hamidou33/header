@@ -1,4 +1,10 @@
-<header class="arv-header" [class.sticky]="sticky()" [class.arv-header_pre-header-desktop--show]="showHeaderPreNav() && !isHeaderFixed()">
+﻿@let themeLogoSrc = themeLogoPath$() | async;
+@let themeLogoAlt = themeLogoAlt$() | async;
+
+<header
+  class="arv-header"
+  [class.sticky]="sticky()"
+  [class.arv-header_pre-header-desktop--show]="showHeaderPreNav() && !isHeaderFixed()">
   @if (showHeaderPreNav() && !isHeaderFixed()) {
     <section class="arv-header_pre-header-desktop">
       <ng-content select="[slot=pre-header-desktop]"></ng-content>
@@ -6,20 +12,33 @@
   }
 
   @if (showHeaderPostNav()) {
-    <section class="arv-header_post-header-desktop" [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
+    <section
+      class="arv-header_post-header-desktop"
+      [class.arv-header_post-header-desktop--show]="showHeaderPostNavMobile()">
       <div class="arv-header_main">
         <div class="arv-header-logo-zone">
-          <a [routerLink]="logoUrl()" [title]="companyName()" class="arv-header-nav-logo" (click)="onClickMainLogo()">
-            @if (logoPath() || (themeLogoPath$() | async); as logoSrc) {
+          <a
+            [routerLink]="logoUrl()"
+            [title]="companyName()"
+            class="arv-header-nav-logo"
+            [class.arv-header-nav-logo_hidden]="isMobileMenuOpen()"
+            data-testid="main-logo-link"
+            (click)="onClickMainLogo()">
+            @if (!mainLogoLoadError() && (logoPath() || themeLogoSrc); as logoSrc) {
               <img
                 id="logo-partner-header"
-                [ngSrc]="logoSrc!"
-                [alt]="mainLogoAlt() || (themeLogoAlt$() | async)"
+                data-testid="main-logo-image"
+                [ngSrc]="logoSrc"
+                [alt]="themeLogoAlt || mainLogoAlt()"
                 [style.max-width.px]="logoWidth()"
                 [style.height.px]="logoHeight()"
                 [width]="logoWidth()"
                 [height]="logoHeight()"
-              />
+                (error)="onMainLogoError()" />
+            } @else {
+              <span class="arv-header-logo-fallback" data-testid="main-logo-fallback">
+                {{ companyName() }}
+              </span>
             }
           </a>
 
@@ -45,7 +64,8 @@
             [profileMenuItems]="profileMenuItems()"
             [showAvatar]="showAvatar()"
             [showEmail]="showEmail()"
-            [showIcons]="showIcons()">
+            [showIcons]="showIcons()"
+            (mobileMenuOpenChange)="onMobileMenuOpenChange($event)">
             <div slot="nav-right">
               <ng-content select="[slot=nav-right]"></ng-content>
             </div>
@@ -64,4 +84,3 @@
     </section>
   }
 </header>
-

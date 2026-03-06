@@ -1,9 +1,9 @@
-import { Component, input, viewChild, signal, effect, output, ChangeDetectionStrategy } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
 import { NavHeaderAvatar } from '../nav-header-avatar/nav-header-avatar.component';
 import type { DropdownItem, UserProfile } from '../../../models';
 
@@ -30,38 +30,39 @@ export type { UserProfile };
 export class NavHeaderRight {
   private static readonly SCROLL_DELAY_MS = 100;
 
-  user = input.required<UserProfile>();
-  menuItems = input<DropdownItem[]>([]);
-  showAvatar = input<boolean>(true);
-  showEmail = input<boolean>(false);
-  showIcons = input<boolean>(false);
-  avatarSize = input<'small' | 'medium' | 'large'>('medium');
+  readonly user = input.required<UserProfile>();
+  readonly menuItems = input<DropdownItem[]>([]);
+  readonly showAvatar = input(true);
+  readonly showEmail = input(false);
+  readonly showIcons = input(false);
+  readonly avatarSize = input<'small' | 'medium' | 'large'>('medium');
 
-  profileMenu = viewChild<Menu<string>>('profileMenu');
+  readonly profileMenu = viewChild<Menu<string>>('profileMenu');
 
-  openSubmenuIndex = signal<number | null>(null);
-  itemClick = output<void>();
+  readonly openSubmenuIndex = signal<number | null>(null);
+  readonly itemClick = output<void>();
 
   constructor() {
     this.setupMenuVisibilityWatcher();
   }
 
-  toggleSubmenu(index: number, event: Event) {
+  toggleSubmenu(index: number, event: Event): void {
     this.preventEventPropagation(event);
 
     const shouldOpen = this.shouldOpenSubmenu(index);
     this.updateSubmenuState(shouldOpen ? index : null);
 
-    if (shouldOpen) {
-      this.scrollSubmenuIntoView(event.currentTarget as HTMLElement);
+    const target = this.getCurrentTargetElement(event);
+    if (shouldOpen && target) {
+      this.scrollSubmenuIntoView(target);
     }
   }
 
-  onItemClick() {
+  onItemClick(): void {
     this.itemClick.emit();
   }
 
-  private setupMenuVisibilityWatcher() {
+  private setupMenuVisibilityWatcher(): void {
     effect(() => {
       const menuRef = this.profileMenu();
       if (menuRef && !menuRef.visible()) {
@@ -70,7 +71,7 @@ export class NavHeaderRight {
     });
   }
 
-  private preventEventPropagation(event: Event) {
+  private preventEventPropagation(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
   }
@@ -79,25 +80,26 @@ export class NavHeaderRight {
     return this.openSubmenuIndex() !== index;
   }
 
-  private updateSubmenuState(index: number | null) {
+  private updateSubmenuState(index: number | null): void {
     this.openSubmenuIndex.set(index);
   }
 
-  private closeAllSubmenus() {
+  private closeAllSubmenus(): void {
     this.openSubmenuIndex.set(null);
   }
 
-  private scrollSubmenuIntoView(element: HTMLElement) {
+  private getCurrentTargetElement(event: Event): HTMLElement | null {
+    return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+  }
+
+  private scrollSubmenuIntoView(element: HTMLElement): void {
     setTimeout(() => {
-      if (element?.scrollIntoView) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }, NavHeaderRight.SCROLL_DELAY_MS);
   }
 }
 
 export { NavHeaderRight as ProfileMenu };
-

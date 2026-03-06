@@ -1,10 +1,59 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import { NavHeaderCenter } from './nav-header-center.component';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
+import type { DropdownItem, NavItem, UserProfile } from '../../../models';
+
+const userProfile: UserProfile = {
+  name: 'John Doe',
+  email: 'john.doe@company.com',
+  avatar: 'JD',
+};
+
+const profileMenuItems: DropdownItem[] = [
+  { label: 'My Profile', link: '/profile', icon: 'profile' },
+  { label: 'Settings', link: '/settings', icon: 'settings' },
+  { label: 'Logout', link: '/logout', icon: 'logout' },
+];
+
+const simpleItems: NavItem[] = [
+  { label: 'Home', link: '/home' },
+  { label: 'About', link: '/about' },
+  { label: 'Services', link: '/services' },
+  { label: 'Contact', link: '/contact' },
+];
+
+const dropdownItems: NavItem[] = [
+  {
+    label: 'Products',
+    subMenu: [
+      { label: 'Software', link: '/products/software' },
+      { label: 'Hardware', link: '/products/hardware' },
+    ],
+  },
+  {
+    label: 'Solutions',
+    subMenu: [
+      { label: 'Enterprise', link: '/solutions/enterprise' },
+      { label: 'SMB', link: '/solutions/smb' },
+    ],
+  },
+  { label: 'Pricing', link: '/pricing' },
+  { label: 'Contact', link: '/contact' },
+];
+
+const manyItems: NavItem[] = [
+  { label: 'Home', link: '/' },
+  { label: 'Products', link: '/products' },
+  { label: 'Solutions', link: '/solutions' },
+  { label: 'Resources', link: '/resources' },
+  { label: 'About', link: '/about' },
+  { label: 'Contact', link: '/contact' },
+  { label: 'Pricing', link: '/pricing' },
+  { label: 'Partners', link: '/partners' },
+  { label: 'Careers', link: '/careers' },
+];
+
 const meta: Meta<NavHeaderCenter> = {
   title: 'Header ARIA/Nav Center',
   component: NavHeaderCenter,
@@ -14,7 +63,7 @@ const meta: Meta<NavHeaderCenter> = {
   },
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderCenter, OverlayModule, Menu, MenuTrigger, MenuItem, MenuContent],
+      imports: [NavHeaderCenter],
     }),
     applicationConfig({
       providers: [
@@ -24,30 +73,15 @@ const meta: Meta<NavHeaderCenter> = {
     }),
   ],
   argTypes: {
-    items: {
-      control: 'object',
-      description: 'Navigation menu items',
-    },
-    rounded: {
-      control: 'boolean',
-      description: 'Rounded corners',
-    },
-    showHeaderNavMobileTop: {
-      control: 'boolean',
-      description: 'Show mobile top slot',
-    },
+    items: { control: 'object', description: 'Navigation menu items' },
+    rounded: { control: 'boolean', description: 'Rounded corners' },
+    showHeaderNavMobileTop: { control: 'boolean', description: 'Show mobile top slot' },
     showHeaderNavMobileBottom: {
       control: 'boolean',
       description: 'Show mobile bottom slot',
     },
-    showHeaderNavRight: {
-      control: 'boolean',
-      description: 'Show nav right slot',
-    },
-    burgerIcon: {
-      control: 'boolean',
-      description: 'Show burger icon',
-    },
+    showHeaderNavRight: { control: 'boolean', description: 'Show nav-right slot' },
+    burgerIcon: { control: 'boolean', description: 'Show burger icon on desktop' },
     burgerIconPos: {
       control: 'select',
       options: ['left', 'right'],
@@ -55,16 +89,26 @@ const meta: Meta<NavHeaderCenter> = {
     },
     maxVisibleItems: {
       control: 'number',
-      description: 'Maximum visible items before showing "More"',
+      description: 'Maximum visible items before overflow',
     },
   },
-};
-
-export default meta;
-type Story = StoryObj<NavHeaderCenter>;
-
-export const Default: Story = {
-  render: (args) => ({
+  args: {
+    rounded: true,
+    showHeaderNavMobileTop: true,
+    showHeaderNavMobileBottom: true,
+    showHeaderNavRight: true,
+    burgerIcon: false,
+    burgerIconPos: 'right',
+    maxVisibleItems: 99,
+    showProfile: true,
+    showAvatar: true,
+    showEmail: true,
+    showIcons: true,
+    userProfile,
+    profileMenuItems,
+    items: simpleItems,
+  },
+  render: args => ({
     props: args,
     template: `
       <ui-nav-header-center
@@ -82,222 +126,38 @@ export const Default: Story = {
         [showAvatar]="showAvatar"
         [showEmail]="showEmail"
         [showIcons]="showIcons">
-        <div slot="nav-left" style="font-size: 0.875rem; color: #666;">🏢 Partner</div>
+        <div slot="nav-right" style="font-size:12px;color:#666;">Support</div>
       </ui-nav-header-center>
     `,
   }),
-  args: {
-    rounded: true,
-    showHeaderNavMobileTop: true,
-    showHeaderNavMobileBottom: true,
-    showHeaderNavRight: true,
-    burgerIcon: false,
-    burgerIconPos: 'right',
-    maxVisibleItems: 99,
-    showProfile: true,
-    showAvatar: true,
-    showEmail: true,
-    showIcons: true,
-    userProfile: {
-      name: 'John Doe',
-      email: 'john.doe@company.com',
-      avatar: 'JD',
-    },
-    profileMenuItems: [
-      {
-        label: 'My Profile',
-        link: '/profile',
-        icon: 'user',
-      },
-      {
-        label: 'Settings',
-        link: '/settings',
-        icon: 'gear',
-      },
-      {
-        label: 'Logout',
-        link: '/logout',
-        icon: 'logout',
-      },
-    ],
-    items: [
-      { label: 'Home', link: '/home' },
-      { label: 'About', link: '/about' },
-      { label: 'Services', link: '/services' },
-      { label: 'Contact', link: '/contact' },
-    ],
-  },
 };
 
-export const SimpleLinks: Story = {
-  render: (args) => ({
-    props: args,
-    template: `
-      <ui-nav-header-center
-        [items]="items"
-        [maxVisibleItems]="maxVisibleItems"
-        [rounded]="rounded"
-        [burgerIcon]="burgerIcon"
-        [burgerIconPos]="burgerIconPos">
-      </ui-nav-header-center>
-    `,
-  }),
-  args: {
-    rounded: true,
-    burgerIcon: false,
-    burgerIconPos: 'right',
-    maxVisibleItems: 99,
-    items: [
-      { label: 'Home', link: '/home' },
-      { label: 'About', link: '/about' },
-      { label: 'Products', link: '/products' },
-      { label: 'Blog', link: '/blog' },
-      { label: 'Contact', link: '/contact' },
-    ],
-  },
-};
+export default meta;
+type Story = StoryObj<NavHeaderCenter>;
+
+export const Default: Story = {};
 
 export const WithDropdowns: Story = {
-  render: (args) => ({
-    props: args,
-    template: `
-      <ui-nav-header-center
-        [items]="items"
-        [maxVisibleItems]="maxVisibleItems"
-        [rounded]="rounded"
-        [showHeaderNavMobileTop]="showHeaderNavMobileTop"
-        [showHeaderNavMobileBottom]="showHeaderNavMobileBottom"
-        [showHeaderNavRight]="showHeaderNavRight"
-        [showProfile]="showProfile"
-        [userProfile]="userProfile"
-        [profileMenuItems]="profileMenuItems"
-        [showAvatar]="showAvatar"
-        [showEmail]="showEmail"
-        [showIcons]="showIcons">
-        <div slot="pre-nav-mobile" style="background: #f9fafb; padding: 15px; margin-bottom: 10px; border-radius: 6px;">
-          📱 Mobile Header Content
-        </div>
-        <div slot="post-nav-mobile" style="background: #f3f4f6; padding: 15px; margin-top: 10px; border-radius: 6px;">
-          📞 Support: 1-800-123-4567
-        </div>
-      </ui-nav-header-center>
-    `,
-  }),
   args: {
-    rounded: true,
-    showHeaderNavMobileTop: true,
-    showHeaderNavMobileBottom: true,
-    showHeaderNavRight: true,
-    maxVisibleItems: 99,
-    showProfile: true,
-    showAvatar: true,
-    showEmail: true,
-    showIcons: true,
-    userProfile: {
-      name: 'Alice Smith',
-      email: 'alice.smith@company.com',
-      avatar: 'AS',
-    },
-    profileMenuItems: [
-      {
-        label: 'My Profile',
-        link: '/profile',
-        icon: 'user',
-      },
-      {
-        label: 'Settings',
-        link: '/settings',
-        icon: 'gear',
-      },
-      {
-        label: 'Logout',
-        link: '/logout',
-        icon: 'logout',
-      },
-    ],
-    items: [
-      {
-        label: 'Products',
-        subMenu: [
-          {
-            label: 'Software',
-            subMenu: [
-              { label: 'Web Apps', link: '/products/software/web', icon: '🌐' },
-              { label: 'Mobile Apps', link: '/products/software/mobile', icon: '📱' },
-              { label: 'Desktop Apps', link: '/products/software/desktop', icon: '💻' },
-            ],
-          },
-          {
-            label: 'Hardware',
-            subMenu: [
-              { label: 'Computers', link: '/products/hardware/computers', icon: '🖥️' },
-              { label: 'Accessories', link: '/products/hardware/accessories', icon: '⌨️' },
-            ],
-          },
-        ],
-      },
-      {
-        label: 'Services',
-        subMenu: [
-          { label: 'Consulting', link: '/services/consulting', icon: '💼' },
-          { label: 'Training', link: '/services/training', icon: '📚' },
-          { label: 'Support', link: '/services/support', icon: '🆘' },
-        ],
-      },
-      { label: 'About', link: '/about' },
-      { label: 'Contact', link: '/contact' },
-    ],
-  },
-};
-
-export const ManyItems: Story = {
-  args: {
-    rounded: true,
-    burgerIcon: false,
-    burgerIconPos: 'right',
-    maxVisibleItems: 99,
-    items: [
-      { label: 'Home', link: '/' },
-      { label: 'Products', link: '/products' },
-      { label: 'Solutions', link: '/solutions' },
-      { label: 'Resources', link: '/resources' },
-      { label: 'About', link: '/about' },
-      { label: 'Contact', link: '/contact' },
-      { label: 'Pricing', link: '/pricing' },
-      { label: 'Partners', link: '/partners' },
-      { label: 'Careers', link: '/careers' },
-      { label: 'Blog', link: '/blog' },
-      { label: 'Docs', link: '/docs' },
-      { label: 'Community', link: '/community' },
-      { label: 'Events', link: '/events' },
-    ],
+    items: dropdownItems,
   },
 };
 
 export const LimitedVisible: Story = {
   args: {
-    ...ManyItems.args,
-    maxVisibleItems: 5,
+    items: manyItems,
+    maxVisibleItems: 4,
   },
 };
 
 export const BurgerLeft: Story = {
   args: {
-    ...Default.args,
     burgerIconPos: 'left',
-  },
-};
-
-export const WithoutBurger: Story = {
-  args: {
-    ...Default.args,
-    burgerIcon: false,
   },
 };
 
 export const NotRounded: Story = {
   args: {
-    ...Default.args,
     rounded: false,
   },
 };
@@ -309,34 +169,6 @@ export const Mobile: Story = {
     },
   },
   args: {
-    ...WithDropdowns.args,
-    maxVisibleItems: 99,
-    showProfile: true,
-    showAvatar: true,
-    showEmail: true,
-    showIcons: true,
-    userProfile: {
-      name: 'Jane Doe',
-      email: 'jane.doe@company.com',
-      avatar: 'JD',
-    },
-    profileMenuItems: [
-      {
-        label: 'My Profile',
-        link: '/profile',
-        icon: 'user',
-      },
-      {
-        label: 'Settings',
-        link: '/settings',
-        icon: 'gear',
-      },
-      {
-        label: 'Logout',
-        link: '/logout',
-        icon: 'logout',
-      },
-    ],
+    items: dropdownItems,
   },
 };
-

@@ -1,12 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavHeaderLeft } from './nav-header-left.component';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { NavHeaderLeft } from './nav-header-left.component';
+
+interface NavHeaderLeftInputs {
+  secondaryLogoPath: string | null;
+  secondaryLogoAlt: string;
+  secondaryLogoUrl: string;
+  tagText: string | null;
+  tagVariant: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
+  showSeparator: boolean;
+}
 
 describe('NavHeaderLeft', () => {
   let component: NavHeaderLeft;
   let fixture: ComponentFixture<NavHeaderLeft>;
 
-  const createComponent = async () => {
+  const createComponent = async (): Promise<void> => {
     await TestBed.configureTestingModule({
       imports: [NavHeaderLeft],
       providers: [provideRouter([])],
@@ -17,7 +26,10 @@ describe('NavHeaderLeft', () => {
     fixture.detectChanges();
   };
 
-  const setInput = (name: string, value: unknown) => {
+  const setInput = <K extends keyof NavHeaderLeftInputs>(
+    name: K,
+    value: NavHeaderLeftInputs[K],
+  ): void => {
     fixture.componentRef.setInput(name, value);
     fixture.detectChanges();
   };
@@ -29,27 +41,26 @@ describe('NavHeaderLeft', () => {
   beforeEach(createComponent);
 
   it('should create the component', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeInstanceOf(NavHeaderLeft);
   });
 
-  describe('Secondary Logo', () => {
+  describe('Secondary logo', () => {
     it('should display logo when path is provided', () => {
       setInput('secondaryLogoPath', 'test-logo.png');
 
-      const logo = queryElement('.nav-left-logo-img') as HTMLImageElement;
+      const logo = queryElement('.nav-left-logo-img') as HTMLImageElement | null;
 
-      expect(logo).toBeTruthy();
-      expect(logo.src).toContain('test-logo.png');
+      expect(logo).not.toBeNull();
+      expect(logo?.src).toContain('test-logo.png');
     });
   });
 
-  describe('Tag Display', () => {
+  describe('Tag display', () => {
     it('should display tag with provided text', () => {
       setInput('tagText', 'PRO');
 
       const tag = queryElement('.nav-left-tag');
 
-      expect(tag).toBeTruthy();
       expect(tag?.textContent?.trim()).toBe('PRO');
     });
 
@@ -63,14 +74,14 @@ describe('NavHeaderLeft', () => {
     });
   });
 
-  describe('Separator Visibility', () => {
+  describe('Separator visibility', () => {
     it('should show separator when enabled', () => {
       setInput('secondaryLogoPath', 'logo.png');
       setInput('showSeparator', true);
 
       const separator = queryElement('.nav-left-separator');
 
-      expect(separator).toBeTruthy();
+      expect(separator).not.toBeNull();
     });
 
     it('should hide separator when disabled', () => {
@@ -79,8 +90,7 @@ describe('NavHeaderLeft', () => {
 
       const separator = queryElement('.nav-left-separator');
 
-      expect(separator).toBeFalsy();
+      expect(separator).toBeNull();
     });
   });
 });
-

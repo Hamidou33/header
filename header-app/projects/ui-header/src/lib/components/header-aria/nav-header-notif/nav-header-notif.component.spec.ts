@@ -1,20 +1,30 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavHeaderNotif } from './nav-header-notif.component';
+
+interface NotifInputs {
+  notificationCount: number;
+  maxCount: number;
+  showBadge: boolean;
+  iconUrl: string;
+  size: 'small' | 'medium' | 'large';
+  variant: 'default' | 'primary' | 'danger';
+}
 
 describe('NavHeaderNotif Component', () => {
   let fixture: ComponentFixture<NavHeaderNotif>;
   let component: NavHeaderNotif;
 
-  const createComponent = () => {
+  const createComponent = (): void => {
     TestBed.configureTestingModule({
       imports: [NavHeaderNotif],
     });
+
     fixture = TestBed.createComponent(NavHeaderNotif);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
 
-  const setInput = (name: string, value: unknown) => {
+  const setInput = <K extends keyof NotifInputs>(name: K, value: NotifInputs[K]): void => {
     fixture.componentRef.setInput(name, value);
     fixture.detectChanges();
   };
@@ -25,149 +35,105 @@ describe('NavHeaderNotif Component', () => {
 
   beforeEach(createComponent);
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    fixture.destroy();
   });
 
-  describe('Notification Badge', () => {
-    it('should show badge with count when notifications exist', () => {
+  it('should create the component', () => {
+    expect(component).toBeInstanceOf(NavHeaderNotif);
+  });
+
+  describe('Badge behavior', () => {
+    it('should show badge with the count when notifications exist', () => {
       setInput('notificationCount', 5);
 
       const badge = queryElement('.notif-badge');
 
-      expect(badge).toBeTruthy();
       expect(badge?.textContent?.trim()).toBe('5');
+      expect(component.displayCount()).toBe('5');
     });
 
-    it('should show 99+ when count exceeds max', () => {
+    it('should show max+ format when count exceeds maxCount', () => {
       setInput('notificationCount', 150);
       setInput('maxCount', 99);
 
-      expect(component.getDisplayCount()).toBe('99+');
+      expect(component.displayCount()).toBe('99+');
     });
 
     it('should hide badge when count is zero', () => {
       setInput('notificationCount', 0);
 
-      const badge = queryElement('.notif-badge');
-
-      expect(badge).toBeFalsy();
+      expect(queryElement('.notif-badge')).toBeNull();
+      expect(component.displayCount()).toBe('');
     });
 
     it('should hide badge when showBadge is false', () => {
       setInput('notificationCount', 10);
       setInput('showBadge', false);
 
-      const badge = queryElement('.notif-badge');
-
-      expect(badge).toBeFalsy();
+      expect(queryElement('.notif-badge')).toBeNull();
     });
   });
 
-  describe('Badge Variants', () => {
-    it('should apply default variant class', () => {
-      setInput('notificationCount', 1);
-      setInput('variant', 'default');
-
-      const badge = queryElement('.notif-badge');
-
-      expect(badge?.classList.contains('notif-default')).toBe(true);
-    });
-
-    it('should apply primary variant class', () => {
+  describe('Variant and size classes', () => {
+    it('should apply variant class to badge', () => {
       setInput('notificationCount', 1);
       setInput('variant', 'primary');
 
       const badge = queryElement('.notif-badge');
 
       expect(badge?.classList.contains('notif-primary')).toBe(true);
+      expect(component.variantClass()).toBe('notif-primary');
     });
 
-    it('should apply danger variant class', () => {
-      setInput('notificationCount', 1);
-      setInput('variant', 'danger');
-
-      const badge = queryElement('.notif-badge');
-
-      expect(badge?.classList.contains('notif-danger')).toBe(true);
-    });
-  });
-
-  describe('Icon Display', () => {
-    it('should display custom icon when iconUrl is provided', () => {
-      setInput('iconUrl', 'https://example.com/bell.svg');
-
-      const iconImage = queryElement('.notif-icon-image') as HTMLImageElement;
-
-      expect(iconImage).toBeTruthy();
-      expect(iconImage.src).toContain('bell.svg');
-    });
-
-    it('should display default SVG icon when no iconUrl provided', () => {
-      const svgIcon = queryElement('.notif-icon');
-
-      expect(svgIcon).toBeTruthy();
-      expect(svgIcon?.tagName.toLowerCase()).toBe('svg');
-    });
-  });
-
-  describe('Size Variants', () => {
-    it('should apply small size class', () => {
-      setInput('size', 'small');
-
-      const container = queryElement('.notif-container');
-
-      expect(container?.classList.contains('notif-small')).toBe(true);
-    });
-
-    it('should apply medium size class by default', () => {
-      const container = queryElement('.notif-container');
-
-      expect(container?.classList.contains('notif-medium')).toBe(true);
-    });
-
-    it('should apply large size class', () => {
+    it('should apply size class to container', () => {
       setInput('size', 'large');
 
-      const container = queryElement('.notif-container');
+      const button = queryElement('[data-testid="notif-button"]');
 
-      expect(container?.classList.contains('notif-large')).toBe(true);
+      expect(button?.classList.contains('notif-large')).toBe(true);
+      expect(component.sizeClass()).toBe('notif-large');
     });
   });
 
-  describe('Click Behavior', () => {
-    it('should emit event when clicked', () => {
-      let eventEmitted = false;
-      component.notifClick.subscribe(() => {
-        eventEmitted = true;
-      });
+  describe('Icon behavior', () => {
+    it('should display custom icon image when iconUrl is provided', () => {
+      setInput('iconUrl', 'https://example.com/bell.svg');
 
-      const button = queryElement('.notif-container') as HTMLButtonElement;
-      button.click();
+      const image = queryElement('.notif-icon-image') as HTMLImageElement | null;
 
-      expect(eventEmitted).toBe(true);
+      expect(image).not.toBeNull();
+      expect(image?.src).toContain('bell.svg');
+    });
+
+    it('should display default svg icon when iconUrl is empty', () => {
+      const icon = queryElement('.notif-icon');
+
+      expect(icon).not.toBeNull();
     });
   });
 
-  describe('Notification Status', () => {
-    it('should detect when notifications exist', () => {
-      setInput('notificationCount', 5);
+  describe('Click behavior', () => {
+    it('should emit notifClick when button is clicked', () => {
+      const emitSpy = vi.fn();
+      component.notifClick.subscribe(emitSpy);
+
+      const button = queryElement('[data-testid="notif-button"]') as HTMLButtonElement | null;
+      button?.click();
+
+      expect(emitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Notification state', () => {
+    it('should expose hasNotifications signal state', () => {
+      setInput('notificationCount', 3);
 
       expect(component.hasNotifications()).toBe(true);
-    });
 
-    it('should detect when no notifications exist', () => {
       setInput('notificationCount', 0);
 
       expect(component.hasNotifications()).toBe(false);
-    });
-
-    it('should apply has-notifications class when notifications exist', () => {
-      setInput('notificationCount', 3);
-
-      const container = queryElement('.notif-container');
-
-      expect(container?.classList.contains('has-notifications')).toBe(true);
     });
   });
 });

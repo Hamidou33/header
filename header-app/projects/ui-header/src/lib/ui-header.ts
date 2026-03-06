@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'ui-ui-header',
   imports: [],
-  template: ` <p>ui-header works!</p> `,
+  template: `<p>ui-header works!</p>`,
   styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiHeader {}

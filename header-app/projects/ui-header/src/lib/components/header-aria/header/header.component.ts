@@ -1,29 +1,15 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { RouterModule } from '@angular/router';
-import { NavHeaderCenter } from '../nav-header-center/nav-header-center.component';
-import { UserProfile } from '../../../models';
 import { Observable, of } from 'rxjs';
-
-interface SubMenuItem {
-  label: string;
-  link?: string;
-  subMenu?: SubMenuItem[];
-}
-
-interface MenuItem {
-  label: string;
-  link?: string;
-  subMenu?: SubMenuItem[];
-}
-
-interface ProfileMenuItem {
-  label: string;
-  link?: string;
-  icon: string;
-  subMenu?: { label: string; link: string; icon: string }[];
-}
+import { NavHeaderCenter } from '../nav-header-center/nav-header-center.component';
+import type { DropdownItem, NavItem, UserProfile } from '../../../models';
+import {
+  getDefaultMenuItems,
+  getDefaultProfileMenuItems,
+  getDefaultUserProfile,
+} from './header.defaults';
 
 @Component({
   selector: 'ui-header',
@@ -33,157 +19,56 @@ interface ProfileMenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
-  showProfile = input<boolean>(true);
-  showAvatar = input<boolean>(false);
-  showEmail = input<boolean>(false);
-  showIcons = input<boolean>(false);
-  maxVisibleItems = input<number>(99);
-  logoPath = input<string | null>('/logo-header.svg');
-  themeLogoPath$ = input<Observable<string | null>>(of(null));
-  mainLogoAlt = input<string>('Logo');
-  themeLogoAlt$ = input<Observable<string | null>>(of(null));
-  logoWidth = input<number>(140);
-  logoHeight = input<number>(32);
-  rounded = input<boolean>(true);
+  readonly showProfile = input(true);
+  readonly showAvatar = input(false);
+  readonly showEmail = input(false);
+  readonly showIcons = input(false);
+  readonly maxVisibleItems = input(99);
+  readonly logoPath = input<string | null>('/logo-header.svg');
+  readonly themeLogoPath$ = input<Observable<string | null>>(of(null));
+  readonly mainLogoAlt = input('Logo');
+  readonly themeLogoAlt$ = input<Observable<string | null>>(of(null));
+  readonly logoWidth = input(140);
+  readonly logoHeight = input(32);
+  readonly rounded = input(true);
 
-  // Nouveaux signaux basés sur les images
-  isHeaderFixed = input<boolean>(false);
-  showHeaderPreNav = input<boolean>(true);
-  showHeaderPostNav = input<boolean>(true);
-  showHeaderPostNavMobile = input<boolean>(false); // Pour la classe arv-header_post-header-desktop--show
+  readonly isHeaderFixed = input(false);
+  readonly showHeaderPreNav = input(true);
+  readonly showHeaderPostNav = input(true);
+  readonly showHeaderPostNavMobile = input(false);
 
-  sticky = input<boolean>(false);
-  showNav = input<boolean>(true);
+  readonly sticky = input(false);
+  readonly showNav = input(true);
 
-  companyName = input<string>('My Company');
-  logoUrl = input<string>('/');
+  readonly companyName = input('My Company');
+  readonly logoUrl = input('/');
 
-  clickMainLogo = output<void>();
+  readonly clickMainLogo = output<void>();
 
-  onClickMainLogo() {
+  readonly userProfile = input<UserProfile | null>(getDefaultUserProfile());
+  readonly profileMenuItems = input<DropdownItem[]>(getDefaultProfileMenuItems());
+  readonly menuItems = input<NavItem[]>(getDefaultMenuItems());
+
+  readonly mainLogoLoadError = signal(false);
+  readonly isMobileMenuOpen = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.logoPath();
+      this.themeLogoPath$();
+      this.mainLogoLoadError.set(false);
+    });
+  }
+
+  onClickMainLogo(): void {
     this.clickMainLogo.emit();
   }
 
-  userProfile = input<UserProfile | null>({
-    name: 'John Doe',
-    email: 'john.doe@company.com',
-    avatar: '👤',
-  });
+  onMainLogoError(): void {
+    this.mainLogoLoadError.set(true);
+  }
 
-  profileMenuItems = input<ProfileMenuItem[]>([
-    {
-      label: 'My Profile',
-      icon: '👤',
-      subMenu: [
-        { label: 'View Profile', link: '/profile/view', icon: '👁️' },
-        { label: 'Edit Profile', link: '/profile/edit', icon: '✏️' },
-        { label: 'Privacy', link: '/profile/privacy', icon: '🔒' },
-      ],
-    },
-    {
-      label: 'Settings',
-      icon: '⚙️',
-      subMenu: [
-        { label: 'Account', link: '/settings/account', icon: '🔧' },
-        { label: 'Preferences', link: '/settings/preferences', icon: '🎨' },
-        { label: 'Security', link: '/settings/security', icon: '🛡️' },
-        { label: 'Billing', link: '/settings/billing', icon: '💳' },
-      ],
-    },
-    {
-      label: 'Notifications',
-      link: '/notifications',
-      icon: '🔔',
-    },
-    {
-      label: 'Help',
-      icon: '❓',
-      subMenu: [
-        { label: 'Documentation', link: '/help/docs', icon: '📚' },
-        { label: 'Contact Support', link: '/help/support', icon: '💬' },
-        { label: 'FAQ', link: '/help/faq', icon: '💡' },
-      ],
-    },
-    {
-      label: 'Logout',
-      link: '/logout',
-      icon: '🚪',
-    },
-  ]);
-
-  menuItems = input<MenuItem[]>([
-    {
-      label: 'Products',
-      subMenu: [
-        { label: 'Software', link: '/products/software' },
-        {
-          label: 'Services',
-          subMenu: [
-            { label: 'Consulting', link: '/products/services/consulting' },
-            { label: 'Training', link: '/products/services/training' },
-            { label: 'Support', link: '/products/services/support' },
-          ],
-        },
-        { label: 'Cloud Solutions', link: '/products/cloud' },
-      ],
-    },
-    {
-      label: 'Solutions',
-      subMenu: [
-        { label: 'Enterprise', link: '/solutions/enterprise' },
-        { label: 'Small Business', link: '/solutions/smb' },
-        { label: 'Startups', link: '/solutions/startups' },
-      ],
-    },
-    {
-      label: 'Resources',
-      subMenu: [
-        { label: 'Documentation', link: '/resources/docs' },
-        { label: 'Tutorials', link: '/resources/tutorials' },
-        { label: 'Blog', link: '/resources/blog' },
-        { label: 'Support', link: '/resources/support' },
-      ],
-    },
-    {
-      label: 'About',
-      link: '/about',
-    },
-    {
-      label: 'Contact',
-      link: '/contact',
-    },
-    {
-      label: 'Pricing',
-      link: '/pricing',
-    },
-    {
-      label: 'Partners',
-      link: '/partners',
-    },
-    {
-      label: 'Careers',
-      link: '/careers',
-    },
-    {
-      label: 'Blog',
-      link: '/blog',
-    },
-    {
-      label: 'Docs',
-      link: '/docs',
-    },
-    {
-      label: 'Support',
-      link: '/support',
-    },
-    {
-      label: 'Community',
-      link: '/community',
-    },
-    {
-      label: 'Events',
-      link: '/events',
-    },
-  ]);
+  onMobileMenuOpenChange(isOpen: boolean): void {
+    this.isMobileMenuOpen.set(isOpen);
+  }
 }
-
