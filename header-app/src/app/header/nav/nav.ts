@@ -4,7 +4,7 @@ import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
 import { NavLink } from '../nav-link/nav-link';
 import { Dropdown, DropdownItem } from '../dropdown/dropdown';
-import { ProfileMenu, UserProfile } from '../profile-menu/profile-menu';
+import { UserProfile } from '../profile-menu/profile-menu';
 import { Observable, of } from 'rxjs';
 
 export interface NavItem {
@@ -16,7 +16,7 @@ export interface NavItem {
 
 @Component({
   selector: 'app-nav',
-  imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown, ProfileMenu],
+  imports: [CommonModule, NgOptimizedImage, MenuBar, RouterModule, NavLink, Dropdown],
   templateUrl: './nav.html',
   styleUrl: './nav.css',
 })
@@ -55,6 +55,7 @@ export class Nav implements AfterViewInit, OnDestroy {
   clickMainLogo = output<void>();
 
   mobileMenuOpen = signal(false);
+  mobileNavRightHidden = signal(false);
   private readonly visibleCount = signal<number>(0);
   private resizeObserver?: ResizeObserver;
   private recalcQueued = false;
@@ -83,7 +84,21 @@ export class Nav implements AfterViewInit, OnDestroy {
   }
 
   toggleMobileMenu() {
-    this.mobileMenuOpen.set(!this.mobileMenuOpen());
+    const nextState = !this.mobileMenuOpen();
+    this.mobileMenuOpen.set(nextState);
+
+    if (!nextState && typeof window !== 'undefined') {
+      this.mobileNavRightHidden.set(false);
+      window.dispatchEvent(new Event('arv-mobile-nav-back'));
+    }
+  }
+
+  onMobileNavRightClick(): void {
+    if (!this.isMobile()) {
+      return;
+    }
+
+    this.mobileNavRightHidden.set(true);
   }
 
   closeMobileMenu() {

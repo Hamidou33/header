@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,11 +10,11 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./nav-header-left.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderLeft {
-  readonly secondaryLogoPath = input<string | null>(null);
-  readonly secondaryLogoAlt = input('Secondary logo');
-  readonly secondaryLogoUrl = input('/');
-  readonly tagText = input<string | null>(null);
-  readonly tagVariant = input<'primary' | 'secondary' | 'success' | 'info' | 'warning'>('primary');
-  readonly showSeparator = input(true);
+export class NavHeaderLeftComponent {
+  public readonly secondaryLogoPath = input<string | undefined>(undefined);
+  public readonly secondaryLogoAlt = input('Secondary logo');
+  public readonly secondaryLogoUrl = input('/');
+  public readonly tagText = input<string | undefined>(undefined);
+  public readonly tagVariant = input<'primary' | 'secondary' | 'success' | 'info' | 'warning'>('primary');
+  public readonly showSeparator = input(true);
 }

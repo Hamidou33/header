@@ -1,16 +1,19 @@
-﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MenuBar } from '@angular/aria/menu';
-import { NavHeaderLink } from './nav-header-link.component';
+import { NavHeaderLinkComponent } from './nav-header-link.component';
 
-const meta: Meta<NavHeaderLink> = {
+const meta: Meta<NavHeaderLinkComponent> = {
   title: 'Header ARIA/Nav Link',
-  component: NavHeaderLink,
+  component: NavHeaderLinkComponent,
   tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+  },
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderLink, MenuBar],
+      imports: [NavHeaderLinkComponent, MenuBar],
     }),
     applicationConfig({
       providers: [
@@ -53,7 +56,7 @@ const meta: Meta<NavHeaderLink> = {
 };
 
 export default meta;
-type Story = StoryObj<NavHeaderLink>;
+type Story = StoryObj<NavHeaderLinkComponent>;
 
 export const Default: Story = {};
 

@@ -1,18 +1,18 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Dropdown } from './dropdown.component';
+import { DropdownComponent } from './dropdown.component';
 
 describe('Dropdown Component', () => {
-  let fixture: ComponentFixture<Dropdown>;
-  let component: Dropdown;
+  let fixture: ComponentFixture<DropdownComponent>;
+  let component: DropdownComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [Dropdown],
+      imports: [DropdownComponent],
       providers: [provideRouter([])],
     });
 
-    fixture = TestBed.createComponent(Dropdown);
+    fixture = TestBed.createComponent(DropdownComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -33,7 +33,7 @@ describe('Dropdown Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(Dropdown);
+    expect(component).toBeInstanceOf(DropdownComponent);
   });
 
   describe('Submenu toggle', () => {
@@ -47,7 +47,7 @@ describe('Dropdown Component', () => {
 
       expect(preventDefaultSpy).toHaveBeenCalledTimes(2);
       expect(stopPropagationSpy).toHaveBeenCalledTimes(2);
-      expect(component.openSubmenuIndex()).toBeNull();
+      expect(component.openSubmenuIndex()).toBeUndefined();
     });
 
     it('should switch from one submenu index to another', () => {

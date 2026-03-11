@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
@@ -25,28 +25,28 @@ export type { DropdownItem };
   styleUrl: './dropdown.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dropdown {
+export class DropdownComponent {
   private static readonly SCROLL_DELAY_MS = 100;
 
-  readonly label = input('');
-  readonly items = input<DropdownItem[]>([]);
-  readonly active = input(false);
-  readonly measureOnly = input(false);
+  public readonly label = input('');
+  public readonly items = input<DropdownItem[]>([]);
+  public readonly active = input(false);
+  public readonly measureOnly = input(false);
 
-  readonly menu = viewChild<Menu<string>>('menu');
+  public readonly menu = viewChild<Menu<string>>('menu');
 
-  readonly openSubmenuIndex = signal<number | null>(null);
-  readonly itemClick = output<void>();
+  public readonly openSubmenuIndex = signal<number | undefined>(undefined);
+  public readonly itemClick = output<void>();
 
-  constructor() {
+  public constructor() {
     this.setupMenuVisibilityWatcher();
   }
 
-  toggleSubmenu(index: number, event: Event): void {
+  public toggleSubmenu(index: number, event: Event): void {
     this.preventEventPropagation(event);
 
     const shouldOpen = this.shouldOpenSubmenu(index);
-    this.updateSubmenuState(shouldOpen ? index : null);
+    this.updateSubmenuState(shouldOpen ? index : undefined);
 
     const target = this.getCurrentTargetElement(event);
     if (shouldOpen && target) {
@@ -54,7 +54,7 @@ export class Dropdown {
     }
   }
 
-  onItemClick(): void {
+  public onItemClick(): void {
     this.itemClick.emit();
   }
 
@@ -76,16 +76,16 @@ export class Dropdown {
     return this.openSubmenuIndex() !== index;
   }
 
-  private updateSubmenuState(index: number | null): void {
+  private updateSubmenuState(index: number | undefined): void {
     this.openSubmenuIndex.set(index);
   }
 
   private closeAllSubmenus(): void {
-    this.openSubmenuIndex.set(null);
+    this.openSubmenuIndex.set(undefined);
   }
 
-  private getCurrentTargetElement(event: Event): HTMLElement | null {
-    return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+  private getCurrentTargetElement(event: Event): HTMLElement | undefined {
+    return event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
   }
 
   private scrollSubmenuIntoView(element: HTMLElement): void {
@@ -94,6 +94,6 @@ export class Dropdown {
         behavior: 'smooth',
         block: 'start',
       });
-    }, Dropdown.SCROLL_DELAY_MS);
+    }, DropdownComponent.SCROLL_DELAY_MS);
   }
 }

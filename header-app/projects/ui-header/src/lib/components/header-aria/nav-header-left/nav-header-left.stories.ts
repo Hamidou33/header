@@ -1,14 +1,17 @@
-﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
-import { NavHeaderLeft } from './nav-header-left.component';
+import { NavHeaderLeftComponent } from './nav-header-left.component';
 
-const meta: Meta<NavHeaderLeft> = {
+const meta: Meta<NavHeaderLeftComponent> = {
   title: 'Header ARIA/Nav Left',
-  component: NavHeaderLeft,
+  component: NavHeaderLeftComponent,
   tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+  },
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderLeft],
+      imports: [NavHeaderLeftComponent],
     }),
     applicationConfig({
       providers: [provideRouter([{ path: '**', redirectTo: '' }], withHashLocation())],
@@ -44,7 +47,7 @@ const meta: Meta<NavHeaderLeft> = {
 };
 
 export default meta;
-type Story = StoryObj<NavHeaderLeft>;
+type Story = StoryObj<NavHeaderLeftComponent>;
 
 export const Default: Story = {
   args: {

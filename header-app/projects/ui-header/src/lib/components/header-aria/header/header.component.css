@@ -200,6 +200,7 @@
 .arv-header-nav-right-extra {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -214,6 +215,22 @@
   @media (min-width: 768px) {
     display: none;
   }
+}
+
+.arv-header-mobile-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.arv-header-mobile-profile-trigger:focus-visible {
+  outline: 2px solid rgb(var(--header-normal-text-color, 26 26 26));
+  outline-offset: 2px;
+  border-radius: 999px;
 }
 
 .arv-header_pre-header-desktop {

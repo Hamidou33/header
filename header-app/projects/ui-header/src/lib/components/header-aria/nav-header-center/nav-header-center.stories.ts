@@ -1,7 +1,7 @@
-﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { NavHeaderCenter } from './nav-header-center.component';
+import { NavHeaderCenterComponent } from './nav-header-center.component';
 import type { DropdownItem, NavItem, UserProfile } from '../../../models';
 
 const userProfile: UserProfile = {
@@ -54,16 +54,17 @@ const manyItems: NavItem[] = [
   { label: 'Careers', link: '/careers' },
 ];
 
-const meta: Meta<NavHeaderCenter> = {
+const meta: Meta<NavHeaderCenterComponent> = {
   title: 'Header ARIA/Nav Center',
-  component: NavHeaderCenter,
+  component: NavHeaderCenterComponent,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderCenter],
+      imports: [NavHeaderCenterComponent],
     }),
     applicationConfig({
       providers: [
@@ -133,7 +134,7 @@ const meta: Meta<NavHeaderCenter> = {
 };
 
 export default meta;
-type Story = StoryObj<NavHeaderCenter>;
+type Story = StoryObj<NavHeaderCenterComponent>;
 
 export const Default: Story = {};
 

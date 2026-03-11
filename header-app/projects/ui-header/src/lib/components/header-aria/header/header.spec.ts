@@ -1,23 +1,23 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Header } from './header.component';
+import { HeaderComponent } from './header.component';
 
 interface HeaderInputs {
-  logoPath: string | null;
+  logoPath: string | undefined;
   companyName: string;
 }
 
 describe('Header Component', () => {
-  let fixture: ComponentFixture<Header>;
-  let component: Header;
+  let fixture: ComponentFixture<HeaderComponent>;
+  let component: HeaderComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [Header],
+      imports: [HeaderComponent],
       providers: [provideRouter([])],
     });
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -27,8 +27,8 @@ describe('Header Component', () => {
     fixture.detectChanges();
   };
 
-  const queryElement = (selector: string): HTMLElement | null => {
-    return fixture.nativeElement.querySelector(selector);
+  const queryElement = (selector: string): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector(selector) ?? undefined;
   };
 
   beforeEach(createComponent);
@@ -38,14 +38,14 @@ describe('Header Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(Header);
+    expect(component).toBeInstanceOf(HeaderComponent);
   });
 
   it('should emit clickMainLogo when main logo link is clicked', () => {
     const emitSpy = vi.fn();
     component.clickMainLogo.subscribe(emitSpy);
 
-    const logoLink = queryElement('[data-testid="main-logo-link"]') as HTMLAnchorElement | null;
+    const logoLink = queryElement('[data-testid="main-logo-link"]') as HTMLAnchorElement | undefined;
     logoLink?.click();
 
     expect(emitSpy).toHaveBeenCalledTimes(1);
@@ -55,7 +55,7 @@ describe('Header Component', () => {
     setInput('companyName', 'Arval');
     setInput('logoPath', '/missing-logo.svg');
 
-    const image = queryElement('[data-testid="main-logo-image"]') as HTMLImageElement | null;
+    const image = queryElement('[data-testid="main-logo-image"]') as HTMLImageElement | undefined;
     image?.dispatchEvent(new Event('error'));
     fixture.detectChanges();
 

@@ -56,18 +56,20 @@
 
 
 .arv-header_profile {
-  display: none;
+  display: block;
   margin-right: 8px;
-
-  @media (min-width: 768px) {
-    display: block;
-  }
 }
 
 .arv-header-nav-right-extra {
   display: block;
 
   @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.arv-header-nav-right-extra_hidden {
+  @media (max-width: 768px) {
     display: none;
   }
 }

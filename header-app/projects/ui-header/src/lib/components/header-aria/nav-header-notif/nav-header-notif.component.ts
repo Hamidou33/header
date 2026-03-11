@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,20 +9,38 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./nav-header-notif.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderNotif {
-  readonly notificationCount = input(0);
-  readonly maxCount = input(99);
-  readonly showBadge = input(true);
-  readonly iconUrl = input('');
-  readonly size = input<'small' | 'medium' | 'large'>('medium');
-  readonly variant = input<'default' | 'primary' | 'danger'>('default');
+export class NavHeaderNotifComponent {
+  public readonly notificationCount = input(0);
+  public readonly maxCount = input(99);
+  public readonly showBadge = input(true);
+  public readonly iconUrl = input('');
+  public readonly size = input<'small' | 'medium' | 'large'>('medium');
+  public readonly variant = input<'default' | 'primary' | 'danger'>('default');
 
-  readonly notifClick = output<void>();
+  public readonly notifClick = output<void>();
 
-  readonly hasNotifications = computed(() => this.notificationCount() > 0);
-  readonly sizeClass = computed(() => `notif-${this.size()}`);
-  readonly variantClass = computed(() => `notif-${this.variant()}`);
-  readonly displayCount = computed(() => {
+  public readonly hasNotifications = computed(() => this.computeHasNotifications());
+  public readonly sizeClass = computed(() => this.computeSizeClass());
+  public readonly variantClass = computed(() => this.computeVariantClass());
+  public readonly displayCount = computed(() => this.computeDisplayCount());
+
+  public onNotifClick(): void {
+    this.notifClick.emit();
+  }
+
+  private computeHasNotifications(): boolean {
+    return this.notificationCount() > 0;
+  }
+
+  private computeSizeClass(): string {
+    return `notif-${this.size()}`;
+  }
+
+  private computeVariantClass(): string {
+    return `notif-${this.variant()}`;
+  }
+
+  private computeDisplayCount(): string {
     const count = this.notificationCount();
     const max = this.maxCount();
 
@@ -35,9 +53,5 @@ export class NavHeaderNotif {
     }
 
     return `${count}`;
-  });
-
-  onNotifClick(): void {
-    this.notifClick.emit();
   }
 }

@@ -1,10 +1,10 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { NavHeaderRight, UserProfile } from './nav-header-right.component';
+import { NavHeaderRightComponent, UserProfile } from './nav-header-right.component';
 
 describe('NavHeaderRight Component', () => {
-  let fixture: ComponentFixture<NavHeaderRight>;
-  let component: NavHeaderRight;
+  let fixture: ComponentFixture<NavHeaderRightComponent>;
+  let component: NavHeaderRightComponent;
 
   const user: UserProfile = {
     name: 'John Doe',
@@ -14,11 +14,11 @@ describe('NavHeaderRight Component', () => {
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [NavHeaderRight],
+      imports: [NavHeaderRightComponent],
       providers: [provideRouter([])],
     });
 
-    fixture = TestBed.createComponent(NavHeaderRight);
+    fixture = TestBed.createComponent(NavHeaderRightComponent);
     fixture.componentRef.setInput('user', user);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -40,7 +40,7 @@ describe('NavHeaderRight Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderRight);
+    expect(component).toBeInstanceOf(NavHeaderRightComponent);
   });
 
   it('should emit itemClick when onItemClick is called', () => {
@@ -64,6 +64,6 @@ describe('NavHeaderRight Component', () => {
 
     expect(preventDefaultSpy).toHaveBeenCalledTimes(2);
     expect(stopPropagationSpy).toHaveBeenCalledTimes(2);
-    expect(component.openSubmenuIndex()).toBeNull();
+    expect(component.openSubmenuIndex()).toBeUndefined();
   });
 });

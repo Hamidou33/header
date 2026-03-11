@@ -1,10 +1,13 @@
 <div class="profile-section">
   <button
     class="profile-button"
+    [class.profile-button_hidden]="mobileButtonHidden()"
     ngMenuTrigger
     #origin
     #trigger="ngMenuTrigger"
     [menu]="profileMenu()"
+    [attr.aria-expanded]="trigger.expanded()"
+    (click)="onProfileButtonClick()"
     aria-label="Profile menu">
     @if (showAvatar()) {
       <span class="profile-avatar">{{ user().avatar }}</span>

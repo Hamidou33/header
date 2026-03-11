@@ -1,4 +1,4 @@
-﻿import {
+import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -8,63 +8,71 @@
   input,
   OnDestroy,
   output,
-  QueryList,
   signal,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuBar } from '@angular/aria/menu';
 import { RouterModule } from '@angular/router';
-import { NavHeaderLink } from '../nav-header-link/nav-header-link.component';
-import { Dropdown } from '../dropdown/dropdown.component';
-import { NavHeaderRight } from '../nav-header-right/nav-header-right.component';
+import { NavHeaderLinkComponent } from '../nav-header-link/nav-header-link.component';
+import { DropdownComponent } from '../dropdown/dropdown.component';
+import { NavHeaderRightComponent } from '../nav-header-right/nav-header-right.component';
 import type { DropdownItem, NavItem, UserProfile } from '../../../models';
-import { Subscription } from 'rxjs';
 
 export type { NavItem };
 
+function isActiveItem(item: DropdownItem): boolean {
+  return item.active === true;
+}
+
 @Component({
   selector: 'ui-nav-header-center',
-  imports: [CommonModule, MenuBar, RouterModule, NavHeaderLink, Dropdown, NavHeaderRight],
+  imports: [CommonModule, MenuBar, RouterModule, NavHeaderLinkComponent, DropdownComponent, NavHeaderRightComponent],
   templateUrl: './nav-header-center.component.html',
   styleUrl: './nav-header-center.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderCenter implements AfterViewInit, OnDestroy {
+export class NavHeaderCenterComponent implements AfterViewInit, OnDestroy {
   private static readonly MOBILE_BREAKPOINT = '(max-width: 768px)';
   private static readonly PROFILE_GAP_PX = 4;
 
-  readonly items = input<NavItem[]>([]);
-  readonly maxVisibleItems = input(99);
+  public readonly items = input<NavItem[]>([]);
+  public readonly maxVisibleItems = input(99);
 
-  readonly rounded = input(true);
+  public readonly rounded = input(true);
 
-  readonly showHeaderNavMobileTop = input(true);
-  readonly showHeaderNavMobileBottom = input(true);
-  readonly showHeaderNavRight = input(true);
-  readonly burgerIcon = input(false);
-  readonly burgerIconPos = input<'left' | 'right'>('right');
+  public readonly showHeaderNavMobileTop = input(true);
+  public readonly showHeaderNavMobileBottom = input(true);
+  public readonly showHeaderNavRight = input(true);
+  public readonly burgerIcon = input(false);
+  public readonly burgerIconPos = input<'left' | 'right'>('right');
 
-  readonly showProfile = input(false);
-  readonly userProfile = input<UserProfile | null>(null);
-  readonly profileMenuItems = input<DropdownItem[]>([]);
-  readonly showAvatar = input(false);
-  readonly showEmail = input(false);
-  readonly showIcons = input(false);
+  public readonly showProfile = input(false);
+  public readonly userProfile = input<UserProfile | undefined>(undefined);
+  public readonly profileMenuItems = input<DropdownItem[]>([]);
+  public readonly showAvatar = input(false);
+  public readonly showEmail = input(false);
+  public readonly showIcons = input(false);
 
-  readonly clickMainLogo = output<void>();
-  readonly mobileMenuOpenChange = output<boolean>();
+  public readonly clickMainLogo = output<void>();
+  public readonly mobileMenuOpenChange = output<boolean>();
 
-  readonly isMobile = signal(this.detectMobileState());
-  readonly mobileMenuOpen = signal(false);
-  readonly navigationStack = signal<DropdownItem[][]>([]);
-  readonly currentMenuTitle = signal('');
+  public readonly isMobile = signal(this.detectMobileState());
+  public readonly mobileMenuOpen = signal(false);
+  public readonly navigationStack = signal<DropdownItem[][]>([]);
+  public readonly currentMenuTitle = signal('');
+  public readonly isFromProfile = signal(false);
+
+  public readonly navMenu = viewChild<ElementRef<HTMLElement>>('navMenu');
+  public readonly navContent = viewChild<ElementRef<HTMLElement>>('navContent');
+  public readonly measureItems = viewChildren<ElementRef<HTMLElement>>('measureItem');
+  public readonly measureMore = viewChild<ElementRef<HTMLElement>>('measureMore');
+  public readonly navRight = viewChild<ElementRef<HTMLElement>>('navRight');
 
   private readonly visibleCount = signal(0);
   private resizeObserver?: ResizeObserver;
   private recalcQueued = false;
-  private measureItemsChangesSubscription?: Subscription;
   private mobileMediaQueryList?: MediaQueryList;
 
   private readonly mediaQueryChangeHandler = (event: MediaQueryListEvent): void => {
@@ -74,71 +82,41 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     }
   };
 
-  @ViewChild('navMenu') navMenu?: ElementRef<HTMLElement>;
-  @ViewChild('navContent') navContent?: ElementRef<HTMLElement>;
-  @ViewChildren('measureItem', { read: ElementRef })
-  measureItems?: QueryList<ElementRef<HTMLElement>>;
-  @ViewChild('measureMore') measureMore?: ElementRef<HTMLElement>;
-  @ViewChild('navRight') navRight?: ElementRef<HTMLElement>;
+  public readonly effectiveVisibleCount = computed(() => this.computeEffectiveVisibleCount());
 
-  readonly effectiveVisibleCount = computed(() => {
-    const items = this.items();
-    const maxAllowed = this.getMaxAllowedItems(items.length);
-    return Math.min(this.visibleCount(), maxAllowed, items.length);
-  });
+  public readonly visibleItems = computed(() => this.computeVisibleItems());
 
-  readonly visibleItems = computed(() => {
-    const allItems = this.items();
-    const count = this.effectiveVisibleCount();
+  public readonly moreItems = computed<DropdownItem[]>(() => this.computeMoreItems());
 
-    if (allItems.length === 0 || count <= 0) {
-      return [];
-    }
+  public readonly isMoreActive = computed(() => this.computeIsMoreActive());
 
-    return allItems.slice(0, count);
-  });
-
-  readonly moreItems = computed<DropdownItem[]>(() => {
-    const allItems = this.items();
-    const count = this.effectiveVisibleCount();
-
-    if (allItems.length <= count) {
-      return [];
-    }
-
-    return this.cloneMenuItems(allItems.slice(count));
-  });
-
-  readonly isMoreActive = computed(() => this.moreItems().some(item => item.active));
-
-  constructor() {
+  public constructor() {
     this.setupItemsWatcher();
     this.setupMediaQueryListener();
   }
 
-  ngAfterViewInit(): void {
-    this.setupMeasureItemsWatcher();
+  public ngAfterViewInit(): void {
     this.scheduleRecalculate();
     this.waitForFontsAndRecalculate();
     this.setupResizeObserver();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
-    this.measureItemsChangesSubscription?.unsubscribe();
 
     if (this.mobileMediaQueryList) {
       this.mobileMediaQueryList.removeEventListener('change', this.mediaQueryChangeHandler);
     }
   }
 
-  toggleMobileMenu(): void {
+  public toggleMobileMenu(): void {
     this.mobileMenuOpen.update(isOpen => {
       const nextOpen = !isOpen;
 
       if (nextOpen) {
         this.navigationStack.set([this.cloneMenuItems(this.items())]);
         this.currentMenuTitle.set('');
+        this.isFromProfile.set(false);
       }
 
       this.mobileMenuOpenChange.emit(nextOpen);
@@ -146,14 +124,45 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     });
   }
 
-  closeMobileMenu(): void {
+  public closeMobileMenu(): void {
     this.mobileMenuOpen.set(false);
     this.navigationStack.set([]);
     this.currentMenuTitle.set('');
+    this.isFromProfile.set(false);
     this.mobileMenuOpenChange.emit(false);
   }
 
-  navigateToSubMenu(item: DropdownItem, event?: Event): void {
+  public openMobileProfileMenu(event?: Event): void {
+    this.stopEvent(event);
+
+    if (!this.isMobile()) {
+      return;
+    }
+
+    const rootItems = this.cloneMenuItems(this.items());
+    const profileItems = this.cloneMenuItems(this.profileMenuItems());
+
+    if (profileItems.length === 0) {
+      return;
+    }
+
+    this.isFromProfile.set(true);
+
+    if (rootItems.length > 0) {
+      this.navigationStack.set([rootItems, profileItems]);
+      this.currentMenuTitle.set(this.userProfile()?.name ?? 'Profile');
+    } else {
+      this.navigationStack.set([profileItems]);
+      this.currentMenuTitle.set('');
+    }
+
+    if (!this.mobileMenuOpen()) {
+      this.mobileMenuOpen.set(true);
+      this.mobileMenuOpenChange.emit(true);
+    }
+  }
+
+  public navigateToSubMenu(item: DropdownItem, event?: Event): void {
     this.stopEvent(event);
 
     if (!item.subMenu || item.subMenu.length === 0) {
@@ -164,11 +173,17 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     this.currentMenuTitle.set(item.label);
   }
 
-  goBack(event?: Event): void {
+  public goBack(event?: Event): void {
     this.stopEvent(event);
 
     this.navigationStack.update(stack => {
       if (stack.length <= 1) {
+        this.closeMobileMenu();
+        return [];
+      }
+
+      // Si on vient du profile et qu'on est au niveau 2, fermer directement
+      if (this.isFromProfile() && stack.length === 2) {
         this.closeMobileMenu();
         return [];
       }
@@ -182,20 +197,52 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     });
   }
 
-  getMobileLevelTransform(levelIndex: number): string {
+  public getMobileLevelTransform(levelIndex: number): string {
     const shift = 100 * (levelIndex - (this.navigationStack().length - 1));
     return `translateX(${shift}%)`;
   }
 
-  getMobileItemAnimationDelay(levelIndex: number, itemIndex: number): string {
+  public getMobileItemAnimationDelay(levelIndex: number, itemIndex: number): string {
     return levelIndex === 0 ? `${itemIndex * 0.05}s` : '0s';
+  }
+
+  private computeEffectiveVisibleCount(): number {
+    const items = this.items();
+    const maxAllowed = this.getMaxAllowedItems(items.length);
+    return Math.min(this.visibleCount(), maxAllowed, items.length);
+  }
+
+  private computeVisibleItems(): NavItem[] {
+    const allItems = this.items();
+    const count = this.effectiveVisibleCount();
+
+    if (allItems.length === 0 || count <= 0) {
+      return [];
+    }
+
+    return allItems.slice(0, count);
+  }
+
+  private computeMoreItems(): DropdownItem[] {
+    const allItems = this.items();
+    const count = this.effectiveVisibleCount();
+
+    if (allItems.length <= count) {
+      return [];
+    }
+
+    return this.cloneMenuItems(allItems.slice(count));
+  }
+
+  private computeIsMoreActive(): boolean {
+    return this.moreItems().some(isActiveItem);
   }
 
   private setupItemsWatcher(): void {
     effect(() => {
       const items = this.items();
 
-      if (!this.measureItems?.length) {
+      if (this.measureItems().length === 0) {
         this.visibleCount.set(items.length);
       }
 
@@ -210,19 +257,9 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.mobileMediaQueryList = windowRef.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT);
+    this.mobileMediaQueryList = windowRef.matchMedia(NavHeaderCenterComponent.MOBILE_BREAKPOINT);
     this.isMobile.set(this.mobileMediaQueryList.matches);
     this.mobileMediaQueryList.addEventListener('change', this.mediaQueryChangeHandler);
-  }
-
-  private setupMeasureItemsWatcher(): void {
-    if (!this.measureItems) {
-      return;
-    }
-
-    this.measureItemsChangesSubscription = this.measureItems.changes.subscribe(() => {
-      this.scheduleRecalculate();
-    });
   }
 
   private waitForFontsAndRecalculate(): void {
@@ -246,9 +283,9 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
     });
 
     this.observeElements([
-      this.navMenu?.nativeElement,
-      this.navContent?.nativeElement,
-      this.navRight?.nativeElement,
+      this.navMenu()?.nativeElement,
+      this.navContent()?.nativeElement,
+      this.navRight()?.nativeElement,
     ]);
   }
 
@@ -297,21 +334,21 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
   }
 
   private calculateVisibleItemsCount(allItems: NavItem[]): number {
-    const navEl = this.navMenu?.nativeElement;
-    const measureEls = this.measureItems?.toArray() ?? [];
+    const navEl = this.navMenu()?.nativeElement;
+    const measureEls = this.measureItems();
 
     if (!navEl || measureEls.length === 0) {
       return allItems.length;
     }
 
     const availableWidth = this.getAvailableWidth(navEl);
-    const moreWidth = this.measureMore?.nativeElement?.offsetWidth ?? 0;
+    const moreWidth = this.measureMore()?.nativeElement?.offsetWidth ?? 0;
     const measurements = this.getMeasurements(measureEls, navEl);
 
     return this.countItemsThatFit(allItems, measurements, availableWidth, moreWidth);
   }
 
-  private getMeasurements(measureEls: ElementRef<HTMLElement>[], navEl: HTMLElement): {
+  private getMeasurements(measureEls: ReadonlyArray<ElementRef<HTMLElement>>, navEl: HTMLElement): {
     rects: DOMRect[];
     gap: number;
   } {
@@ -371,17 +408,17 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
   }
 
   private getAvailableWidth(navEl: HTMLElement): number {
-    const contentEl = this.navContent?.nativeElement;
-    const rightEl = this.navRight?.nativeElement;
+    const contentEl = this.navContent()?.nativeElement;
+    const rightEl = this.navRight()?.nativeElement;
 
     if (!contentEl || !rightEl) {
-      return Math.max(0, navEl.clientWidth - NavHeaderCenter.PROFILE_GAP_PX);
+      return Math.max(0, navEl.clientWidth - NavHeaderCenterComponent.PROFILE_GAP_PX);
     }
 
     const contentRect = contentEl.getBoundingClientRect();
     const rightRect = rightEl.getBoundingClientRect();
 
-    return Math.max(0, rightRect.left - contentRect.left - NavHeaderCenter.PROFILE_GAP_PX);
+    return Math.max(0, rightRect.left - contentRect.left - NavHeaderCenterComponent.PROFILE_GAP_PX);
   }
 
   private getMaxAllowedItems(totalItems: number): number {
@@ -395,11 +432,11 @@ export class NavHeaderCenter implements AfterViewInit, OnDestroy {
       return false;
     }
 
-    return windowRef.matchMedia(NavHeaderCenter.MOBILE_BREAKPOINT).matches;
+    return windowRef.matchMedia(NavHeaderCenterComponent.MOBILE_BREAKPOINT).matches;
   }
 
-  private getWindow(): Window | null {
-    return typeof window === 'undefined' ? null : window;
+  private getWindow(): Window | undefined {
+    return typeof window === 'undefined' ? undefined : window;
   }
 
   private cloneMenuItems(items: ReadonlyArray<DropdownItem>): DropdownItem[] {

@@ -1,27 +1,27 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { NavHeaderLeft } from './nav-header-left.component';
+import { NavHeaderLeftComponent } from './nav-header-left.component';
 
 interface NavHeaderLeftInputs {
-  secondaryLogoPath: string | null;
+  secondaryLogoPath: string | undefined;
   secondaryLogoAlt: string;
   secondaryLogoUrl: string;
-  tagText: string | null;
+  tagText: string | undefined;
   tagVariant: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
   showSeparator: boolean;
 }
 
-describe('NavHeaderLeft', () => {
-  let component: NavHeaderLeft;
-  let fixture: ComponentFixture<NavHeaderLeft>;
+describe('NavHeaderLeftComponent', () => {
+  let component: NavHeaderLeftComponent;
+  let fixture: ComponentFixture<NavHeaderLeftComponent>;
 
   const createComponent = async (): Promise<void> => {
     await TestBed.configureTestingModule({
-      imports: [NavHeaderLeft],
+      imports: [NavHeaderLeftComponent],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NavHeaderLeft);
+    fixture = TestBed.createComponent(NavHeaderLeftComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -34,23 +34,23 @@ describe('NavHeaderLeft', () => {
     fixture.detectChanges();
   };
 
-  const queryElement = (selector: string): HTMLElement | null => {
-    return fixture.nativeElement.querySelector(selector);
+  const queryElement = (selector: string): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector(selector) ?? undefined;
   };
 
   beforeEach(createComponent);
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderLeft);
+    expect(component).toBeInstanceOf(NavHeaderLeftComponent);
   });
 
   describe('Secondary logo', () => {
     it('should display logo when path is provided', () => {
       setInput('secondaryLogoPath', 'test-logo.png');
 
-      const logo = queryElement('.nav-left-logo-img') as HTMLImageElement | null;
+      const logo = queryElement('.nav-left-logo-img') as HTMLImageElement | undefined;
 
-      expect(logo).not.toBeNull();
+      expect(logo).toBeDefined();
       expect(logo?.src).toContain('test-logo.png');
     });
   });
@@ -81,7 +81,7 @@ describe('NavHeaderLeft', () => {
 
       const separator = queryElement('.nav-left-separator');
 
-      expect(separator).not.toBeNull();
+      expect(separator).toBeDefined();
     });
 
     it('should hide separator when disabled', () => {
@@ -90,7 +90,7 @@ describe('NavHeaderLeft', () => {
 
       const separator = queryElement('.nav-left-separator');
 
-      expect(separator).toBeNull();
-    });
+      expect(separator).toBeUndefined();
   });
+});
 });

@@ -1,7 +1,7 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { provideRouter } from '@angular/router';
-import { NavHeaderLink } from './nav-header-link.component';
+import { NavHeaderLinkComponent } from './nav-header-link.component';
 
 interface NavHeaderLinkInputs {
   label: string;
@@ -13,16 +13,16 @@ interface NavHeaderLinkInputs {
 }
 
 describe('NavHeaderLink Component', () => {
-  let fixture: ComponentFixture<NavHeaderLink>;
-  let component: NavHeaderLink;
+  let fixture: ComponentFixture<NavHeaderLinkComponent>;
+  let component: NavHeaderLinkComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [NavHeaderLink],
+      imports: [NavHeaderLinkComponent],
       providers: [provideRouter([]), PARENT_OR_NEW_MENU_STACK_PROVIDER],
     });
 
-    fixture = TestBed.createComponent(NavHeaderLink);
+    fixture = TestBed.createComponent(NavHeaderLinkComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -35,8 +35,8 @@ describe('NavHeaderLink Component', () => {
     fixture.detectChanges();
   };
 
-  const queryElement = (selector: string): HTMLElement | null => {
-    return fixture.nativeElement.querySelector(selector);
+  const queryElement = (selector: string): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector(selector) ?? undefined;
   };
 
   beforeEach(createComponent);
@@ -46,14 +46,14 @@ describe('NavHeaderLink Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderLink);
+    expect(component).toBeInstanceOf(NavHeaderLinkComponent);
   });
 
   it('should emit itemClick when link is clicked', () => {
     const emitSpy = vi.fn();
     component.itemClick.subscribe(emitSpy);
 
-    const link = queryElement('[data-testid="nav-link"]') as HTMLAnchorElement | null;
+    const link = queryElement('[data-testid="nav-link"]') as HTMLAnchorElement | undefined;
     link?.click();
 
     expect(emitSpy).toHaveBeenCalledTimes(1);
@@ -65,8 +65,8 @@ describe('NavHeaderLink Component', () => {
     const measureElement = queryElement('[data-testid="nav-link-measure"]');
     const interactiveLink = queryElement('[data-testid="nav-link"]');
 
-    expect(measureElement).not.toBeNull();
-    expect(interactiveLink).toBeNull();
+    expect(measureElement).toBeDefined();
+    expect(interactiveLink).toBeUndefined();
   });
 
   it('should apply active class to the rendered link', () => {

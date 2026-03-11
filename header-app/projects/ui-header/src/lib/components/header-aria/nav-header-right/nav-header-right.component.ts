@@ -1,10 +1,10 @@
-﻿import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkMenuModule, PARENT_OR_NEW_MENU_STACK_PROVIDER } from '@angular/cdk/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Menu, MenuContent, MenuItem, MenuTrigger } from '@angular/aria/menu';
-import { NavHeaderAvatar } from '../nav-header-avatar/nav-header-avatar.component';
+import { NavHeaderAvatarComponent } from '../nav-header-avatar/nav-header-avatar.component';
 import type { DropdownItem, UserProfile } from '../../../models';
 
 export type { UserProfile };
@@ -20,37 +20,37 @@ export type { UserProfile };
     MenuContent,
     CdkMenuModule,
     OverlayModule,
-    NavHeaderAvatar,
+    NavHeaderAvatarComponent,
   ],
   providers: [PARENT_OR_NEW_MENU_STACK_PROVIDER],
   templateUrl: './nav-header-right.component.html',
   styleUrl: './nav-header-right.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderRight {
+export class NavHeaderRightComponent {
   private static readonly SCROLL_DELAY_MS = 100;
 
-  readonly user = input.required<UserProfile>();
-  readonly menuItems = input<DropdownItem[]>([]);
-  readonly showAvatar = input(true);
-  readonly showEmail = input(false);
-  readonly showIcons = input(false);
-  readonly avatarSize = input<'small' | 'medium' | 'large'>('medium');
+  public readonly user = input.required<UserProfile>();
+  public readonly menuItems = input<DropdownItem[]>([]);
+  public readonly showAvatar = input(true);
+  public readonly showEmail = input(false);
+  public readonly showIcons = input(false);
+  public readonly avatarSize = input<'small' | 'medium' | 'large'>('medium');
 
-  readonly profileMenu = viewChild<Menu<string>>('profileMenu');
+  public readonly profileMenu = viewChild<Menu<string>>('profileMenu');
 
-  readonly openSubmenuIndex = signal<number | null>(null);
-  readonly itemClick = output<void>();
+  public readonly openSubmenuIndex = signal<number | undefined>(undefined);
+  public readonly itemClick = output<void>();
 
-  constructor() {
+  public constructor() {
     this.setupMenuVisibilityWatcher();
   }
 
-  toggleSubmenu(index: number, event: Event): void {
+  public toggleSubmenu(index: number, event: Event): void {
     this.preventEventPropagation(event);
 
     const shouldOpen = this.shouldOpenSubmenu(index);
-    this.updateSubmenuState(shouldOpen ? index : null);
+    this.updateSubmenuState(shouldOpen ? index : undefined);
 
     const target = this.getCurrentTargetElement(event);
     if (shouldOpen && target) {
@@ -58,7 +58,7 @@ export class NavHeaderRight {
     }
   }
 
-  onItemClick(): void {
+  public onItemClick(): void {
     this.itemClick.emit();
   }
 
@@ -80,16 +80,16 @@ export class NavHeaderRight {
     return this.openSubmenuIndex() !== index;
   }
 
-  private updateSubmenuState(index: number | null): void {
+  private updateSubmenuState(index: number | undefined): void {
     this.openSubmenuIndex.set(index);
   }
 
   private closeAllSubmenus(): void {
-    this.openSubmenuIndex.set(null);
+    this.openSubmenuIndex.set(undefined);
   }
 
-  private getCurrentTargetElement(event: Event): HTMLElement | null {
-    return event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+  private getCurrentTargetElement(event: Event): HTMLElement | undefined {
+    return event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
   }
 
   private scrollSubmenuIntoView(element: HTMLElement): void {
@@ -98,8 +98,8 @@ export class NavHeaderRight {
         behavior: 'smooth',
         block: 'start',
       });
-    }, NavHeaderRight.SCROLL_DELAY_MS);
+    }, NavHeaderRightComponent.SCROLL_DELAY_MS);
   }
 }
 
-export { NavHeaderRight as ProfileMenu };
+export { NavHeaderRightComponent as ProfileMenu };

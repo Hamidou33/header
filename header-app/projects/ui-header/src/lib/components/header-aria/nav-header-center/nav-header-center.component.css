@@ -299,7 +299,8 @@
 
       .arv-header-nav-menu-mobile-container {
         position: relative;
-        flex: 1;
+        flex: 1 1 auto;
+        min-height: 0;
         overflow-x: hidden;
         overflow-y: hidden;
       }
@@ -309,7 +310,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: auto;
+        height: 100%;
         display: flex;
         flex-direction: column;
         padding: 0;
@@ -317,7 +318,10 @@
         transition: transform 0.3s ease-in-out;
         overflow-y: auto;
         overflow-x: hidden;
+        min-height: 0;
         box-sizing: border-box;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* Edge/IE */
 
@@ -363,6 +367,8 @@
           width: 100%;
           display: flex;
           align-items: stretch;
+          height: auto;
+          flex: 0 0 auto;
 
           ui-nav-header-link,
           app-nav-link {

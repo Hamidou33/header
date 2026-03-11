@@ -1,19 +1,20 @@
 import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { Header } from './header.component';
-import { NavHeaderLeft } from '../nav-header-left/nav-header-left.component';
+import { HeaderComponent } from './header.component';
+import { NavHeaderLeftComponent } from '../nav-header-left/nav-header-left.component';
 
-const meta: Meta<Header> = {
+const meta: Meta<HeaderComponent> = {
   title: 'Header ARIA/Header',
-  component: Header,
+  component: HeaderComponent,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [Header, NavHeaderLeft],
+      imports: [HeaderComponent, NavHeaderLeftComponent],
     }),
     applicationConfig({
       providers: [
@@ -90,7 +91,7 @@ const meta: Meta<Header> = {
 };
 
 export default meta;
-type Story = StoryObj<Header>;
+type Story = StoryObj<HeaderComponent>;
 
 export const Default: Story = {};
 

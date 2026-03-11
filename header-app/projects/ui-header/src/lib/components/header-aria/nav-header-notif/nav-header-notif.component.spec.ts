@@ -1,5 +1,5 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavHeaderNotif } from './nav-header-notif.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NavHeaderNotifComponent } from './nav-header-notif.component';
 
 interface NotifInputs {
   notificationCount: number;
@@ -11,15 +11,15 @@ interface NotifInputs {
 }
 
 describe('NavHeaderNotif Component', () => {
-  let fixture: ComponentFixture<NavHeaderNotif>;
-  let component: NavHeaderNotif;
+  let fixture: ComponentFixture<NavHeaderNotifComponent>;
+  let component: NavHeaderNotifComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [NavHeaderNotif],
+      imports: [NavHeaderNotifComponent],
     });
 
-    fixture = TestBed.createComponent(NavHeaderNotif);
+    fixture = TestBed.createComponent(NavHeaderNotifComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -29,8 +29,8 @@ describe('NavHeaderNotif Component', () => {
     fixture.detectChanges();
   };
 
-  const queryElement = (selector: string): HTMLElement | null => {
-    return fixture.nativeElement.querySelector(selector);
+  const queryElement = (selector: string): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector(selector) ?? undefined;
   };
 
   beforeEach(createComponent);
@@ -40,7 +40,7 @@ describe('NavHeaderNotif Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderNotif);
+    expect(component).toBeInstanceOf(NavHeaderNotifComponent);
   });
 
   describe('Badge behavior', () => {
@@ -63,7 +63,7 @@ describe('NavHeaderNotif Component', () => {
     it('should hide badge when count is zero', () => {
       setInput('notificationCount', 0);
 
-      expect(queryElement('.notif-badge')).toBeNull();
+      expect(queryElement('.notif-badge')).toBeUndefined();
       expect(component.displayCount()).toBe('');
     });
 
@@ -71,7 +71,7 @@ describe('NavHeaderNotif Component', () => {
       setInput('notificationCount', 10);
       setInput('showBadge', false);
 
-      expect(queryElement('.notif-badge')).toBeNull();
+      expect(queryElement('.notif-badge')).toBeUndefined();
     });
   });
 
@@ -100,16 +100,16 @@ describe('NavHeaderNotif Component', () => {
     it('should display custom icon image when iconUrl is provided', () => {
       setInput('iconUrl', 'https://example.com/bell.svg');
 
-      const image = queryElement('.notif-icon-image') as HTMLImageElement | null;
+      const image = queryElement('.notif-icon-image') as HTMLImageElement | undefined;
 
-      expect(image).not.toBeNull();
+      expect(image).toBeDefined();
       expect(image?.src).toContain('bell.svg');
     });
 
     it('should display default svg icon when iconUrl is empty', () => {
       const icon = queryElement('.notif-icon');
 
-      expect(icon).not.toBeNull();
+      expect(icon).toBeDefined();
     });
   });
 
@@ -118,7 +118,7 @@ describe('NavHeaderNotif Component', () => {
       const emitSpy = vi.fn();
       component.notifClick.subscribe(emitSpy);
 
-      const button = queryElement('[data-testid="notif-button"]') as HTMLButtonElement | null;
+      const button = queryElement('[data-testid="notif-button"]') as HTMLButtonElement | undefined;
       button?.click();
 
       expect(emitSpy).toHaveBeenCalledTimes(1);

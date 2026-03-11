@@ -49,7 +49,20 @@
           <div class="arv-header-logo-pipe"></div>
         </div>
 
-        <div class="arv-header-nav-right-extra">
+        <div class="arv-header-nav-right-extra" [style.display]="showRightExtra() ? '' : 'none !important'">
+          @if (showNav() && showProfile() && userProfile()) {
+            <button
+              type="button"
+              class="arv-header-mobile-profile-trigger"
+              data-testid="mobile-profile-trigger"
+              aria-label="Open profile menu"
+              (click)="onMobileProfileTriggerClick($event)">
+              <ui-nav-header-avatar
+                [userName]="userProfile()!.name"
+                [size]="'small'"
+                [clickable]="false" />
+            </button>
+          }
           <ng-content select="[slot=nav-right]"></ng-content>
         </div>
 

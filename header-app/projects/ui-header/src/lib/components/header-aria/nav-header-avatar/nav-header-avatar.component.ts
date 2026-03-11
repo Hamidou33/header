@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,17 +9,28 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./nav-header-avatar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderAvatar {
-  readonly avatarUrl = input('');
-  readonly userName = input('');
-  readonly size = input<'small' | 'medium' | 'large'>('medium');
-  readonly showOnlineStatus = input(false);
-  readonly isOnline = input(false);
-  readonly clickable = input(true);
+export class NavHeaderAvatarComponent {
+  public readonly avatarUrl = input('');
+  public readonly userName = input('');
+  public readonly size = input<'small' | 'medium' | 'large'>('medium');
+  public readonly showOnlineStatus = input(false);
+  public readonly isOnline = input(false);
+  public readonly clickable = input(true);
 
-  readonly avatarClick = output<void>();
+  public readonly avatarClick = output<void>();
 
-  readonly initials = computed(() => {
+  public readonly initials = computed(() => this.computeInitials());
+  public readonly shouldShowInitials = computed(() => this.computeShouldShowInitials());
+  public readonly shouldShowDefaultIcon = computed(() => this.computeShouldShowDefaultIcon());
+  public readonly sizeClass = computed(() => this.computeSizeClass());
+
+  public onAvatarClick(): void {
+    if (this.clickable()) {
+      this.avatarClick.emit();
+    }
+  }
+
+  private computeInitials(): string {
     const name = this.userName().trim();
     if (!name) {
       return '';
@@ -31,15 +42,17 @@ export class NavHeaderAvatar {
     }
 
     return `${words[0].charAt(0).toUpperCase()} ${words[words.length - 1].charAt(0).toUpperCase()}`;
-  });
+  }
 
-  readonly shouldShowInitials = computed(() => !this.avatarUrl() && this.initials().length > 0);
-  readonly shouldShowDefaultIcon = computed(() => !this.avatarUrl() && this.initials().length === 0);
-  readonly sizeClass = computed(() => `avatar-${this.size()}`);
+  private computeShouldShowInitials(): boolean {
+    return !this.avatarUrl() && this.initials().length > 0;
+  }
 
-  onAvatarClick(): void {
-    if (this.clickable()) {
-      this.avatarClick.emit();
-    }
+  private computeShouldShowDefaultIcon(): boolean {
+    return !this.avatarUrl() && this.initials().length === 0;
+  }
+
+  private computeSizeClass(): string {
+    return `avatar-${this.size()}`;
   }
 }

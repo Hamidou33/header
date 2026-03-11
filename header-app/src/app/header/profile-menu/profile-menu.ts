@@ -1,4 +1,4 @@
-import { Component, input, viewChild, signal, effect } from '@angular/core';
+import { Component, input, viewChild, signal, effect, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Menu, MenuItem, MenuTrigger, MenuContent } from '@angular/aria/menu';
@@ -19,7 +19,7 @@ export interface UserProfile {
   templateUrl: './profile-menu.html',
   styleUrl: './profile-menu.css',
 })
-export class ProfileMenu {
+export class ProfileMenu implements OnDestroy {
   user = input.required<UserProfile>();
   menuItems = input<DropdownItem[]>([]);
   showAvatar = input<boolean>(false);
@@ -29,6 +29,10 @@ export class ProfileMenu {
   profileMenu = viewChild<Menu<string>>('profileMenu');
 
   openSubmenuIndex = signal<number | null>(null);
+  mobileButtonHidden = signal(false);
+  private readonly mobileNavBackHandler = (): void => {
+    this.mobileButtonHidden.set(false);
+  };
 
   constructor() {
     effect(() => {
@@ -37,6 +41,24 @@ export class ProfileMenu {
         this.openSubmenuIndex.set(null);
       }
     });
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('arv-mobile-nav-back', this.mobileNavBackHandler as EventListener);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('arv-mobile-nav-back', this.mobileNavBackHandler as EventListener);
+    }
+  }
+
+  onProfileButtonClick(): void {
+    if (!this.isMobileViewport()) {
+      return;
+    }
+
+    this.mobileButtonHidden.set(true);
   }
 
   toggleSubmenu(index: number, event: Event) {
@@ -51,5 +73,9 @@ export class ProfileMenu {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
+  }
+
+  private isMobileViewport(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
   }
 }

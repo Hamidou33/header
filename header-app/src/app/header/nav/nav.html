@@ -59,18 +59,6 @@
         </div>
       }
 
-      @if (showProfile() && userProfile() && isMobile()) {
-        <div class="arv-header-nav_item mobile-profile-item">
-          <app-profile-menu
-            class="mobile-profile"
-            [user]="userProfile()!"
-            [menuItems]="profileMenuItems()"
-            [showAvatar]="showAvatar()"
-            [showEmail]="showEmail()"
-            [showIcons]="showIcons()"
-            (itemClick)="closeMobileMenu()" />
-        </div>
-      }
     </div>
 
     @if (moreItems().length > 0) {
@@ -91,7 +79,11 @@
     </nav>
 
     @if (showHeaderNavRight()) {
-      <section #navRight class="arv-header-nav-right">
+      <section
+        #navRight
+        class="arv-header-nav-right"
+        [class.arv-header-nav-right_hidden]="isMobile() && mobileNavRightHidden()"
+        (click)="onMobileNavRightClick()">
         <ng-content select="[slot=nav-right]"></ng-content>
       </section>
     }

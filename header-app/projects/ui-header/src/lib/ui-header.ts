@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'ui-ui-header',
@@ -7,4 +7,4 @@
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiHeader {}
+export class UiHeaderComponent {}

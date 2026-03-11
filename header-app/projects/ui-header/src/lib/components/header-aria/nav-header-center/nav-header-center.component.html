@@ -65,18 +65,6 @@
                 </div>
               }
 
-              @if (levelIndex === 0 && showProfile() && userProfile()) {
-                <div class="arv-header-nav_item mobile-profile-item">
-                  <ui-nav-header-right
-                    class="mobile-profile"
-                    [user]="userProfile()!"
-                    [menuItems]="profileMenuItems()"
-                    [showAvatar]="showAvatar()"
-                    [showEmail]="showEmail()"
-                    [showIcons]="showIcons()"
-                    (itemClick)="closeMobileMenu()" />
-                </div>
-              }
             </div>
           }
         </div>

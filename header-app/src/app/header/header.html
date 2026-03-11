@@ -26,7 +26,7 @@
             <div slot="nav-left">
               <ng-content select="[slot=nav-left]"></ng-content>
             </div>
-            <div slot="nav-right">
+            <div slot="nav-right" (click)="onMobileNavRightClick()">
               @if (showProfile() && userProfile()) {
                 <app-profile-menu
                   class="arv-header_profile"
@@ -36,7 +36,9 @@
                   [showEmail]="showEmail()"
                   [showIcons]="showIcons()" />
               }
-              <div class="arv-header-nav-right-extra">
+              <div
+                class="arv-header-nav-right-extra"
+                [class.arv-header-nav-right-extra_hidden]="mobileNavRightExtraHidden()">
                 <ng-content select="[slot=nav-right]"></ng-content>
               </div>
             </div>

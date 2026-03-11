@@ -1,5 +1,5 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavHeaderAvatar } from './nav-header-avatar.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NavHeaderAvatarComponent } from './nav-header-avatar.component';
 
 interface AvatarInputs {
   avatarUrl: string;
@@ -11,15 +11,15 @@ interface AvatarInputs {
 }
 
 describe('NavHeaderAvatar Component', () => {
-  let fixture: ComponentFixture<NavHeaderAvatar>;
-  let component: NavHeaderAvatar;
+  let fixture: ComponentFixture<NavHeaderAvatarComponent>;
+  let component: NavHeaderAvatarComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [NavHeaderAvatar],
+      imports: [NavHeaderAvatarComponent],
     });
 
-    fixture = TestBed.createComponent(NavHeaderAvatar);
+    fixture = TestBed.createComponent(NavHeaderAvatarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -29,8 +29,8 @@ describe('NavHeaderAvatar Component', () => {
     fixture.detectChanges();
   };
 
-  const queryElement = (selector: string): HTMLElement | null => {
-    return fixture.nativeElement.querySelector(selector);
+  const queryElement = (selector: string): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector(selector) ?? undefined;
   };
 
   beforeEach(createComponent);
@@ -40,16 +40,16 @@ describe('NavHeaderAvatar Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderAvatar);
+    expect(component).toBeInstanceOf(NavHeaderAvatarComponent);
   });
 
   describe('Avatar display', () => {
     it('should render image when avatarUrl is provided', () => {
       setInput('avatarUrl', 'https://example.com/avatar.jpg');
 
-      const image = queryElement('.avatar-image') as HTMLImageElement | null;
+      const image = queryElement('.avatar-image') as HTMLImageElement | undefined;
 
-      expect(image).not.toBeNull();
+      expect(image).toBeDefined();
       expect(image?.src).toContain('avatar.jpg');
     });
 
@@ -64,7 +64,7 @@ describe('NavHeaderAvatar Component', () => {
     it('should render default icon when no image and no user name', () => {
       const defaultIcon = queryElement('.avatar-default-icon');
 
-      expect(defaultIcon).not.toBeNull();
+      expect(defaultIcon).toBeDefined();
     });
   });
 
@@ -129,7 +129,7 @@ describe('NavHeaderAvatar Component', () => {
       const emitSpy = vi.fn();
       component.avatarClick.subscribe(emitSpy);
 
-      const button = queryElement('[data-testid="avatar-button"]') as HTMLButtonElement | null;
+      const button = queryElement('[data-testid="avatar-button"]') as HTMLButtonElement | undefined;
       button?.click();
 
       expect(emitSpy).toHaveBeenCalledTimes(1);

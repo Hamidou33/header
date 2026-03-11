@@ -1,8 +1,8 @@
-﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MenuBar } from '@angular/aria/menu';
-import { Dropdown } from './dropdown.component';
+import { DropdownComponent } from './dropdown.component';
 import type { DropdownItem } from '../../../models';
 
 const simpleItems: DropdownItem[] = [
@@ -37,16 +37,17 @@ const textOnlyItems: DropdownItem[] = [
   { label: 'Tutorials', link: '/tutorials' },
 ];
 
-const meta: Meta<Dropdown> = {
+const meta: Meta<DropdownComponent> = {
   title: 'Header ARIA/Dropdown',
-  component: Dropdown,
+  component: DropdownComponent,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [Dropdown, MenuBar],
+      imports: [DropdownComponent, MenuBar],
     }),
     applicationConfig({
       providers: [
@@ -56,8 +57,8 @@ const meta: Meta<Dropdown> = {
     }),
   ],
   argTypes: {
-    label: { control: 'text', description: 'Dropdown button label' },
-    items: { control: 'object', description: 'Dropdown items' },
+    label: { control: 'text', description: 'DropdownComponent button label' },
+    items: { control: 'object', description: 'DropdownComponent items' },
     active: { control: 'boolean', description: 'Trigger active state' },
     measureOnly: { control: 'boolean', description: 'Render for measurement only' },
   },
@@ -84,7 +85,7 @@ const meta: Meta<Dropdown> = {
 };
 
 export default meta;
-type Story = StoryObj<Dropdown>;
+type Story = StoryObj<DropdownComponent>;
 
 export const Default: Story = {};
 

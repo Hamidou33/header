@@ -1,10 +1,12 @@
-﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { NavHeaderCenter, NavItem } from './nav-header-center.component';
+import { NavHeaderCenterComponent, NavItem } from './nav-header-center.component';
 
 interface NavHeaderCenterInputs {
   items: NavItem[];
   maxVisibleItems: number;
+  profileMenuItems: Array<{ label: string; link?: string }>;
+  userProfile: { name: string; email: string; avatar: string };
 }
 
 if (window.matchMedia === undefined) {
@@ -14,7 +16,7 @@ if (window.matchMedia === undefined) {
       return {
         matches: false,
         media: query,
-        onchange: null,
+        onchange: undefined,
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
         dispatchEvent: vi.fn(),
@@ -24,16 +26,16 @@ if (window.matchMedia === undefined) {
 }
 
 describe('NavHeaderCenter Component', () => {
-  let fixture: ComponentFixture<NavHeaderCenter>;
-  let component: NavHeaderCenter;
+  let fixture: ComponentFixture<NavHeaderCenterComponent>;
+  let component: NavHeaderCenterComponent;
 
   const createComponent = (): void => {
     TestBed.configureTestingModule({
-      imports: [NavHeaderCenter],
+      imports: [NavHeaderCenterComponent],
       providers: [provideRouter([])],
     });
 
-    fixture = TestBed.createComponent(NavHeaderCenter);
+    fixture = TestBed.createComponent(NavHeaderCenterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
@@ -53,7 +55,7 @@ describe('NavHeaderCenter Component', () => {
   });
 
   it('should create the component', () => {
-    expect(component).toBeInstanceOf(NavHeaderCenter);
+    expect(component).toBeInstanceOf(NavHeaderCenterComponent);
   });
 
   describe('Mobile menu', () => {
@@ -132,6 +134,44 @@ describe('NavHeaderCenter Component', () => {
       component.toggleMobileMenu();
 
       expect(states).toEqual([true, false]);
+    });
+
+    it('should open profile menu from the right on mobile', () => {
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+      const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
+      const states: boolean[] = [];
+
+      component.mobileMenuOpenChange.subscribe(isOpen => {
+        states.push(isOpen);
+      });
+
+      component.isMobile.set(true);
+      setInput('items', [{ label: 'Home', link: '/home' }]);
+      setInput('profileMenuItems', [{ label: 'My profile', link: '/profile' }]);
+      setInput('userProfile', { name: 'John Doe', email: 'john@example.com', avatar: 'JD' });
+
+      component.openMobileProfileMenu(event);
+
+      expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+      expect(stopPropagationSpy).toHaveBeenCalledTimes(1);
+      expect(component.mobileMenuOpen()).toBe(true);
+      expect(component.navigationStack().length).toBe(2);
+      expect(component.navigationStack()[1][0]?.label).toBe('My profile');
+      expect(component.currentMenuTitle()).toBe('John Doe');
+      expect(states).toEqual([true]);
+    });
+
+    it('should ignore profile menu open request on desktop', () => {
+      component.isMobile.set(false);
+      setInput('items', [{ label: 'Home', link: '/home' }]);
+      setInput('profileMenuItems', [{ label: 'My profile', link: '/profile' }]);
+
+      component.openMobileProfileMenu();
+
+      expect(component.mobileMenuOpen()).toBe(false);
+      expect(component.navigationStack()).toEqual([]);
+      expect(component.currentMenuTitle()).toBe('');
     });
   });
 

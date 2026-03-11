@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { DropdownItem } from './dropdown/dropdown';
@@ -16,7 +16,7 @@ import {
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class Header implements OnDestroy {
   readonly showProfile = input(true);
   readonly showAvatar = input(false);
   readonly showEmail = input(false);
@@ -39,4 +39,33 @@ export class Header {
   readonly userProfile = input<UserProfile | null>(getDefaultUserProfile());
   readonly profileMenuItems = input<DropdownItem[]>(getDefaultProfileMenuItems());
   readonly menuItems = input<NavItem[]>(getDefaultMenuItems());
+
+  readonly mobileNavRightExtraHidden = signal(false);
+  private readonly mobileNavBackHandler = (): void => {
+    this.mobileNavRightExtraHidden.set(false);
+  };
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('arv-mobile-nav-back', this.mobileNavBackHandler as EventListener);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('arv-mobile-nav-back', this.mobileNavBackHandler as EventListener);
+    }
+  }
+
+  onMobileNavRightClick(): void {
+    if (!this.isMobileViewport()) {
+      return;
+    }
+
+    this.mobileNavRightExtraHidden.set(true);
+  }
+
+  private isMobileViewport(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+  }
 }

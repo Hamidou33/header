@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { MenuItem } from '@angular/aria/menu';
@@ -11,16 +11,16 @@ import { RouterModule } from '@angular/router';
   styleUrl: './nav-header-link.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavHeaderLink {
-  readonly label = input('');
-  readonly link = input<string | undefined>(undefined);
-  readonly icon = input<string | undefined>(undefined);
-  readonly active = input(false);
-  readonly measureOnly = input(false);
-  readonly useAriaMenu = input(false);
-  readonly itemClick = output<void>();
+export class NavHeaderLinkComponent {
+  public readonly label = input('');
+  public readonly link = input<string | undefined>(undefined);
+  public readonly icon = input<string | undefined>(undefined);
+  public readonly active = input(false);
+  public readonly measureOnly = input(false);
+  public readonly useAriaMenu = input(false);
+  public readonly itemClick = output<void>();
 
-  onLinkClick(): void {
+  public onLinkClick(): void {
     this.itemClick.emit();
   }
 }

@@ -1,7 +1,7 @@
-﻿import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { NavHeaderRight } from './nav-header-right.component';
+import { NavHeaderRightComponent } from './nav-header-right.component';
 import type { DropdownItem, UserProfile } from '../../../models';
 
 const user: UserProfile = {
@@ -30,16 +30,17 @@ const menuItems: DropdownItem[] = [
   { label: 'Logout', link: '/logout', icon: '\u{1F6AA}' },
 ];
 
-const meta: Meta<NavHeaderRight> = {
+const meta: Meta<NavHeaderRightComponent> = {
   title: 'Header ARIA/Nav Right',
-  component: NavHeaderRight,
+  component: NavHeaderRightComponent,
   tags: ['autodocs'],
   parameters: {
+    layout: 'fullscreen',
     controls: { expanded: true },
   },
   decorators: [
     moduleMetadata({
-      imports: [NavHeaderRight],
+      imports: [NavHeaderRightComponent],
     }),
     applicationConfig({
       providers: [
@@ -79,7 +80,7 @@ const meta: Meta<NavHeaderRight> = {
 };
 
 export default meta;
-type Story = StoryObj<NavHeaderRight>;
+type Story = StoryObj<NavHeaderRightComponent>;
 
 export const Default: Story = {};
 

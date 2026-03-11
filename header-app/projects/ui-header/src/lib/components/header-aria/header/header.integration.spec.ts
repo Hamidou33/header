@@ -1,6 +1,6 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Header } from './header.component';
+import { HeaderComponent } from './header.component';
 
 interface MatchMediaMock extends MediaQueryList {
   __triggerChange: (matches: boolean) => void;
@@ -18,7 +18,7 @@ function createMatchMediaMock(initialMatches = true): MatchMediaMock {
 
   const mediaQueryList: Partial<MatchMediaMock> = {
     media: '(max-width: 768px)',
-    onchange: null,
+    onchange: undefined,
     addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => {
       if (type !== 'change') {
         return;
@@ -59,7 +59,7 @@ function createMatchMediaMock(initialMatches = true): MatchMediaMock {
 }
 
 describe('Header Integration', () => {
-  let fixture: ComponentFixture<Header>;
+  let fixture: ComponentFixture<HeaderComponent>;
   let originalMatchMedia: ((query: string) => MediaQueryList) | undefined;
 
   const createComponent = (): void => {
@@ -72,24 +72,28 @@ describe('Header Integration', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [Header],
+      imports: [HeaderComponent],
       providers: [provideRouter([])],
     });
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(HeaderComponent);
     fixture.detectChanges();
   };
 
-  const getLogoLink = (): HTMLElement | null => {
-    return fixture.nativeElement.querySelector('[data-testid="main-logo-link"]');
+  const getLogoLink = (): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector('[data-testid="main-logo-link"]') ?? undefined;
   };
 
-  const getBurgerButton = (): HTMLElement | null => {
-    return fixture.nativeElement.querySelector('[data-testid="mobile-burger"]');
+  const getBurgerButton = (): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector('[data-testid="mobile-burger"]') ?? undefined;
   };
 
-  const getCenterNavMenu = (): HTMLElement | null => {
-    return fixture.nativeElement.querySelector('[data-testid="center-nav-menu"]');
+  const getCenterNavMenu = (): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector('[data-testid="center-nav-menu"]') ?? undefined;
+  };
+
+  const getMobileProfileTrigger = (): HTMLElement | undefined => {
+    return fixture.nativeElement.querySelector('[data-testid="mobile-profile-trigger"]') ?? undefined;
   };
 
   beforeEach(createComponent);
@@ -130,7 +134,7 @@ describe('Header Integration', () => {
     const navMenu = getCenterNavMenu();
     const logoLink = getLogoLink();
 
-    expect(burger).not.toBeNull();
+    expect(burger).toBeDefined();
 
     burger?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     fixture.detectChanges();
@@ -147,6 +151,29 @@ describe('Header Integration', () => {
     expect(logoLink?.classList.contains('arv-header-nav-logo_hidden')).toBe(false);
   });
 
+  it('should open profile menu from mobile header trigger using right-side submenu navigation', () => {
+    const burger = getBurgerButton();
+    const navMenu = getCenterNavMenu();
+    const profileTrigger = getMobileProfileTrigger();
+
+    expect(profileTrigger).toBeDefined();
+
+    profileTrigger?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+
+    const menuTitle = fixture.nativeElement.querySelector('.arv-header-nav-menu-title') as
+      | HTMLElement
+      | undefined;
+    const menuLevels = fixture.nativeElement.querySelectorAll('.arv-header-nav-menu-level');
+    const mobileProfileInBurger = fixture.nativeElement.querySelector('.mobile-profile-item');
+
+    expect(burger?.classList.contains('open')).toBe(true);
+    expect(navMenu?.classList.contains('show')).toBe(true);
+    expect(menuTitle?.textContent?.trim()).toBe('John Doe');
+    expect(menuLevels.length).toBe(2);
+    expect(mobileProfileInBurger).toBeNull();
+  });
+
   it('should reset menu state after a fresh component creation', () => {
     const burger = getBurgerButton();
 
@@ -156,7 +183,7 @@ describe('Header Integration', () => {
 
     fixture.destroy();
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(HeaderComponent);
     fixture.detectChanges();
 
     const recreatedBurger = getBurgerButton();
